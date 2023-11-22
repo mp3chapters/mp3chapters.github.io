@@ -32,8 +32,9 @@ function exportFileBasedOnOldTags(file, tags) {
         }
     }
 
-    console.log("New tags:");
-    console.log(tags);
+    if (tags.hasOwnProperty('encodedBy')) {
+        tags.encodedBy = `${tags.encodedBy} | mp3chapters.github.io`;
+    }
 
     // Call the addTags function from your bundle
     addTags(tags, file, function (taggedBuffer) {
