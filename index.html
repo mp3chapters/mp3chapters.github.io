@@ -3,13 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Online MP3 Chapter Editor</title>
+    <title>Online MP3 Podcast Chapter Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="A simple online tool for adding chapters to audio files. No sign-up or install required." />
+    <link rel="canonical" href="https://mp3chapters.github.io/" />
+    <meta property="og:title" content="Online MP3 Podcast Chapter Editor" />
+    <meta property="og:site_name" content="Online MP3 Podcast Chapter Editor">
+    <meta property="og:description" content="A simple online tool for adding chapters to audio files. No sign-up or install required." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mp3chapters.github.io/" />
+    <meta property="og:image" content="https://mp3chapters.github.io/img/og-banner.png" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="icon" type="image/x-png" href="favicon.png" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vidstack/styles/defaults.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vidstack/styles/community-skin/audio.min.css" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -145,7 +156,7 @@
                     <path fill-rule="evenodd"
                         d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
                 </svg>
-                Online MP3 Chapter Editor
+                Online MP3 Podcast Chapter Editor
             </a>
             <a href="https://github.com/mp3chapters/mp3chapters.github.io" class="icon-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
@@ -167,9 +178,8 @@
                     loading="lazy" data-tippy-content="Examples of podcasts that provide chapters">
             </div>
             <div class="col-lg-6 mt-4 mt-sm-8">
-                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Add chapters to your podcast MP3 files</h1>
-                <p class="lead">A simple online tool without install or signup, running locally in your browser. Works
-                    with all
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Add chapters to your podcast MP3 files<span class="d-none">.</span></h1>
+                <p class="lead">A simple online tool without install or signup, running locally in your browser. Works with all
                     podcast players that support <code class="text-body">id3</code> chapters.</p>
                 <div class="container app-icons">
                     <!-- <img src="app-icons/spotify.webp" width="100" height="100"> -->
@@ -427,7 +437,7 @@
                             <path fill-rule="evenodd"
                                 d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
                         </svg>
-                        <span class="fs-5">Online MP3 Chapter Editor</span>
+                        <span class="fs-5">Online MP3 Podcast Chapter Editor</span>
                     </a>
                     <ul class="list-unstyled small">
                         <li class="mb-2">Built by <a
