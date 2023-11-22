@@ -10,14 +10,20 @@ function exportFileBasedOnOldTags(file, tags) {
     let chapterIndex = 0;
     for (let chapter of window.chapters.getChapters()) {
         if (!chapter.error) {
-            chapterTag.push({
+            const chapterObject = {
                 elementID: `chp${chapterIndex}`,
                 startTimeMs: Math.round(chapter.start * 1000),
                 endTimeMs: Math.round(chapter.end * 1000),
                 tags: {
                     title: chapter.title,
                 }
-            });
+            };
+            if (chapter.hasOwnProperty('url')) {
+                chapterObject.tags.userDefinedUrl = {
+                    url: chapter.url,
+                }
+            }
+            chapterTag.push(chapterObject);
             tocTag.elements.push(`chp${chapterIndex}`);
             chapterIndex++;
         }

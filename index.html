@@ -13,6 +13,7 @@
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
+            --bs-code-color: #084298;
         }
 
         .app-icons {
@@ -100,6 +101,27 @@
         span.warning {
             background-color: hsl(45, 100%, 71%);
             color: hsl(45, 100%, 21%);
+        }
+
+        span.url {
+            font-size: 12px;
+            background-color: hsl(0, 0%, 90%);
+            color: #084298;
+            max-width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px 4px;
+            padding-left: 2px;
+            border-radius: 5px;
+            margin-left: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        span.url > svg {
+            position: relative; 
+            top: 2.5px; 
+            margin-top: -7px; 
+            margin-right: 1px;
         }
 
         #button-container {
@@ -210,10 +232,8 @@
                 <p class="lead">A simple online tool without install or signup, running locally in your browser. Works with all
                     podcast players that support <code class="text-body">id3</code> chapters.</p>
                 <div class="container app-icons">
-                    <!-- <img src="app-icons/spotify.webp" width="100" height="100"> -->
                     <img src="app-icons/apple-podcasts.webp" width="100" height="100"
                         data-tippy-content="Works with Apple Podcasts">
-                    <!-- <img src="app-icons/google-podcasts.webp" width="100" height="100"> -->
                     <img src="app-icons/overcast.webp" width="100" height="100"
                         data-tippy-content="Works with Overcast">
                     <img src="app-icons/pocketcasts.webp" width="100" height="100"
@@ -303,11 +323,13 @@
         <h2>Edit chapters</h2>
 
         <p>Chapters are managed using the same syntax also used by YouTube. Each chapter is one line, starting with the
-            timestamp when the chapter begins, followed by a space, followed by the name of the chapter. The first
-            chapter should start at <code>00:00</code>. The last chapter will end when the MP3 file ends. </p>
+            timestamp when the chapter begins, followed by a space, followed by the name of the chapter. 
+            You can add 1 link per chapter at the end of the line (starting in <code>http</code>).</p>
 
-        <p>You can add and edit chapters manually below. You can also go to a desired starting point in the player and
-            click the <em>Add Chapter</em> button to start a chapter at that timestamp.</p>
+            <!-- The first chapter should start at <code>00:00</code>. The last chapter will end when the MP3 file ends.  -->
+
+        <!-- <p>You can add and edit chapters manually below. You can also go to a desired starting point in the player and
+            click the <em>Add Chapter</em> button to start a chapter at that timestamp.</p> -->
 
         <!-- <div class="form-check form-switch">
             <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">

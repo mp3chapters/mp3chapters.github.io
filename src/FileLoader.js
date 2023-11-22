@@ -10,10 +10,14 @@ export function loadFile(file, wave, player) {
         if (tags.hasOwnProperty('chapter')) {
             const parsedChapters = [];
             for (let chapter of tags.chapter) {
-                parsedChapters.push({
+                const chapterObject = {
                     title: chapter.tags.title,
                     start: chapter.startTimeMs / 1000,
-                });
+                };
+                if (chapter.tags.hasOwnProperty('userDefinedUrl')) {
+                    chapterObject.url = chapter.tags.userDefinedUrl[0].url;
+                }
+                parsedChapters.push(chapterObject);
             }
             window.chapters.setChapters(parsedChapters);
         } else {

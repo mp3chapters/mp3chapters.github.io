@@ -56,7 +56,8 @@ export class ChapterList {
         this.chapters.forEach(chapter => {
             if (!chapter.error) {
                 const startTime = secondsToString(chapter.start);
-                xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}" />\n`;
+                const href = chapter.url ? ` href="${chapter.url}"` : '';
+                xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}"${href} />\n`;
             }
         });
 

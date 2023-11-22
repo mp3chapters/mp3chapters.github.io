@@ -1,9 +1,22 @@
 import { secondsToString, stringToSeconds } from './utils.js';
 
-const alertSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-<path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
-<path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+const linkSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+    <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+    <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
 </svg>`;
+
+function extractUrl(str) {
+    const urlRegex = / https?:\/\/[^\s]+$/;
+    const match = str.match(urlRegex);
+    if (match) {
+        const url = match[0];
+        const stringWithoutUrl = str.replace(urlRegex, '').trim();
+        return { url, stringWithoutUrl };
+    } else {
+        // No URL found, return null for the URL and the original string
+        return { url: null, stringWithoutUrl: str };
+    }
+}
 
 export function updateChapterListBasedOnTextarea() {
     const textInput = document.getElementById('text-input');
@@ -28,7 +41,12 @@ export function updateChapterListBasedOnTextarea() {
                     encounteredTimes.add(time);
                 }
                 chapter.start = time;
-                chapter.title = title;
+
+                const { url, stringWithoutUrl } = extractUrl(title);
+                chapter.title = stringWithoutUrl;
+                if (url) {
+                    chapter.url = url.trim();
+                }
             } catch (e) {
                 chapter.error = 'Invalid time format';
                 chapter.start = -1;
@@ -78,6 +96,19 @@ export function displayChapterList() {
         titleSpan.textContent = chapter.title;
         lineSpan.appendChild(titleSpan);
         textDisplay.appendChild(lineSpan);
+        // Show URL
+        if (chapter.url) {
+            const urlSpan = document.createElement('span');
+            urlSpan.className = 'url';
+            // clean up url
+            let url = chapter.url.replace(/(https?:\/\/)?(www\.)?/, '');
+            // truncate url
+            if (url.length > 35) {
+                url = url.substring(0, 35) + '...';
+            }
+            urlSpan.innerHTML = `${linkSVG}${url}`;
+            lineSpan.appendChild(urlSpan);
+        }
         // Show error
         if (chapter.error) {
             const errorSpan = document.createElement('span');
@@ -117,7 +148,11 @@ export function setTextAreaContent() {
         if (chapter.start === -1) {
             return chapter.title;
         } else {
-            return `${secondsToString(chapter.start)} ${chapter.title}`;
+            if (chapter.url) {
+                return `${secondsToString(chapter.start)} ${chapter.title} ${chapter.url}`;
+            } else {
+                return `${secondsToString(chapter.start)} ${chapter.title}`;
+            }
         }
     });
     textInput.value = lines.join('\n');
