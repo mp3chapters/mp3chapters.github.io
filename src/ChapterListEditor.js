@@ -58,6 +58,7 @@ export function displayChapterList() {
     for (let chapter of window.chapters.getChapters()) {
         const lineSpan = document.createElement('div');
         lineSpan.className = 'line';
+
         // Show time
         if (chapter.start != -1) {
             const a = document.createElement('span');
@@ -68,6 +69,9 @@ export function displayChapterList() {
                 e.stopPropagation();
             });
             lineSpan.appendChild(a);
+
+            lineSpan.dataset.start = chapter.start;
+            lineSpan.dataset.end = chapter.end;
         }
         // Show title
         const titleSpan = document.createElement('span');
@@ -133,4 +137,15 @@ export function editText() {
 
     textInput.scrollTop = scrollTop;
     textInput.scrollLeft = scrollLeft;
+}
+
+export function highlightCurrentLine() {
+    const lines = document.getElementsByClassName('line');
+    for (let line of lines) {
+        if (line.dataset.start <= window.currentTime && window.currentTime < line.dataset.end) {
+            line.classList.add('current-line');
+        } else {
+            line.classList.remove('current-line');
+        }
+    }
 }

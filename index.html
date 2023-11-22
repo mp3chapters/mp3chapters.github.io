@@ -63,7 +63,7 @@
             box-sizing: border-box;
             width: 100%;
             height: 530px;
-            padding: 5px;
+            padding: 5px 0;
             border: 1px solid #ccc;
             font-family: monospace;
             white-space: pre;
@@ -72,8 +72,20 @@
             line-height: 1.5;
         }
 
+        #text-input {
+            padding: 5px 5px;
+        }
+
         #text-display {
             cursor: pointer;
+        }
+
+        .line {
+            padding: 0 5px;
+        }
+
+        .current-line {
+            background-color: #efefef;
         }
 
         span.error, span.warning {

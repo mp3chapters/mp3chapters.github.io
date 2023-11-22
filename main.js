@@ -1,7 +1,7 @@
 import WaveSurfer from './libs/wavesurfer.esm.js'
 import { secondsToString, stringToSeconds } from './src/utils.js';
 import { ChapterList } from './src/ChapterList.js';
-import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText } from './src/ChapterListEditor.js';
+import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText, highlightCurrentLine } from './src/ChapterListEditor.js';
 import { loadFile } from './src/FileLoader.js';
 import { exportFile } from './src/FileExport.js';
 import { initializeDragDrop } from './src/dragDropHandler.js';
@@ -9,6 +9,9 @@ import { initializeDragDrop } from './src/dragDropHandler.js';
 const chapters = new ChapterList();
 window.chapters = chapters;
 
+window.currentTime = 0;
+
+// id3 field names that are supported
 window.fieldNames = ["title", "artist", "album", "trackNumber", "genre", "year", "copyright", "publisher", "language"];
 
 function addChaptersToPlayer() {
@@ -40,6 +43,7 @@ chapters.addEventListener((chapters) => {
     displayChapterList();
     addChaptersToPlayer();
     updatePodlove();
+    highlightCurrentLine();
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -123,7 +127,9 @@ player.addEventListener('play', () => {
 });
 
 player.addEventListener('time-update', (e) => {
+    window.currentTime = e.detail.currentTime;
     wave.setTime(e.detail.currentTime);
+    highlightCurrentLine();
     // move add chapter button to cursor
     const button = document.getElementById('addTimestamp');
     const buttonWidth = button.offsetWidth;
