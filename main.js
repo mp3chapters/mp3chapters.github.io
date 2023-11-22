@@ -37,6 +37,7 @@ chapters.addEventListener((chapters) => {
     setTextAreaContent();
     displayChapterList();
     addChaptersToPlayer();
+    updatePodlove();
 });
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -159,4 +160,33 @@ document.getElementById('mp3FileInput').addEventListener('change', function () {
 
 document.getElementById('addTagsButton').addEventListener('click', function () {
     exportFile(window.currentFile);
+});
+
+function updatePodlove() {
+    const code = document.getElementById('podlove-code');
+    code.innerHTML = chapters.exportAsPodlove().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+document.getElementById('podloveButton').addEventListener('click', function () {
+    updatePodlove();
+    const container = document.getElementById('podlove');
+    container.classList.remove("d-none");
+    container.open = true;
+});
+
+document.getElementById('copyPodloveButton').addEventListener('click', function () {
+    const code = chapters.exportAsPodlove();
+    navigator.clipboard.writeText(code).then(function() {
+        const button = document.getElementById('copyPodloveButton');
+        const copyCheck = document.getElementById('publove-copy-check');
+        copyCheck.style.visibility = 'visible';
+        button.classList.add("btn-outline-success");
+        setTimeout(function() {
+            copyCheck.style.visibility = 'hidden';
+            button.classList.remove("btn-outline-success");
+        }, 3000);
+    }).catch(function(error) {
+        // Error handling
+        console.error('Error copying text: ', error);
+    });
 });

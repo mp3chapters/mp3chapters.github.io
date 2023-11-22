@@ -39,4 +39,6 @@ export function loadFile(file, wave, player) {
     });
 
     document.getElementById('filename').innerText = file.name;
+
+    document.getElementById('podlove').open = false;
 }

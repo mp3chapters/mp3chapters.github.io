@@ -1,3 +1,5 @@
+import { secondsToString } from './utils.js';
+
 export class ChapterList {
     constructor() {
         this.chapters = [];
@@ -44,6 +46,18 @@ export class ChapterList {
         this.setChapters(this.chapters);
     }
     
+    exportAsPodlove() {
+        let xmlChapters = '<psc:chapters version="1.2" xmlns:psc="http://podlove.org/simple-chapters">\n';
+
+        this.chapters.forEach(chapter => {
+            const startTime = secondsToString(chapter.start);
+            xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}" />\n`;
+        });
+
+        xmlChapters += '</psc:chapters>';
+
+        return xmlChapters;
+    }
 
     // Method to add an event listener
     addEventListener(listener) {
