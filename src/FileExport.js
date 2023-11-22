@@ -9,15 +9,18 @@ function exportFileBasedOnOldTags(file, tags) {
     };
     let chapterIndex = 0;
     for (let chapter of window.chapters.getChapters()) {
-        chapterTag.push({
-            elementID: `chp${chapterIndex}`,
-            startTimeMs: Math.round(chapter.start * 1000),
-            endTimeMs: Math.round(chapter.end * 1000),
-            tags: {
-                title: chapter.title,
-            }
-        });
-        tocTag.elements.push(`chp${chapterIndex}`);
+        if (!chapter.error) {
+            chapterTag.push({
+                elementID: `chp${chapterIndex}`,
+                startTimeMs: Math.round(chapter.start * 1000),
+                endTimeMs: Math.round(chapter.end * 1000),
+                tags: {
+                    title: chapter.title,
+                }
+            });
+            tocTag.elements.push(`chp${chapterIndex}`);
+            chapterIndex++;
+        }
     }
     tags.chapter = chapterTag;
     tags.tableOfContents = tocTag;

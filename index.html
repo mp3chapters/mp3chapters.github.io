@@ -76,6 +76,20 @@
             cursor: pointer;
         }
 
+        span.error, span.warning {
+            font-size: 12px;
+            background-color: hsl(355, 70%, 96%);
+            padding: 2px 4px;
+            border-radius: 5px;
+            margin-left: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        span.warning {
+            background-color: hsl(45, 100%, 71%);
+            color: hsl(45, 100%, 21%);
+        }
+
         #button-container {
             position: absolute;
             right: 0;
@@ -241,7 +255,7 @@
                             d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
                     </svg> add chapter</button>
                 <div id="wave"></div>
-                <media-player id="player" src="jingles.mp3">
+                <media-player id="player" src="example.mp3">
                     <media-outlet>
                         <track src="" kind="chapters" label="English" srclang="en-US" default data-type="vtt" />
                     </media-outlet>

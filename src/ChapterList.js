@@ -36,6 +36,10 @@ export class ChapterList {
         if (this.chapters.length > 0) {
             this.chapters[this.chapters.length - 1].end = this.duration;
         }
+
+        if (this.chapters[0].start != 0) {
+            this.chapters[0].warning = 'Best practice: First chapter should start at 00:00';
+        }
     
         this.triggerEventListeners();
     }    
@@ -50,8 +54,10 @@ export class ChapterList {
         let xmlChapters = '<psc:chapters version="1.2" xmlns:psc="http://podlove.org/simple-chapters">\n';
 
         this.chapters.forEach(chapter => {
-            const startTime = secondsToString(chapter.start);
-            xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}" />\n`;
+            if (!chapter.error) {
+                const startTime = secondsToString(chapter.start);
+                xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}" />\n`;
+            }
         });
 
         xmlChapters += '</psc:chapters>';

@@ -21,11 +21,13 @@ function addChaptersToPlayer() {
         track.addCue({ "startTime": 0, "endTime": chapters.duration, "text": "Chapter" });
     }
     for (let chapter of chapters_) {
-        track.addCue({ 
-            "startTime": chapter.start, 
-            "endTime": chapter.end, 
-            "text": chapter.title 
-        });
+        if (chapter.error == undefined) {
+            track.addCue({ 
+                "startTime": chapter.start, 
+                "endTime": chapter.end, 
+                "text": chapter.title 
+            });
+        }
     }
     // refresh
     track.mode = 'hidden';
@@ -141,7 +143,6 @@ player.addEventListener('time-update', (e) => {
 
 player.addEventListener('duration-change', (e) => {
     chapters.duration = e.detail;
-    console.log('Duration:', e.detail);
 });
 
 document.getElementById('addTimestamp').addEventListener('click', () => {
