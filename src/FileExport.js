@@ -38,10 +38,6 @@ function exportFileBasedOnOldTags(file, tags) {
         }
     }
 
-    if (tags.hasOwnProperty('encodedBy')) {
-        tags.encodedBy = `${tags.encodedBy} | mp3chapters.github.io`;
-    }
-
     // Call the addTags function from your bundle
     addTags(tags, file, function (taggedBuffer) {
         // Convert buffer to Blob

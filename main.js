@@ -12,7 +12,7 @@ window.chapters = chapters;
 window.currentTime = 0;
 
 // id3 field names that are supported
-window.fieldNames = ["title", "artist", "album", "trackNumber", "genre", "year", "copyright", "publisher", "language"];
+window.fieldNames = ["title", "artist", "album", "trackNumber", "genre", "year", "copyright", "publisher", "language", "encodedBy"];
 
 function addChaptersToPlayer() {
     const chapters_ = chapters.getChapters();

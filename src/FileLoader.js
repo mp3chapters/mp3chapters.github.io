@@ -30,6 +30,10 @@ export function loadFile(file, wave, player) {
             window.chapters.setChapters(baseChapters);
         }
 
+        if (tags.hasOwnProperty('encodedBy')) {
+            tags.encodedBy = `${tags.encodedBy} and mp3chapters.github.io`;
+        }
+
         for (let field of window.fieldNames) {
             const input = document.getElementById(`field-${field}`);
             if (tags.hasOwnProperty(field)) {
