@@ -32,6 +32,15 @@ export class ChapterList {
             this.chapters[i].end = this.chapters[i + 1].start;
         }
 
+        // Warn if chapter starts after duration
+        if (this.duration != -1) {
+            for (let chapter of this.chapters) {
+                if (chapter.start > this.duration) {
+                    chapter.warning = 'Warning: Chapter starts after the end of the file';
+                }
+            }
+        }
+
         // Update the end time of the last chapter to match the duration of the video
         if (this.chapters.length > 0) {
             this.chapters[this.chapters.length - 1].end = this.duration;
