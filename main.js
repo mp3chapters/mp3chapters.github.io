@@ -1,7 +1,7 @@
 import WaveSurfer from './libs/wavesurfer.esm.js'
 import { secondsToString, stringToSeconds } from './src/utils.js';
 import { ChapterList } from './src/ChapterList.js';
-import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText, highlightCurrentLine } from './src/ChapterListEditor.js';
+import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText, adjustTextAreaHeight, highlightCurrentLine } from './src/ChapterListEditor.js';
 import { loadFile } from './src/FileLoader.js';
 import { exportFile } from './src/FileExport.js';
 import { initializeDragDrop } from './src/dragDropHandler.js';
@@ -39,6 +39,7 @@ function addChaptersToPlayer() {
 
 chapters.addEventListener((chapters) => {
     // display chapters
+    adjustTextAreaHeight();
     setTextAreaContent();
     displayChapterList();
     addChaptersToPlayer();
@@ -49,7 +50,8 @@ chapters.addEventListener((chapters) => {
 document.addEventListener('DOMContentLoaded', function () {
     const textInput = document.getElementById('text-input');
     textInput.addEventListener('blur', updateChapterListBasedOnTextarea);
-    document.getElementById('text-display').addEventListener('click', editText);
+    textInput.addEventListener('mousedown', editText);
+    textInput.addEventListener('input', adjustTextAreaHeight);
 
     tippy('[data-tippy-content]');
 

@@ -135,7 +135,7 @@ export function displayChapterList() {
     const scrollTop = textInput.scrollTop;
     const scrollLeft = textInput.scrollLeft;
 
-    textInput.style.display = 'none';
+    // textInput.style.display = 'none';
     textDisplay.style.display = 'block';
 
     textDisplay.scrollTop = scrollTop;
@@ -158,20 +158,36 @@ export function setTextAreaContent() {
     textInput.value = lines.join('\n');
 }
 
-export function editText() {
-    const textInput = document.getElementById('text-input');
+export function editText(e) {
     const textDisplay = document.getElementById('text-display');
+    const textInput = document.getElementById('text-input');
+    if (textDisplay.style.display === 'block') {
 
-    const scrollTop = textDisplay.scrollTop;
-    const scrollLeft = textDisplay.scrollLeft;
+        const scrollTop = textDisplay.scrollTop;
+        const scrollLeft = textDisplay.scrollLeft;
 
-    textInput.style.display = 'block';
-    textDisplay.style.display = 'none';
+        // textInput.style.display = 'block';
+        textDisplay.style.display = 'none';
 
-    textInput.focus();
+        textInput.focus();
 
-    textInput.scrollTop = scrollTop;
-    textInput.scrollLeft = scrollLeft;
+        textInput.scrollTop = scrollTop;
+        textInput.scrollLeft = scrollLeft;
+    }
+}
+
+export function adjustTextAreaHeight() {
+    const lineHeight = 1.5 * 15;
+    let height = lineHeight * window.chapters.getChapters().length;
+    if (document.getElementById("text-display").style.display === 'none') {
+        // instead use number of lines in textarea
+        const textInput = document.getElementById('text-input');
+        height = lineHeight * textInput.value.split('\n').length;
+    }
+    height = Math.max(height + 10, 530); // 10px padding
+    for (let id of ['text-input', 'text-display', 'editor-container']) {
+        document.getElementById(id).style.height = `${height}px`;
+    }
 }
 
 export function highlightCurrentLine() {
