@@ -203,3 +203,20 @@ document.getElementById('copyPodloveButton').addEventListener('click', function 
         console.error('Error copying text: ', error);
     });
 });
+
+document.getElementById('copyListButton').addEventListener('click', function () {
+    const code = chapters.exportAsList();
+    navigator.clipboard.writeText(code).then(function() {
+        const button = document.getElementById('copyListButton');
+        const copyCheck = document.getElementById('list-copy-check');
+        copyCheck.style.visibility = 'visible';
+        button.classList.add("btn-outline-success");
+        setTimeout(function() {
+            copyCheck.style.visibility = 'hidden';
+            button.classList.remove("btn-outline-success");
+        }, 3000);
+    }).catch(function(error) {
+        // Error handling
+        console.error('Error copying text: ', error);
+    });
+});

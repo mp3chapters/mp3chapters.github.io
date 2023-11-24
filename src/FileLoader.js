@@ -12,7 +12,7 @@ export function loadFile(file, wave, player) {
     let tags;
     readTags(file, (fileTags) => {
         tags = fileTags;
-        console.log(tags);
+        // console.log(tags);
         if (tags.hasOwnProperty('chapter')) {
             const parsedChapters = [];
             for (let chapter of tags.chapter) {

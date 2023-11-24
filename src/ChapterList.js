@@ -88,6 +88,18 @@ export class ChapterList {
         return xmlChapters;
     }
 
+    exportAsList() {
+        // for copy pasting; includes startTime and title, but not link or image
+        let list = '';
+        this.chapters.forEach(chapter => {
+            if (!chapter.error) {
+                const startTime = secondsToString(chapter.start);
+                list += `${startTime} ${chapter.title}\n`;
+            }
+        });
+        return list;
+    }
+
     // Method to add an event listener
     addEventListener(listener) {
         this.eventListeners.push(listener);
