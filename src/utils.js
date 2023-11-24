@@ -1,41 +1,70 @@
-export function secondsToString(seconds, showHours = false) {
-    seconds = Math.floor(seconds);
+export function secondsToString(milliseconds, showHours = false) {
+    const seconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
+    const ms = milliseconds % 1000;
 
     const paddedHours = hours.toString().padStart(2, '0');
     const paddedMinutes = minutes.toString().padStart(2, '0');
     const paddedSeconds = secs.toString().padStart(2, '0');
+    const paddedMs = ms.toString().padEnd(3, '0');
+    const MsString = ms > 0 || window.chapters.usesMs ? `.${paddedMs}` : '';
 
     if (showHours || hours > 0) {
-        return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+        return `${paddedHours}:${paddedMinutes}:${paddedSeconds}${MsString}`;
     } else {
-        return `${paddedMinutes}:${paddedSeconds}`;
+        return `${paddedMinutes}:${paddedSeconds}${MsString}`;
     }
 }
 
 export function stringToSeconds(timeString) {
-    // Remove any non-numeric and non-colon characters (e.g., parentheses)
-    const cleanedTimeString = timeString.replace(/[^0-9:]/g, '');
+    // Remove non-relevant characters
+    const cleanString = timeString.replace(/[^\d:.]/g, '');
 
-    // Split the time string into parts
-    const parts = cleanedTimeString.split(':').map(part => parseInt(part, 10));
+    // Split the string by colon
+    const parts = cleanString.split(':');
 
-    // Check for invalid or empty parts
-    if (parts.some(isNaN) || parts.length === 0 || parts.length > 3) {
-        throw new Error('Invalid time format');
+    // Error handling for excessive parts
+    if (parts.length > 3) {
+        throw new Error("Invalid time format: too many parts.");
     }
 
-    // Calculate seconds based on the number of parts
+    let hours = 0, minutes = 0, seconds = 0, milliseconds = 0;
+    let msecPart = '';
+
+    // Parse the time parts based on their count
     if (parts.length === 3) {
-        // Format HH:MM:SS
-        return (parts[0] * 3600) + (parts[1] * 60) + parts[2];
+        [hours, minutes, seconds] = parts;
     } else if (parts.length === 2) {
-        // Format MM:SS
-        return (parts[0] * 60) + parts[1];
+        [minutes, seconds] = parts;
     } else {
-        // Format SS
-        return parts[0];
+        seconds = parts[0];
     }
+
+    // Validate and split seconds and milliseconds
+    if (seconds.includes('.')) {
+        [seconds, msecPart] = seconds.split('.');
+
+        // Validate millisecond digits
+        if (msecPart.length > 3) {
+            throw new Error("Invalid time format: too many millisecond digits.");
+        }
+
+        milliseconds = msecPart.padEnd(3, '0');
+    }
+
+    // Convert to integers
+    hours = parseInt(hours);
+    minutes = parseInt(minutes);
+    seconds = parseInt(seconds);
+    milliseconds = parseInt(milliseconds);
+
+    // Validate seconds
+    if (seconds > 59) {
+        throw new Error("Invalid time format: seconds are too high.");
+    }
+
+    // Calculate total milliseconds
+    return (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds;
 }

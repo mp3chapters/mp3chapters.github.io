@@ -5,6 +5,7 @@ export class ChapterList {
         this.chapters = [];
         this.eventListeners = [];
         this._duration = -1;
+        this.usesMs = false;
         this.addChapter('Introduction', 0);
     }
 
@@ -37,7 +38,7 @@ export class ChapterList {
         // Warn if chapter starts after duration
         if (this.duration != -1) {
             for (let chapter of this.chapters) {
-                if (chapter.start > this.duration) {
+                if (chapter.start > this.duration * 1000) {
                     chapter.warning = 'Warning: Chapter starts after the end of the file';
                 }
             }
@@ -45,11 +46,20 @@ export class ChapterList {
 
         // Update the end time of the last chapter to match the duration of the video
         if (this.chapters.length > 0) {
-            this.chapters[this.chapters.length - 1].end = this.duration;
+            this.chapters[this.chapters.length - 1].end = Math.round(this.duration * 1000);
         }
 
         if (this.chapters[0].start != 0) {
             this.chapters[0].warning = 'Best practice: First chapter should start at 00:00';
+        }
+
+        // check if ms are used
+        this.usesMs = false;
+        for (let chapter of this.chapters) {
+            if (chapter.start % 1000 != 0) {
+                this.usesMs = true;
+                break;
+            }
         }
     
         this.triggerEventListeners();
@@ -57,6 +67,7 @@ export class ChapterList {
 
     addChapter(title, start) {
         const newChapter = { title, start, end: undefined };
+        newChapter.start = Math.round(newChapter.start);
         this.chapters.push(newChapter);
         this.setChapters(this.chapters);
     }

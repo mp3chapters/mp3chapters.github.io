@@ -51,7 +51,8 @@ export function updateChapterListBasedOnTextarea() {
         const chapter = { title: '', start: 0, error: '' };
 
         // Regex to handle optional parentheses and split time and title
-        const match = line.match(/^\(?(\d{1,2}:\d{1,2}(?::\d{1,2})?)\)?\s*[-:—–\s]?(.+)/);
+        // const match = line.match(/^\(?(\d{1,2}:\d{1,2}(?::\d{1,2}(\.\d+)?)?)\)?\s*[-:—–\s]?(.+)/);
+        const match = line.match(/^\(?(\d{1,2}:\d{1,2}(?::\d{1,2})?(?:\.\d{1,3})?)\)?\s*[-:—–\s]?(.+)/);
         if (match && match.length === 3) {
             const timeString = match[1].trim();
             const title = match[2].trim();

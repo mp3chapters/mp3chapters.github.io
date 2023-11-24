@@ -13,11 +13,17 @@
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            --bs-code-color: #084298;
+            --bs-code-color: rgb(19, 80, 172);
         }
 
         button {
             cursor: pointer;
+        }
+
+        code {
+            font-size: 0.8em;
+            background-color: hsl(180, 2%, 95%);
+            padding: calc((1em - 0.8em)/2) 2px;
         }
 
         .app-icons {
@@ -421,7 +427,7 @@
         <h2>Edit chapters</h2>
 
         <p>Chapters are managed using the same syntax also used by YouTube. Each chapter is one line, starting with the
-            timestamp when the chapter begins, followed by a space, followed by the name of the chapter.
+            timestamp when the chapter begins (for example <code>03:20</code> or using milliseconds <code>14:21.320</code>), followed by a space, followed by the name of the chapter.
             Chapters can also have a link and an image associated with them, see below for details.</p>
         <!-- Optionally, each chapter can have a link 
             <svg data-tippy-content="must start with http:// or https://" class="help" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">

@@ -12,8 +12,8 @@ async function exportFileBasedOnOldTags(file, tags) {
         if (!chapter.error) {
             const chapterObject = {
                 elementID: `chp${chapterIndex}`,
-                startTimeMs: Math.round(chapter.start * 1000),
-                endTimeMs: Math.round(chapter.end * 1000),
+                startTimeMs: chapter.start,
+                endTimeMs: chapter.end,
                 tags: {
                     title: chapter.title,
                 }

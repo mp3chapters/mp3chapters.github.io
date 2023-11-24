@@ -18,7 +18,7 @@ export function loadFile(file, wave, player) {
             for (let chapter of tags.chapter) {
                 const chapterObject = {
                     title: chapter.tags.title,
-                    start: chapter.startTimeMs / 1000,
+                    start: chapter.startTimeMs,
                 };
                 if (chapter.tags.hasOwnProperty('userDefinedUrl')) {
                     chapterObject.url = chapter.tags.userDefinedUrl[0].url;

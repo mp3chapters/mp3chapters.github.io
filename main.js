@@ -27,8 +27,8 @@ function addChaptersToPlayer() {
     for (let chapter of chapters_) {
         if (chapter.error == undefined) {
             track.addCue({ 
-                "startTime": chapter.start, 
-                "endTime": chapter.end, 
+                "startTime": chapter.start / 1000, 
+                "endTime": chapter.end / 1000, 
                 "text": chapter.title 
             });
         }
@@ -153,7 +153,12 @@ player.addEventListener('duration-change', (e) => {
 });
 
 document.getElementById('addTimestamp').addEventListener('click', () => {
-    chapters.addChapter('New chapter', player.currentTime);
+    let start = window.currentTime * 1000;
+    if (!chapters.usesMs) {
+        // round to nearest second
+        start = Math.round(window.currentTime) * 1000;
+    }
+    chapters.addChapter('New chapter', start);
 });
 
 document.getElementById('mp3FileInputTriggerButton').addEventListener('click', () => {
