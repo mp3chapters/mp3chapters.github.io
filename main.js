@@ -49,6 +49,7 @@ chapters.addEventListener((chapters) => {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+    setColorScheme();
     initializeImageHandling();
 
     const textInput = document.getElementById('text-input');
@@ -80,6 +81,21 @@ document.addEventListener('DOMContentLoaded', function () {
             const file = new File([blob], 'example.mp3');
             loadFile(file, wave, player);
         });
+});
+
+function setColorScheme() {
+    const hero = document.getElementById('hero-image');
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.dataset.bsTheme = 'dark';
+        hero.src = 'hero-dark.jpg';
+    } else {
+        document.body.dataset.bsTheme = 'light';
+        hero.src = 'hero.jpg';
+    }
+}
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+    setColorScheme();
 });
 
 const wave = WaveSurfer.create({

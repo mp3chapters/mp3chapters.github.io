@@ -26,6 +26,10 @@
             padding: calc((1em - 0.8em)/2) 2px;
         }
 
+        [data-bs-theme="dark"] code {
+            background-color: hsl(180, 2%, 10%);
+        }
+
         .app-icons {
             display: flex;
             flex-wrap: wrap;
@@ -97,12 +101,19 @@
             pointer-events: none;
         }
 
+        [data-bs-theme="dark"] #text-display {
+            background-color: rgb(33, 37, 41);
+        }
+
         .line {
             padding: 0 5px;
         }
 
         .current-line {
             background-color: #efefef;
+        }
+        [data-bs-theme="dark"] .current-line {
+            background-color: rgb(62, 74, 87);
         }
 
         span.error,
@@ -135,6 +146,10 @@
             pointer-events: auto;
             cursor: default;
         }
+        [data-bs-theme="dark"] span.url {
+            background-color: hsl(0, 0%, 10%);
+            color: #0cf;
+        }
 
         span.url>svg {
             position: relative;
@@ -158,6 +173,10 @@
             pointer-events: auto;
             cursor: default;
         }
+        [data-bs-theme="dark"] span.image {
+            background-color: hsl(124, 60%, 7%);
+            color: hsl(124, 60%, 75%);
+        }
 
         span.image>svg {
             position: relative;
@@ -178,7 +197,7 @@
         }
 
         .timestamp {
-            color: blue;
+            color: var(--bs-primary);
             /* width of space character */
             margin-right: 1ch;
             cursor: pointer;
@@ -205,6 +224,11 @@
             padding: 0 2px;
             background-color: rgb(237, 239, 240);
         }
+        [data-bs-theme="dark"] .btn-gallery-copy {
+            background-color: rgb(62, 74, 87);
+            color: rgb(255, 255, 255);
+            border-color: rgb(62, 74, 87);
+        }
 
         .btn-gallery-copy svg {
             height: 0.7em;
@@ -219,6 +243,11 @@
             width: 200px;
             height: 200px;
             object-fit: scale-down;
+        }
+        [data-bs-theme="dark"] #cover-image[src="img/placeholder.png"] {
+            filter: invert(1);
+            background-color: hsl(124, 0%, 88%);
+            border-color: hsl(124, 0%, 80%);
         }
 
         #drop-overlay {
@@ -304,6 +333,7 @@
             position: relative;
             top: -2px;
         }
+
     </style>
     <script type="module" src="https://cdn.jsdelivr.net/npm/vidstack/dist/cdn/prod.js"></script>
 
@@ -352,7 +382,7 @@
     <div class="container col-xxl-9 px-4 py-2" id="hero">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-0 py-sm-4">
             <div class="col-12 mt-5 mt-sm-5 col-sm-8 col-lg-6">
-                <img src="hero.jpg" class="d-block mx-lg-auto img-fluid" alt="Two example screenshots of podcast apps displaying a list of chapters" width="400"
+                <img src="hero.jpg" id="hero-image" class="d-block mx-lg-auto img-fluid" alt="Two example screenshots of podcast apps displaying a list of chapters" width="400"
                     loading="lazy" data-tippy-content="Examples of podcasts that provide chapters">
             </div>
             <div class="col-lg-6 mt-4 mt-sm-8">
@@ -520,6 +550,7 @@
                 <p>Each chapter can be assigned an image. To add an image, upload an image and add its code (for example
                     <code>&lt;img-6&gt;</code>) to the end of the chapter line.
                     Images in the gallery that are not assigned to a chapter are ignored.
+                    The same image can be used for multiple chapters.
                     A chapter can get both a link and an image.
                 </p>
                 <input type="file" id="imageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
