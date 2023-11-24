@@ -56,7 +56,7 @@ export class ChapterList {
         // check if ms are used
         this.usesMs = false;
         for (let chapter of this.chapters) {
-            if (chapter.start % 1000 != 0) {
+            if (chapter.start != -1 && chapter.start % 1000 != 0) {
                 this.usesMs = true;
                 break;
             }
