@@ -56,11 +56,13 @@ export function loadFile(file, wave, player) {
             }
         }
 
+        const img = document.getElementById('cover-image');
         if (tags.hasOwnProperty('image')) {
-            const img = document.getElementById('cover-image');
             const blob = new Blob([tags.image.imageBuffer], { type: tags.image.mime });
             const url = URL.createObjectURL(blob);
             img.src = url;
+        } else {
+            img.src = "img/placeholder.png";
         }
 
         buildGallery();
