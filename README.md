@@ -15,3 +15,5 @@ Features:
 * Export to mp3 with id3 tags.
 * Export to Podlove Simple Chapters XML format.
 * Allows editing other id3 tags such as title, artist, copyright, and cover art image.
+
+[<img width="1449" alt="Screenshot 2023-11-24 at 12 49 30" src="https://github.com/mp3chapters/mp3chapters.github.io/assets/3543224/55b986ed-ddd0-462d-9854-555c3115dc80">](https://mp3chapters.github.io)
