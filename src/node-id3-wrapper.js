@@ -5,6 +5,24 @@
 
 const NodeID3 = require('node-id3');
 
+function convertUint8ArraysToBuffers(obj) {
+    // Check if the argument is an object and not null
+    if (typeof obj === 'object' && obj !== null) {
+        // Iterate through each key in the object
+        Object.keys(obj).forEach(key => {
+            const value = obj[key];
+            // If the value is an Uint8Array, convert it to a Buffer
+            if (value instanceof Uint8Array) {
+                obj[key] = Buffer.from(value);
+            }
+            // If the value is an object, apply the function recursively
+            else if (typeof value === 'object') {
+                convertUint8ArraysToBuffers(value);
+            }
+        });
+    }
+}
+
 // Function to read a file as a buffer
 function readFileAsBuffer(file, callback) {
     const reader = new FileReader();
@@ -17,6 +35,7 @@ function readFileAsBuffer(file, callback) {
 // Function to add tags to an MP3 buffer and return a new buffer
 function addTags(tags, mp3file, callback) {
     readFileAsBuffer(mp3file, function (buffer) {
+        convertUint8ArraysToBuffers(tags);
         const taggedBuffer = NodeID3.write(tags, buffer);
         callback(taggedBuffer);
     });

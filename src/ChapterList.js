@@ -10,7 +10,9 @@ export class ChapterList {
 
     set duration(newDuration) {
         this._duration = newDuration;
-        this.setChapters(this.chapters);
+        if (newDuration != -1) {
+            this.setChapters(this.chapters);
+        }
     }
 
     get duration() {

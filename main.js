@@ -5,6 +5,7 @@ import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextare
 import { loadFile } from './src/FileLoader.js';
 import { exportFile } from './src/FileExport.js';
 import { initializeDragDrop } from './src/dragDropHandler.js';
+import { initializeImageHandling } from './src/ImageHandler.js';
 
 const chapters = new ChapterList();
 window.chapters = chapters;
@@ -48,6 +49,8 @@ chapters.addEventListener((chapters) => {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
+    initializeImageHandling();
+
     const textInput = document.getElementById('text-input');
     textInput.addEventListener('blur', updateChapterListBasedOnTextarea);
     textInput.addEventListener('mousedown', editText);
@@ -78,11 +81,6 @@ document.addEventListener('DOMContentLoaded', function () {
             loadFile(file, wave, player);
         });
 });
-
-function addImage(lineIndex) {
-    console.log('Add image at line', lineIndex);
-    // Implement your image adding logic here
-}
 
 const wave = WaveSurfer.create({
     container: '#wave',
@@ -124,6 +122,7 @@ wave.on('ready', () => {
 player.addEventListener('loaded-data', () => {
     addChaptersToPlayer();
 });
+
 player.addEventListener('play', () => {
     addChaptersToPlayer();
 });

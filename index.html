@@ -16,6 +16,10 @@
             --bs-code-color: #084298;
         }
 
+        button {
+            cursor: pointer;
+        }
+
         .app-icons {
             display: flex;
             flex-wrap: wrap;
@@ -72,13 +76,14 @@
             border: 1px solid #ccc;
             font-family: monospace;
             white-space: pre;
-            overflow-y: scroll;
+            overflow-y: hidden;
             font-size: 15px;
             line-height: 1.5;
         }
 
         #text-input {
             padding: 5px 5px;
+            cursor: text;
         }
 
         #text-display {
@@ -94,7 +99,8 @@
             background-color: #efefef;
         }
 
-        span.error, span.warning {
+        span.error,
+        span.warning {
             font-size: 12px;
             background-color: hsl(355, 70%, 96%);
             padding: 2px 4px;
@@ -120,33 +126,52 @@
             border-radius: 5px;
             margin-left: 1ch;
             font-family: Arial, Helvetica, sans-serif;
+            pointer-events: auto;
+            cursor: default;
         }
 
-        span.url > svg {
-            position: relative; 
-            top: 2.5px; 
-            margin-top: -7px; 
+        span.url>svg {
+            position: relative;
+            top: 2.5px;
+            margin-top: -7px;
             margin-right: 1px;
         }
 
-        #button-container {
-            position: absolute;
-            right: 0;
-            top: 5px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        button.add-image {
+        span.image {
             font-size: 12px;
-            height: 18.5px;
-            /* 1.5 * 15px - 4 */
-            appearance: auto;
-            box-sizing: border-box;
-            margin: 2px;
+            background-color: hsl(124, 60%, 93%);
+            color: hsl(124, 60%, 25%);
+            max-width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px 4px;
+            padding-left: 2px;
+            border-radius: 5px;
+            margin-left: 1ch;
+            font-family: Arial, Helvetica, sans-serif;
+            pointer-events: auto;
+            cursor: default;
         }
 
-        .highlight {
+        span.image>svg {
+            position: relative;
+            top: 2.5px;
+            margin-top: -7px;
+            margin-right: 2px;
+            height: 12px;
+        }
+
+        .chapter-image-tooltip {
+            max-width: 300px;
+            max-height: 400px;
+        }
+
+        .gallery-image-tooltip {
+            max-width: 400px;
+            max-height: 500px;
+        }
+
+        .timestamp {
             color: blue;
             /* width of space character */
             margin-right: 1ch;
@@ -154,12 +179,40 @@
             pointer-events: auto;
         }
 
-        .highlight:hover {
+        .timestamp:hover {
             text-decoration: underline;
+        }
+
+        #gallery figcaption {
+            font-size: 1em;
+        }
+
+        #gallery .gallery-img {
+            width: 200px;
+            height: 200px;
+            object-fit: scale-down;
+            margin-bottom: 2px;
+        }
+
+        .btn-gallery-copy {
+            margin-left: 6px;
+            padding: 0 2px;
+            background-color: rgb(237, 239, 240);
+        }
+
+        .btn-gallery-copy svg {
+            height: 0.7em;
+            margin-top: -3px;
         }
 
         .form-floating>label {
             color: #6c757d;
+        }
+
+        #cover-image {
+            width: 200px;
+            height: 200px;
+            object-fit: scale-down;
         }
 
         #drop-overlay {
@@ -186,6 +239,33 @@
             text-shadow: white 0 0 10px;
         }
 
+        #gallery-container div.card-body {
+            position: relative;
+        }
+
+        #gallery-drop-overlay {
+            pointer-events: none;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(52, 157, 31, 0.2) radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+            z-index: 9999;
+        }
+
+        #gallery-drop-overlay-instruction {
+            pointer-events: none;
+            position: sticky;
+            margin-top: 50px;
+            top: 50px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 200%;
+            text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px;
+        }
+
         .help {
             color: #9a9a9a;
             cursor: help;
@@ -195,11 +275,13 @@
     </style>
     <script type="module" src="https://cdn.jsdelivr.net/npm/vidstack/dist/cdn/prod.js"></script>
 
-    <meta name="description" content="A simple online tool for adding chapters to audio files. No sign-up or install required." />
+    <meta name="description"
+        content="A simple online tool for adding chapters to audio files. No sign-up or install required." />
     <link rel="canonical" href="https://mp3chapters.github.io/" />
     <meta property="og:title" content="Online MP3 Podcast Chapter Editor" />
     <meta property="og:site_name" content="Online MP3 Podcast Chapter Editor">
-    <meta property="og:description" content="A simple online tool for adding chapters to audio files. No sign-up or install required." />
+    <meta property="og:description"
+        content="A simple online tool for adding chapters to audio files. No sign-up or install required." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mp3chapters.github.io/" />
     <meta property="og:image" content="https://mp3chapters.github.io/img/og-banner.png" />
@@ -242,8 +324,10 @@
                     loading="lazy" data-tippy-content="Examples of podcasts that provide chapters">
             </div>
             <div class="col-lg-6 mt-4 mt-sm-8">
-                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Add chapters to your podcast MP3 files<span class="d-none">.</span></h1>
-                <p class="lead">A simple online tool without install or signup, running locally in your browser. Works with all
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Add chapters to your podcast MP3 files<span
+                        class="d-none">.</span></h1>
+                <p class="lead">A simple online tool without install or signup, running locally in your browser. Works
+                    with all
                     podcast players that support <code class="text-body">id3</code> chapters.</p>
                 <div class="container app-icons">
                     <img src="app-icons/apple-podcasts.webp" width="100" height="100"
@@ -275,7 +359,7 @@
                             <path
                                 d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
                         </svg></span>
-                    <input type="file" id="mp3FileInput" accept=".mp3" class="d-none">
+                    <input type="file" id="mp3FileInput" class="d-none" accept=".mp3">
                 </div>
             </div>
         </div>
@@ -337,14 +421,15 @@
         <h2>Edit chapters</h2>
 
         <p>Chapters are managed using the same syntax also used by YouTube. Each chapter is one line, starting with the
-            timestamp when the chapter begins, followed by a space, followed by the name of the chapter. 
-            Optionally, each chapter can have a link 
+            timestamp when the chapter begins, followed by a space, followed by the name of the chapter.
+            Chapters can also have a link and an image associated with them, see below for details.</p>
+        <!-- Optionally, each chapter can have a link 
             <svg data-tippy-content="must start with http:// or https://" class="help" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16">
                 <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/>
             </svg> 
-            added to it at the end of its line.</p>
+            added to it at the end of its line.</p> -->
 
-            <!-- The first chapter should start at <code>00:00</code>. The last chapter will end when the MP3 file ends.  -->
+        <!-- The first chapter should start at <code>00:00</code>. The last chapter will end when the MP3 file ends.  -->
 
         <!-- <p>You can add and edit chapters manually below. You can also go to a desired starting point in the player and
             click the <em>Add Chapter</em> button to start a chapter at that timestamp.</p> -->
@@ -362,7 +447,7 @@
             <div id="button-container"></div>
         </div>
 
-        <div class="alert alert-info d-flex align-items-center" role="alert">
+        <div class="alert alert-info d-flex align-items-center py-2" role="alert">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-info-circle flex-shrink-0 me-2" viewBox="0 0 16 16">
                 <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -370,14 +455,40 @@
                     d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
             </svg>
             <span>
-                Tip: Copy and paste the list of chapters into your episode description, which some players like <a class="alert-link fw-normal" href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a> use.
+                Tip: Copy and paste the list of chapters into your episode description, which some players like <a
+                    class="alert-link fw-normal"
+                    href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a> use.
             </span>
         </div>
+
+        <details class="card my-3" id="gallery-container">
+            <summary class="card-header">
+                Advanced: Chapter URLs and images
+            </summary>
+            <div class="card-body">
+                <p>Each chapter can be assigned a link that will be shown by some players. To add a link, add the URL
+                    (starting with <code>http://</code> or <code>https://</code>) to the end of the chapter line.</p>
+                <p>Each chapter can be assigned an image. To add an image, upload an image and add its code (for example
+                    <code>&lt;img-6&gt;</code>) to the end of the chapter line.
+                    Images in the gallery that are not assigned to a chapter are ignored.
+                    A chapter can get both a link and an image.
+                </p>
+                <input type="file" id="imageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
+                <button class="btn btn-secondary me-1" id="upload-image-button">Upload image</button> or drag and drop file
+                <div class="container mt-2 border border-2 rounded p-2 d-flex flex-wrap" id="gallery">
+                </div>
+                <div id="gallery-drop-overlay">
+                    <div id="gallery-drop-overlay-instruction">
+                        Drop an image file to load.
+                    </div>
+                </div>
+            </div>
+        </details>
 
         <h2>Edit MP3 tags</h2>
         <p>MP3 files can contain metadata such as title, artist, etc., known as
             <a href="https://en.wikipedia.org/wiki/ID3">ID3 tags</a>.
-            These tags are displayed by most podcast players. You can edit these tags below. For podcasts, not all
+            You can edit these tags below. For podcasts, not all
             fields are applicable and can be left empty.
         </p>
 
@@ -427,13 +538,29 @@
                         placeholder="Language">
                     <label for="field-language">Language</label>
                 </div>
-                <div class="form-floating col-12 col-md-6 mb-2 ps-0" data-tippy-content="Consider attributing this tool so others can find it.">
+                <div class="form-floating col-12 col-md-6 mb-2 ps-0"
+                    data-tippy-content="Consider attributing this tool so others can find it.">
                     <input type="text" class="form-control" id="field-encodedBy" data-field-name="encodedBy"
                         placeholder="Encoded by">
                     <label for="field-encodedBy">Encoded by</label>
                 </div>
             </div>
         </div>
+
+        <div class="col-12 col-md-6 mb-3" style="padding-right: 12px;">
+            <div class="card">
+            <div class="card-header py-2 icon-link">
+                <span class="text-muted">Cover image</span>
+            </div>
+            <div class="card-body p-2 d-flex align-items-start">
+                <img id="cover-image" class="img-thumbnail" src="img/placeholder.png" alt="Cover image">
+                <button class="btn btn-sm btn-outline-secondary ms-2" id="upload-cover-image-button">Load image</button>
+                <input type="file" id="coverImageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
+            </div>
+            </div>
+        </div>
+
+        <h2>Export</h2>
 
         <div class="gap-2 d-flex align-items-center mt-2">
             <button id="addTagsButton" class="btn btn-success btn-lg icon-link">
@@ -460,7 +587,8 @@
                     <a href="https://podlove.org/simple-chapters/">Podlove Simple Chapters</a>
                     format using XML, which can be embedded in the <code>&lt;item&gt;</code> tag
                     of a podcast RSS feed. While most podcast players use embedded chapters,
-                    some other players (notably <a class="alert-link fw-normal" href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a>)
+                    some other players (notably <a class="alert-link fw-normal"
+                        href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a>)
                     only support time stamps in the episode description or podlove chapters.
                 </p>
                 <p>
@@ -471,16 +599,24 @@
                 </p>
                 <div class="card mt-1">
                     <div class="card-header icon-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-code" viewBox="0 0 16 16">
-                            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
-                            <path d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708m-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-file-earmark-code" viewBox="0 0 16 16">
+                            <path
+                                d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z" />
+                            <path
+                                d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708m-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z" />
                         </svg>
                         xml
                         <button class="btn btn-sm btn-outline-secondary icon-link ms-auto" id="copyPodloveButton">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard2-check" viewBox="0 0 16 16">
-                                <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z"/>
-                                <path d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z"/>
-                                <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z" id="publove-copy-check" style="visibility: hidden"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-clipboard2-check" viewBox="0 0 16 16">
+                                <path
+                                    d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z" />
+                                <path
+                                    d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z" />
+                                <path
+                                    d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z"
+                                    id="publove-copy-check" style="visibility: hidden" />
                             </svg>
                             Copy
                         </button>
@@ -504,7 +640,8 @@
         <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
             <div class="row">
                 <div class="col-lg-6">
-                    <a class="d-inline-flex align-items-center mb-2 text-body-emphasis text-decoration-none icon-link" href="/">
+                    <a class="d-inline-flex align-items-center mb-2 text-body-emphasis text-decoration-none icon-link"
+                        href="/">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-list-columns-reverse" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -513,13 +650,14 @@
                         <span class="fs-5">Online MP3 Podcast Chapter Editor</span>
                     </a>
                     <ul class="list-unstyled small">
-                        <li class="mb-2">Built by <a
-                                href="https://dominik-peters.de">Dominik Peters</a>, in the hope that more podcasts will use chapters in the future.</li>
-                        <li class="mb-2">Built using 
-                            <a href="https://github.com/Zazama/node-id3">node-id3</a>, 
-                            <a href="https://browserify.org/">browserify</a>, 
-                            <a href="https://wavesurfer-js.org/">wavesurfer.js</a>, and 
-                            <a href="https://vidstack.io/docs">Vidstack Player</a>.</li>
+                        <li class="mb-2">Built by <a href="https://dominik-peters.de">Dominik Peters</a>, in the hope
+                            that more podcasts will use chapters in the future.</li>
+                        <li class="mb-2">Built using
+                            <a href="https://github.com/Zazama/node-id3">node-id3</a>,
+                            <a href="https://browserify.org/">browserify</a>,
+                            <a href="https://wavesurfer-js.org/">wavesurfer.js</a>, and
+                            <a href="https://vidstack.io/docs">Vidstack Player</a>.
+                        </li>
                         <li class="mb-2">Code licensed <a href="https://github.com/twbs/bootstrap/blob/main/LICENSE"
                                 target="_blank" rel="license noopener">MIT</a>.
                             Available on <a href="https://github.com/mp3chapters/mp3chapters.github.io">GitHub</a>.</li>

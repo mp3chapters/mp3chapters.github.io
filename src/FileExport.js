@@ -1,6 +1,6 @@
-function exportFileBasedOnOldTags(file, tags) {
-    console.log(tags);
+import { encodeImage } from './ImageHandler.js';
 
+async function exportFileBasedOnOldTags(file, tags) {
     const chapterTag = [];
     const tocTag = {
         elementID: 'toc',
@@ -23,6 +23,13 @@ function exportFileBasedOnOldTags(file, tags) {
                     url: chapter.url,
                 }
             }
+            if (chapter.hasOwnProperty('imageId')) {
+                try {
+                    chapterObject.tags.image = await encodeImage(window.chapterImages[chapter.imageId]);
+                } catch (error) {
+                    console.error('Error encoding image:', error);
+                }
+            }            
             chapterTag.push(chapterObject);
             tocTag.elements.push(`chp${chapterIndex}`);
             chapterIndex++;
@@ -30,12 +37,17 @@ function exportFileBasedOnOldTags(file, tags) {
     }
     tags.chapter = chapterTag;
     tags.tableOfContents = tocTag;
+    // console.log("Exporting", chapterTag);
 
     for (let field of window.fieldNames) {
         const input = document.getElementById(`field-${field}`);
         if (input.value != input.dataset.oldValue) {
             tags[field] = input.value;
         }
+    }
+
+    if (window.coverImage != null) {
+        tags.image = await encodeImage(window.coverImage);
     }
 
     // Call the addTags function from your bundle

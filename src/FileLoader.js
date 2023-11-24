@@ -1,12 +1,17 @@
+import { buildGallery } from "./ImageHandler.js";
+
 export function loadFile(file, wave, player) {
-    wave.loadBlob(file);
-    player.src = { src: file, type: 'audio/object' };
     window.currentFilename = file.name;
     window.currentFile = file;
+    window.chapters.duration = -1;
+    window.chapterImages = [];
+    wave.loadBlob(file);
+    player.src = { src: file, type: 'audio/object' };
 
     let tags;
     readTags(file, (fileTags) => {
         tags = fileTags;
+        console.log(tags);
         if (tags.hasOwnProperty('chapter')) {
             const parsedChapters = [];
             for (let chapter of tags.chapter) {
@@ -16,6 +21,10 @@ export function loadFile(file, wave, player) {
                 };
                 if (chapter.tags.hasOwnProperty('userDefinedUrl')) {
                     chapterObject.url = chapter.tags.userDefinedUrl[0].url;
+                }
+                if (chapter.tags.hasOwnProperty('image')) {
+                    window.chapterImages.push(chapter.tags.image);
+                    chapterObject.imageId = window.chapterImages.length - 1;
                 }
                 parsedChapters.push(chapterObject);
             }
@@ -44,6 +53,16 @@ export function loadFile(file, wave, player) {
                 input.dataset.oldValue = "";
             }
         }
+
+        if (tags.hasOwnProperty('image')) {
+            console.log(tags.image);
+            const img = document.getElementById('cover-image');
+            const blob = new Blob([tags.image.imageBuffer], { type: tags.image.mime });
+            const url = URL.createObjectURL(blob);
+            img.src = url;
+        }
+
+        buildGallery();
     });
 
     document.getElementById('filename').innerText = file.name;

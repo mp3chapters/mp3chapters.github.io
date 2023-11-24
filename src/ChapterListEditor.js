@@ -5,17 +5,40 @@ const linkSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
     <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
 </svg>`;
 
-function extractUrl(str) {
-    const urlRegex = / https?:\/\/[^\s]+$/;
-    const match = str.match(urlRegex);
-    if (match) {
-        const url = match[0];
-        const stringWithoutUrl = str.replace(urlRegex, '').trim();
-        return { url, stringWithoutUrl };
-    } else {
-        // No URL found, return null for the URL and the original string
-        return { url: null, stringWithoutUrl: str };
+const imageSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+    <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"/>
+</svg>`;
+
+function removeLastOccurrence(str, substring) {
+    const index = str.lastIndexOf(substring);
+    if (index === -1) {
+        return str;
     }
+    return str.substring(0, index) + str.substring(index + substring.length);
+}
+
+function extractElements(str) {
+    const urlRegex = /https?:\/\/[^\s]+/g;
+    const imgTagRegex = /<img-(\d+)>/g;
+
+    let urlMatches = str.match(urlRegex);
+    let imgTagMatches = str.match(imgTagRegex);
+
+    let url = urlMatches ? urlMatches[urlMatches.length - 1].trim() : null;
+    let imgTag = imgTagMatches ? imgTagMatches[imgTagMatches.length - 1].match(/\d+/)[0] : null;
+
+    let stringWithoutElements = str;
+
+    // Remove the last occurrence of each element
+    if (url) {
+        stringWithoutElements = removeLastOccurrence(stringWithoutElements, url);
+    }
+    if (imgTag) {
+        stringWithoutElements = removeLastOccurrence(stringWithoutElements, imgTagMatches[imgTagMatches.length - 1].trim());
+    }
+    
+    return { url, imgTag, stringWithoutElements };
 }
 
 export function updateChapterListBasedOnTextarea() {
@@ -42,11 +65,15 @@ export function updateChapterListBasedOnTextarea() {
                 }
                 chapter.start = time;
 
-                const { url, stringWithoutUrl } = extractUrl(title);
-                chapter.title = stringWithoutUrl;
-                if (url) {
-                    chapter.url = url.trim();
+                const { url, imgTag, stringWithoutElements } = extractElements(title);
+                chapter.title = stringWithoutElements.trim();
+                if (imgTag != null) {
+                    chapter.imageId = parseInt(imgTag);
+                    if (chapter.imageId < 0 || chapter.imageId >= window.chapterImages.length) {
+                        chapter.error = 'Invalid image id';
+                    }
                 }
+                chapter.url = url;
             } catch (e) {
                 chapter.error = 'Invalid time format';
                 chapter.start = -1;
@@ -80,7 +107,7 @@ export function displayChapterList() {
         // Show time
         if (chapter.start != -1) {
             const a = document.createElement('span');
-            a.className = 'highlight';
+            a.className = 'timestamp';
             a.textContent = secondsToString(chapter.start);
             a.addEventListener('click', (e) => {
                 player.currentTime = chapter.start;
@@ -107,7 +134,24 @@ export function displayChapterList() {
                 url = url.substring(0, 35) + '...';
             }
             urlSpan.innerHTML = `${linkSVG}${url}`;
+            tippy(urlSpan, { content: chapter.url });
             lineSpan.appendChild(urlSpan);
+        }
+        // Show image
+        if (chapter.imageId != undefined) {
+            const imageSpan = document.createElement('span');
+            imageSpan.className = 'image';
+            imageSpan.innerHTML = `${imageSVG}&lt;img-${chapter.imageId}&gt;`;
+            lineSpan.appendChild(imageSpan);
+            // tippy
+            const image = window.chapterImages[chapter.imageId];
+            const imageElement = document.createElement('img');
+            const blob = new Blob([image.imageBuffer], { type: image.mime });
+            const url = URL.createObjectURL(blob);
+            imageElement.src = url;
+            imageElement.loading = 'lazy';
+            imageElement.className = 'chapter-image-tooltip';
+            tippy(imageSpan, { content: imageElement, allowHTML: true });
         }
         // Show error
         if (chapter.error) {
@@ -123,13 +167,6 @@ export function displayChapterList() {
             warningSpan.innerHTML = `${chapter.warning}`; //${alertSVG}
             lineSpan.appendChild(warningSpan);
         }
-
-        // Add button
-        // const button = document.createElement('button');
-        // button.textContent = 'Add image';
-        // button.className = 'add-image';
-        // button.onclick = () => addImage(index);
-        // buttonContainer.appendChild(button);
     }
 
     const scrollTop = textInput.scrollTop;
@@ -148,11 +185,9 @@ export function setTextAreaContent() {
         if (chapter.start === -1) {
             return chapter.title;
         } else {
-            if (chapter.url) {
-                return `${secondsToString(chapter.start)} ${chapter.title} ${chapter.url}`;
-            } else {
-                return `${secondsToString(chapter.start)} ${chapter.title}`;
-            }
+            const url = chapter.url ? ` ${chapter.url}` : '';
+            const image = chapter.imageId != undefined ? ` <img-${chapter.imageId}>` : '';
+            return `${secondsToString(chapter.start)} ${chapter.title}${url}${image}`;
         }
     });
     textInput.value = lines.join('\n');
