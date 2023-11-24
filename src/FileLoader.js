@@ -5,6 +5,7 @@ export function loadFile(file, wave, player) {
     window.currentFile = file;
     window.chapters.duration = -1;
     window.chapterImages = [];
+    document.getElementById('gallery-container').open = false;
     wave.loadBlob(file);
     player.src = { src: file, type: 'audio/object' };
 
@@ -25,6 +26,7 @@ export function loadFile(file, wave, player) {
                 if (chapter.tags.hasOwnProperty('image')) {
                     window.chapterImages.push(chapter.tags.image);
                     chapterObject.imageId = window.chapterImages.length - 1;
+                    document.getElementById('gallery-container').open = true;
                 }
                 parsedChapters.push(chapterObject);
             }
@@ -55,7 +57,6 @@ export function loadFile(file, wave, player) {
         }
 
         if (tags.hasOwnProperty('image')) {
-            console.log(tags.image);
             const img = document.getElementById('cover-image');
             const blob = new Blob([tags.image.imageBuffer], { type: tags.image.mime });
             const url = URL.createObjectURL(blob);
