@@ -239,10 +239,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            /* padding: 10em; */
             border-radius: 5px;
             font-size: 200%;
-            text-shadow: white 0 0 10px;
+            text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px;
         }
 
         #gallery-container div.card-body {
@@ -267,6 +266,33 @@
             margin-top: 50px;
             top: 50px;
             text-align: center;
+            border-radius: 5px;
+            font-size: 200%;
+            text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px;
+        }
+
+        #hero {
+            position: relative;
+        }
+
+        #hero-drop-overlay {
+            pointer-events: none;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 31, 157, 0.2) radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+            z-index: 9999;
+        }
+
+        #hero-drop-overlay-instruction {
+            pointer-events: none;
+            position: absolute;
+            top: 70%;
+            left: 30%;
+            transform: translate(-50%, -50%);
             border-radius: 5px;
             font-size: 200%;
             text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px;
@@ -323,10 +349,10 @@
         </div>
     </nav>
 
-    <div class="container col-xxl-9 px-4 py-2">
+    <div class="container col-xxl-9 px-4 py-2" id="hero">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-0 py-sm-4">
             <div class="col-12 mt-5 mt-sm-5 col-sm-8 col-lg-6">
-                <img src="hero.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="400"
+                <img src="hero.jpg" class="d-block mx-lg-auto img-fluid" alt="Two example screenshots of podcast apps displaying a list of chapters" width="400"
                     loading="lazy" data-tippy-content="Examples of podcasts that provide chapters">
             </div>
             <div class="col-lg-6 mt-4 mt-sm-8">
@@ -367,6 +393,11 @@
                         </svg></span>
                     <input type="file" id="mp3FileInput" class="d-none" accept=".mp3">
                 </div>
+            </div>
+        </div>
+        <div id="hero-drop-overlay">
+            <div id="hero-drop-overlay-instruction">
+                Drop an mp3 file to load.
             </div>
         </div>
     </div>

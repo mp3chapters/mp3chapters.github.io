@@ -11,10 +11,13 @@ function isGalleryVisible() {
     return (vertInView && horInView);
 }
 
-
+// if gallery is not visible, display a full screen drop overlay
+// if gallery is visible, display a drop overlay only over the hero image
 
 export function initializeDragDrop(callback) {
     const dropOverlay = document.getElementById('drop-overlay');
+    const heroOverlay = document.getElementById('hero-drop-overlay');
+    const hero = document.getElementById('hero');
 
     function dragOverHandler(ev) {
         if (!isGalleryVisible()) {
@@ -22,25 +25,23 @@ export function initializeDragDrop(callback) {
         }
         ev.preventDefault();
     }
-    
-    function dragStartHandler(ev) {
-        if (!isGalleryVisible()) {
-            dropOverlay.style.display = "block";
+
+    function heroDragOverHandler(ev) {
+        if (isGalleryVisible()) {
+            heroOverlay.style.display = "block";
         }
         ev.preventDefault();
     }
-
+    
     function dragEndHandler(ev) {
         dropOverlay.style.display = "none";
+        heroOverlay.style.display = "none";
         ev.preventDefault();
     }
 
     function dropHandler(ev) {
         dropOverlay.style.display = "none";
-
-        if (isGalleryVisible()) {
-            return;
-        }
+        heroOverlay.style.display = "none";
 
         ev.preventDefault();
 
@@ -62,8 +63,16 @@ export function initializeDragDrop(callback) {
         }
     }
 
-    document.body.addEventListener('drop', dropHandler);
+    document.body.addEventListener('drop', (e) => { if (isGalleryVisible()) {
+        return;
+    } dropHandler(e); });
     document.body.addEventListener('dragover', dragOverHandler);
-    document.body.addEventListener('dragenter', dragStartHandler);
+    document.body.addEventListener('dragenter', dragOverHandler);
     document.body.addEventListener('dragleave', dragEndHandler);
+
+    hero.addEventListener('drop', dropHandler);
+    hero.addEventListener('dragover', heroDragOverHandler);
+    hero.addEventListener('dragenter', heroDragOverHandler);
+    hero.addEventListener('dragleave', dragEndHandler);
+
 }

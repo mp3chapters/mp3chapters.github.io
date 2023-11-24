@@ -139,7 +139,7 @@ export function displayChapterList() {
             lineSpan.appendChild(urlSpan);
         }
         // Show image
-        if (chapter.imageId != undefined) {
+        if (chapter.imageId != undefined && window.chapterImages[chapter.imageId] != undefined) {
             const imageSpan = document.createElement('span');
             imageSpan.className = 'image';
             imageSpan.innerHTML = `${imageSVG}&lt;img-${chapter.imageId}&gt;`;
