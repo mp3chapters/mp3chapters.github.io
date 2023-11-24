@@ -355,6 +355,11 @@
 </head>
 
 <body>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.bsTheme = 'dark';
+        }
+    </script>
 
     <nav class="navbar bg-body-tertiary">
         <div class="container">
@@ -382,7 +387,7 @@
     <div class="container col-xxl-9 px-4 py-2" id="hero">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-0 py-sm-4">
             <div class="col-12 mt-5 mt-sm-5 col-sm-8 col-lg-6">
-                <img src="hero.jpg" id="hero-image" class="d-block mx-lg-auto img-fluid" alt="Two example screenshots of podcast apps displaying a list of chapters" width="400"
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" id="hero-image" class="d-block mx-lg-auto img-fluid" alt="Two example screenshots of podcast apps displaying a list of chapters" width="400" height="461"
                     loading="lazy" data-tippy-content="Examples of podcasts that provide chapters">
             </div>
             <div class="col-lg-6 mt-4 mt-sm-8">

@@ -86,10 +86,10 @@ document.addEventListener('DOMContentLoaded', function () {
 function setColorScheme() {
     const hero = document.getElementById('hero-image');
     if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.dataset.bsTheme = 'dark';
+        document.documentElement.dataset.bsTheme = 'dark';
         hero.src = 'hero-dark.jpg';
     } else {
-        document.body.dataset.bsTheme = 'light';
+        document.documentElement.dataset.bsTheme = 'light';
         hero.src = 'hero.jpg';
     }
 }
