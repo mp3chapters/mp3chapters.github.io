@@ -6,6 +6,8 @@ Uses just HTML/CSS and vanilla JS. No server-side code, so it can be run by just
 
 Built using [node-id3](https://github.com/Zazama/node-id3), [browserify](https://browserify.org/), [wavesurfer.js](https://wavesurfer-js.org/), and [Vidstack Player](https://vidstack.io/docs).
 
+Feedback, bug reports, and pull requests are very welcome.
+
 Features:
 * Add chapters using the player, which displays a waveform and the current chapters.
 * Add chapters manually using a straightforward text interface.
