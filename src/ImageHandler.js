@@ -73,15 +73,27 @@ function addToGallery(file) {
     reader.readAsArrayBuffer(file);
 }
 
+function isImageFile(ev) {
+    const data = ev.dataTransfer.items;
+    for (let i = 0; i < data.length; i += 1) {
+        if (data[i].kind === "file" && data[i].type.match("^image/")) {
+            return true;
+        }
+    }
+    return false;
+}
+
 const container = document.getElementById('gallery-container');
 const dropOverlay = document.getElementById('gallery-drop-overlay');
 
 function dragOverHandler(ev) {
-    const body = container.querySelector('.card-body');
-    dropOverlay.style.height = body.offsetHeight + 'px';
-    dropOverlay.style.width = body.offsetWidth + 'px';
-    dropOverlay.style.display = "block";
-    container.open = true;
+    if (isImageFile(ev)) {
+        const body = container.querySelector('.card-body');
+        dropOverlay.style.height = body.offsetHeight + 'px';
+        dropOverlay.style.width = body.offsetWidth + 'px';
+        dropOverlay.style.display = "block";
+        container.open = true;
+    }
     ev.preventDefault();
 }
 
@@ -94,7 +106,7 @@ function dropHandler(ev) {
     dropOverlay.style.display = "none";
     ev.preventDefault();
 
-    if (ev.dataTransfer.items) {
+    if (isImageFile(ev) && ev.dataTransfer.items) {
         [...ev.dataTransfer.items].forEach((item) => {
             if (item.kind === "file") {
                 let file = item.getAsFile();

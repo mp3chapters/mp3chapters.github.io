@@ -11,6 +11,16 @@ function isGalleryVisible() {
     return (vertInView && horInView);
 }
 
+function isAudioFile(ev) {
+    const data = ev.dataTransfer.items;
+    for (let i = 0; i < data.length; i += 1) {
+        if (data[i].kind === "file" && data[i].type.match("^audio/")) {
+            return true;
+        }
+    }
+    return false;
+}
+
 // if gallery is not visible, display a full screen drop overlay
 // if gallery is visible, display a drop overlay only over the hero image
 
@@ -20,19 +30,19 @@ export function initializeDragDrop(callback) {
     const hero = document.getElementById('hero');
 
     function dragOverHandler(ev) {
-        if (!isGalleryVisible()) {
+        if (isAudioFile(ev) && !isGalleryVisible()) {
             dropOverlay.style.display = "block";
         }
         ev.preventDefault();
     }
 
     function heroDragOverHandler(ev) {
-        if (isGalleryVisible()) {
+        if (isAudioFile(ev) && isGalleryVisible()) {
             heroOverlay.style.display = "block";
         }
         ev.preventDefault();
     }
-    
+
     function dragEndHandler(ev) {
         dropOverlay.style.display = "none";
         heroOverlay.style.display = "none";
@@ -45,7 +55,7 @@ export function initializeDragDrop(callback) {
 
         ev.preventDefault();
 
-        if (ev.dataTransfer.items) {
+        if (isAudioFile(ev) && ev.dataTransfer.items) {
             [...ev.dataTransfer.items].forEach((item) => {
                 if (item.kind === "file") {
                     let file = item.getAsFile();
@@ -63,9 +73,11 @@ export function initializeDragDrop(callback) {
         }
     }
 
-    document.body.addEventListener('drop', (e) => { if (isGalleryVisible()) {
-        return;
-    } dropHandler(e); });
+    document.body.addEventListener('drop', (e) => {
+        if (isGalleryVisible()) {
+            return;
+        } dropHandler(e);
+    });
     document.body.addEventListener('dragover', dragOverHandler);
     document.body.addEventListener('dragenter', dragOverHandler);
     document.body.addEventListener('dragleave', dragEndHandler);
