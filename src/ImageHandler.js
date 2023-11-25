@@ -159,6 +159,7 @@ export function buildGallery() {
         figcaption.appendChild(code);
         const button = document.createElement('button');
         button.className = 'btn btn-sm btn-light btn-gallery-copy';
+        button.ariaLabel = "Copy image tag";
         button.innerHTML = copySVG;
         button.addEventListener('click', function () {
             navigator.clipboard.writeText(`<img-${i}>`).then(function () {

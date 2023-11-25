@@ -104,6 +104,7 @@ export function displayChapterList() {
     for (let chapter of window.chapters.getChapters()) {
         const lineSpan = document.createElement('div');
         lineSpan.className = 'line';
+        lineSpan.ariaLabel = "Chapter";
 
         // Show time
         if (chapter.start != -1) {
@@ -128,6 +129,7 @@ export function displayChapterList() {
         if (chapter.url) {
             const urlSpan = document.createElement('span');
             urlSpan.className = 'url';
+            urlSpan.ariaLabel = "Chapter URL";
             // clean up url
             let url = chapter.url.replace(/(https?:\/\/)?(www\.)?/, '');
             // truncate url
@@ -142,6 +144,7 @@ export function displayChapterList() {
         if (chapter.imageId != undefined && window.chapterImages[chapter.imageId] != undefined) {
             const imageSpan = document.createElement('span');
             imageSpan.className = 'image';
+            imageSpan.ariaLabel = "Chapter image";
             imageSpan.innerHTML = `${imageSVG}&lt;img-${chapter.imageId}&gt;`;
             lineSpan.appendChild(imageSpan);
             // tippy
@@ -158,6 +161,7 @@ export function displayChapterList() {
         if (chapter.error) {
             const errorSpan = document.createElement('span');
             errorSpan.className = 'text-danger error';
+            errorSpan.ariaLabel = "Error";
             errorSpan.innerHTML = `${chapter.error}`; //${alertSVG}
             lineSpan.appendChild(errorSpan);
         }
@@ -165,6 +169,7 @@ export function displayChapterList() {
         if (chapter.warning) {
             const warningSpan = document.createElement('span');
             warningSpan.className = 'warning';
+            warningSpan.ariaLabel = "Warning";
             warningSpan.innerHTML = `${chapter.warning}`; //${alertSVG}
             lineSpan.appendChild(warningSpan);
         }
