@@ -7,6 +7,15 @@ async function exportFileBasedOnOldTags(file, tags) {
         isOrdered: true,
         elements: [],
     };
+    // collect coarse data for Google Analytics
+    const eventTag = {
+        durationMinutes: Math.round(window.chapters.duration / 60),
+        numChapters: window.chapters.getChapters().length,
+        usedImages: false,
+        usedURLs: false,
+        changedID3Fields: false,
+        changedCoverImage: false,
+    };
     let chapterIndex = 0;
     for (let chapter of window.chapters.getChapters()) {
         if (!chapter.error) {
@@ -22,6 +31,7 @@ async function exportFileBasedOnOldTags(file, tags) {
                 chapterObject.tags.userDefinedUrl = {
                     url: chapter.url,
                 }
+                eventTag.usedURLs = true;
             }
             if (chapter.hasOwnProperty('imageId')) {
                 try {
@@ -29,6 +39,7 @@ async function exportFileBasedOnOldTags(file, tags) {
                 } catch (error) {
                     console.error('Error encoding image:', error);
                 }
+                eventTag.usedImages = true;
             }            
             chapterTag.push(chapterObject);
             tocTag.elements.push(`chp${chapterIndex}`);
@@ -44,10 +55,12 @@ async function exportFileBasedOnOldTags(file, tags) {
         if (input.value != input.dataset.oldValue) {
             tags[field] = input.value;
         }
+        eventTag.changedID3Fields = true;
     }
 
     if (window.coverImage != null) {
         tags.image = await encodeImage(window.coverImage);
+        eventTag.changedCoverImage = true;
     }
 
     // Call the addTags function from your bundle
@@ -64,6 +77,11 @@ async function exportFileBasedOnOldTags(file, tags) {
         downloadLink.download = window.currentFilename;
         downloadLink.click();
     });
+
+    if (window.currentFilename != "example.mp3") {
+        // send event to Google Analytics
+        gtag('event', 'export', eventTag);
+    }
 }
 
 export function exportFile(file) {

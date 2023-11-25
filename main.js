@@ -201,6 +201,7 @@ document.getElementById('podloveButton').addEventListener('click', function () {
     const container = document.getElementById('podlove');
     container.classList.remove("d-none");
     container.open = true;
+    gtag('event', 'podlove', {});
 });
 
 document.getElementById('copyPodloveButton').addEventListener('click', function () {
