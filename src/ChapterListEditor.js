@@ -112,7 +112,7 @@ export function displayChapterList() {
             a.className = 'timestamp';
             a.textContent = secondsToString(chapter.start);
             a.addEventListener('click', (e) => {
-                player.currentTime = chapter.start;
+                player.currentTime = chapter.start / 1000;
                 e.stopPropagation();
             });
             lineSpan.appendChild(a);
