@@ -234,7 +234,7 @@ export function adjustTextAreaHeight() {
 export function highlightCurrentLine() {
     const lines = document.getElementsByClassName('line');
     for (let line of lines) {
-        if (line.dataset.start <= window.currentTime && window.currentTime < line.dataset.end) {
+        if (line.dataset.start <= window.currentTime * 1000 && window.currentTime * 1000 < line.dataset.end) {
             line.classList.add('current-line');
         } else {
             line.classList.remove('current-line');
