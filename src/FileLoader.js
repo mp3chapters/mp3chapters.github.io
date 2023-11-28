@@ -1,5 +1,10 @@
 import { buildGallery } from "./ImageHandler.js";
 
+function arrayEquals(a, b) {
+    return a.length === b.length &&
+        a.every((val, index) => val === b[index]);
+}
+
 export function loadFile(file, wave, player) {
     window.currentFilename = file.name;
     window.currentFile = file;
@@ -24,9 +29,21 @@ export function loadFile(file, wave, player) {
                     chapterObject.url = chapter.tags.userDefinedUrl[0].url;
                 }
                 if (chapter.tags.hasOwnProperty('image')) {
-                    window.chapterImages.push(chapter.tags.image);
-                    chapterObject.imageId = window.chapterImages.length - 1;
-                    document.getElementById('gallery-container').open = true;
+                    // check if image is already in array (same buffer)
+                    let found = -1;
+                    for (let i = 0; i < window.chapterImages.length; i++) {
+                        if (arrayEquals(window.chapterImages[i].imageBuffer, chapter.tags.image.imageBuffer)) {
+                            found = i;
+                            break;
+                        }
+                    }
+                    if (found != -1) {
+                        chapterObject.imageId = found;
+                    } else {
+                        window.chapterImages.push(chapter.tags.image);
+                        chapterObject.imageId = window.chapterImages.length - 1;
+                        document.getElementById('gallery-container').open = true;
+                    }
                 }
                 parsedChapters.push(chapterObject);
             }
