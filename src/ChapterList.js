@@ -73,13 +73,23 @@ export class ChapterList {
     }
     
     exportAsPodlove() {
+        const includeImgLinks = document.getElementById('imgLinkSwitch').checked;
+        let baseURL = document.getElementById('imageURL').value;
+        if (baseURL.length > 0 && !baseURL.endsWith('/')) {
+            baseURL += '/';
+        }
+
         let xmlChapters = '<psc:chapters version="1.2" xmlns:psc="http://podlove.org/simple-chapters">\n';
 
         this.chapters.forEach(chapter => {
             if (!chapter.error) {
                 const startTime = secondsToString(chapter.start);
                 const href = chapter.url ? ` href="${chapter.url}"` : '';
-                xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}"${href} />\n`;
+                let img = '';
+                if (chapter.imageId != undefined && includeImgLinks) {
+                    img = ` image="${baseURL}image-${chapter.imageId}.jpg"`;
+                }
+                xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}"${href}${img} />\n`;
             }
         });
 
@@ -89,6 +99,12 @@ export class ChapterList {
     }
 
     exportAsJSON() {
+        const includeImgLinks = document.getElementById('imgLinkSwitch').checked;
+        let baseURL = document.getElementById('imageURL').value;
+        if (baseURL.length > 0 && !baseURL.endsWith('/')) {
+            baseURL += '/';
+        }
+
         let jsonChapters = [];
 
         this.chapters.forEach(chapter => {
@@ -102,6 +118,9 @@ export class ChapterList {
                 }
                 if (chapter.title[0] == '_') {
                     chapterObject.toc = false;
+                }
+                if (chapter.imageId != undefined && includeImgLinks) {
+                    chapterObject.img = `${baseURL}image-${chapter.imageId}.jpg`;
                 }
                 jsonChapters.push(chapterObject);
             }

@@ -89,3 +89,26 @@ async function exportFileBasedOnOldTags(file, tags) {
 export function exportFile(file) {
     readTags(file, (fileTags) => { exportFileBasedOnOldTags(file, fileTags) });
 }
+
+export function exportImageZip() {
+    // first load jszip (/js/jszip.min.js)
+    const script = document.createElement('script');
+    script.src = '/libs/jszip.min.js';
+    script.onload = function() {
+        // then create zip file
+        const zip = new JSZip();
+        const imageFolder = zip.folder("images");
+        for (let i = 0; i < window.chapterImages.length; i++) {
+            const image = window.chapterImages[i];
+            imageFolder.file(`image-${i}.${image.format || 'jpg'}`, image.imageBuffer);
+        }
+        zip.generateAsync({ type: "blob" }).then(function (content) {
+            // Create download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(content);
+            downloadLink.download = `${window.currentFilename.replace(".mp3","")}_images.zip`;
+            downloadLink.click();
+        });
+    };
+    document.head.appendChild(script);
+}
