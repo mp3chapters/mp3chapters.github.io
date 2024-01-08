@@ -117,6 +117,7 @@ export class ChapterList {
                     chapterObject.url = chapter.url;
                 }
                 if (chapter.title[0] == '_') {
+                    chapterObject.title = chapter.title.substring(1);
                     chapterObject.toc = false;
                 }
                 if (chapter.imageId != undefined && includeImgLinks) {

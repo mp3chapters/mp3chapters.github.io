@@ -588,20 +588,19 @@
                 Advanced: Chapter URLs, images, hidden chapters
             </summary>
             <div class="card-body">
-                <p>Each chapter can be assigned a link that will be shown by some players. To add a link, add the URL
+                <p>Each chapter can be assigned a <strong>link</strong> that will be shown by some players. To add a link, add the URL
                     (starting with <code>http://</code> or <code>https://</code>) to the end of the chapter line.</p>
-                <p>Each chapter can be assigned an image. To add an image, upload an image and add its code (for example
+                <p>Each chapter can be assigned an <strong>image</strong>. To add an image, upload an image and add its code (for example
                     <code>&lt;img-6&gt;</code>) to the end of the chapter line.
                     Images in the gallery that are not assigned to a chapter are ignored.
                     The same image can be used for multiple chapters.
                     A chapter can get both a link and an image.
                 </p>
                 <p>
-                    A chapter can be hidden from the table of contents (the chapter list). This can be useful to show
+                    A chapter can be <strong>hidden</strong> from the table of contents (i.e., the chapter list). This can be useful to show
                     a chapter image for some time period without showing a separate chapter.
-                    To hide a chapter, begin its name with <code>_</code> (an underscore).
-                    The chapter name can also consist of only <code>_</code>.
-                    Note that hidden chapters are not supported by all players.
+                    To hide a chapter, begin its name with <code>_</code> (an underscore), for example <code>_photo</code> or simply <code>_</code>.
+                    Note that hidden chapters are ignored by some players.
                 </p>
                 <input type="file" id="imageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
                 <button class="btn btn-secondary me-1" id="upload-image-button">Upload image</button> or drag and drop
@@ -716,13 +715,15 @@
             </summary>
             <div class="card-body">
                 <p>
-                    There are alternatives to embedding chapters directly in the audio file, including the
+                    Besides embedded ID3 chapters, other standards for specifying chapters exist.
+                    Examples are the
                     <a href="https://github.com/Podcastindex-org/podcast-namespace/blob/main/chapters/jsonChapters.md">Podcast
                         Chapter JSON</a>
                     and
                     <a href="https://podlove.org/simple-chapters/">Podlove Simple Chapters XML</a>
-                    formats, which can be linked to (JSON, XML) or embedded in the <code>&lt;item&gt;</code> tag (XML)
-                    of a podcast RSS feed. While most podcast players use embedded chapters,
+                    formats, which can be added to a podcast RSS feed via embedding into the <code>&lt;item&gt;</code> tag (XML) 
+                    or by adding a link (JSON, XML).
+                    While most podcast players use embedded chapters,
                     some other players (notably <a class="alert-link fw-normal"
                         href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a>)
                     only support time stamps in the episode description or podlove chapters.

@@ -123,6 +123,9 @@ export function displayChapterList() {
         // Show title
         const titleSpan = document.createElement('span');
         titleSpan.textContent = chapter.title;
+        if (chapter.title[0] == "_") {
+            titleSpan.className = 'text-secondary';
+        }
         lineSpan.appendChild(titleSpan);
         textDisplay.appendChild(lineSpan);
         // Show URL
