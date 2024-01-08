@@ -88,6 +88,31 @@ export class ChapterList {
         return xmlChapters;
     }
 
+    exportAsJSON() {
+        let jsonChapters = [];
+
+        this.chapters.forEach(chapter => {
+            if (!chapter.error) {
+                const chapterObject = {
+                    startTime: secondsToString(chapter.start),
+                    title: chapter.title,
+                };
+                if (chapter.url) {
+                    chapterObject.url = chapter.url;
+                }
+                if (chapter.title[0] == '_') {
+                    chapterObject.toc = false;
+                }
+                jsonChapters.push(chapterObject);
+            }
+        });
+
+        return JSON.stringify({
+            version: '1.2.0',
+            chapters: jsonChapters,
+        }, null, 4);
+    }
+
     exportAsList() {
         // for copy pasting; includes startTime and title, but not link or image
         let list = '';

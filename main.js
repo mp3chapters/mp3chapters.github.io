@@ -194,6 +194,9 @@ document.getElementById('addTagsButton').addEventListener('click', function () {
 function updatePodlove() {
     const code = document.getElementById('podlove-code');
     code.innerHTML = chapters.exportAsPodlove().replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    const jsonCode = document.getElementById('json-code');
+    jsonCode.innerHTML = chapters.exportAsJSON().replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 document.getElementById('podloveButton').addEventListener('click', function () {
@@ -219,6 +222,47 @@ document.getElementById('copyPodloveButton').addEventListener('click', function 
         // Error handling
         console.error('Error copying text: ', error);
     });
+});
+
+document.getElementById('downloadPodloveButton').addEventListener('click', function () {
+    const code = chapters.exportAsPodlove();
+    const filename = window.currentFilename.replace(/\.[^/.]+$/, "") + ".psc";
+    const blob = new Blob([code], {type: "application/xml"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    a.remove();
+});
+
+document.getElementById('copyJSONButton').addEventListener('click', function () {
+    const code = chapters.exportAsJSON();
+    navigator.clipboard.writeText(code).then(function() {
+        const button = document.getElementById('copyJSONButton');
+        const copyCheck = document.getElementById('json-copy-check');
+        copyCheck.style.visibility = 'visible';
+        button.classList.add("btn-outline-success");
+        setTimeout(function() {
+            copyCheck.style.visibility = 'hidden';
+            button.classList.remove("btn-outline-success");
+        }, 3000);
+    }).catch(function(error) {
+        // Error handling
+        console.error('Error copying text: ', error);
+    });
+});
+
+document.getElementById('downloadJSONButton').addEventListener('click', function () {
+    const code = chapters.exportAsJSON();
+    const filename = window.currentFilename.replace(/\.[^/.]+$/, "") + ".json";
+    const blob = new Blob([code], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    a.remove();
 });
 
 document.getElementById('copyListButton').addEventListener('click', function () {
