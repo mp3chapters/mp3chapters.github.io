@@ -5,6 +5,8 @@ function arrayEquals(a, b) {
         a.every((val, index) => val === b[index]);
 }
 
+let initialLoad = true;
+
 export function loadFile(file, wave, player) {
     window.currentFilename = file.name;
     window.currentFile = file;
@@ -42,7 +44,10 @@ export function loadFile(file, wave, player) {
                     } else {
                         window.chapterImages.push(chapter.tags.image);
                         chapterObject.imageId = window.chapterImages.length - 1;
-                        document.getElementById('gallery-container').open = true;
+                        if (!initialLoad) {
+                            // do not open gallery on initial load with example file
+                            document.getElementById('gallery-container').open = true;
+                        }
                     }
                 }
                 parsedChapters.push(chapterObject);
@@ -83,6 +88,8 @@ export function loadFile(file, wave, player) {
         }
 
         buildGallery();
+
+        initialLoad = false;
     });
 
     document.getElementById('filename').innerText = file.name;

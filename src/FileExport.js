@@ -42,7 +42,9 @@ async function exportFileBasedOnOldTags(file, tags) {
                 eventTag.usedImages = true;
             }            
             chapterTag.push(chapterObject);
-            tocTag.elements.push(`chp${chapterIndex}`);
+            if (chapter.title[0] != "_") {
+                tocTag.elements.push(`chp${chapterIndex}`);
+            }
             chapterIndex++;
         }
     }
