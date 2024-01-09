@@ -54,7 +54,7 @@ export function updateChapterListBasedOnTextarea() {
         // const match = line.match(/^\(?(\d{1,2}:\d{1,2}(?::\d{1,2}(\.\d+)?)?)\)?\s*[-:—–\s]?(.+)/);
         // const match = line.match(/^\(?(\d{1,2}:\d{1,2}(?::\d{1,2})?(?:\.\d{1,3})?)\)?\s*[-:—–\s]?(.+)/);
         // const match = line.match(/^\(?((\d{1,2}:)?\d{1,2}(?::\d{1,2})?(?:\.\d{1,3})?)\)?\s*[-:—–\s]?(.+)/);
-        const match = line.match(/^\(?((?:\d{1,2}:)?\d{1,2}(?::\d{1,2})?(?:\.\d{1,3})?)\)?\s*[-:—–\s]?(.+)/);
+        const match = line.match(/^\(?((?:\d{1,2}:)?\d{1,2}(?::\d{1,2})?(?:\.\d{1,3})?)\)?\s*[-:—–\s]?(.*)/);
 
 
         if (match && match.length === 3) {
