@@ -27,6 +27,9 @@ async function exportFileBasedOnOldTags(file, tags) {
                     title: chapter.title,
                 }
             };
+            if (chapter.title[0] == "_") {
+                chapterObject.tags.title = chapter.title.substring(1);
+            }
             if (chapter.hasOwnProperty('url')) {
                 chapterObject.tags.userDefinedUrl = {
                     url: chapter.url,
