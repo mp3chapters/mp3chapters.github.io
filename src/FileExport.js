@@ -90,17 +90,17 @@ export function exportFile(file) {
     readTags(file, (fileTags) => { exportFileBasedOnOldTags(file, fileTags) });
 }
 
-export function exportImageZip() {
+export async function exportImageZip() {
     // first load jszip (/js/jszip.min.js)
     const script = document.createElement('script');
     script.src = '/libs/jszip.min.js';
-    script.onload = function() {
+    script.onload = async function() {
         // then create zip file
         const zip = new JSZip();
         const imageFolder = zip.folder("images");
         for (let i = 0; i < window.chapterImages.length; i++) {
-            const image = window.chapterImages[i];
-            imageFolder.file(`image-${i}.${image.format || 'jpg'}`, image.imageBuffer);
+            const image = await encodeImage(window.chapterImages[i]);
+            imageFolder.file(`image-${i}.jpg`, image.imageBuffer);
         }
         zip.generateAsync({ type: "blob" }).then(function (content) {
             // Create download link
