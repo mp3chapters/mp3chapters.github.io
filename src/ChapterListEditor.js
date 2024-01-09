@@ -19,25 +19,25 @@ function removeLastOccurrence(str, substring) {
 }
 
 function extractElements(str) {
-    const urlRegex = /https?:\/\/[^\s]+/g;
-    const imgTagRegex = /<img-(\d+)>/g;
+    const urlRegex = /^https?:\/\/[^\s]+$/;
+    const imgTagRegex = /^<img-(\d+)>$/;
 
-    let urlMatches = str.match(urlRegex);
-    let imgTagMatches = str.match(imgTagRegex);
+    let substrings = str.split(" ");
+    let url = null, imgTag = null;
 
-    let url = urlMatches ? urlMatches[urlMatches.length - 1].trim() : null;
-    let imgTag = imgTagMatches ? imgTagMatches[imgTagMatches.length - 1].match(/\d+/)[0] : null;
-
-    let stringWithoutElements = str;
-
-    // Remove the last occurrence of each element
-    if (url) {
-        stringWithoutElements = removeLastOccurrence(stringWithoutElements, url);
+    for (let i = substrings.length - 1; i >= 0; i--) {
+        if (!url && urlRegex.test(substrings[i])) {
+            url = substrings[i];
+            substrings.splice(i, 1); // Remove the URL from the array
+        }
+        if (!imgTag && imgTagRegex.test(substrings[i])) {
+            imgTag = substrings[i].match(/\d+/)[0];
+            substrings.splice(i, 1);  // Remove the image tag from the array
+        }
     }
-    if (imgTag) {
-        stringWithoutElements = removeLastOccurrence(stringWithoutElements, imgTagMatches[imgTagMatches.length - 1].trim());
-    }
-    
+
+    let stringWithoutElements = substrings.join(' ');
+
     return { url, imgTag, stringWithoutElements };
 }
 
