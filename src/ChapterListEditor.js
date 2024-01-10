@@ -204,6 +204,7 @@ export function setTextAreaContent() {
         }
     });
     textInput.value = lines.join('\n');
+    window.allowClosing = false; // unsaved changes
 }
 
 export function editText(e) {

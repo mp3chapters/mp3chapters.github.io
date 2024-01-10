@@ -91,6 +91,7 @@ async function exportFileBasedOnOldTags(file, tags) {
 
 export function exportFile(file) {
     readTags(file, (fileTags) => { exportFileBasedOnOldTags(file, fileTags) });
+    window.allowClosing = true;
 }
 
 export async function exportImageZip() {

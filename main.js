@@ -13,6 +13,15 @@ window.chapters = chapters;
 
 window.currentTime = 0;
 
+window.allowClosing = true;
+window.addEventListener('beforeunload', function (e) {
+    if (window.allowClosing) {
+        return undefined;
+    }
+    e.preventDefault();
+    e.returnValue = true;
+});
+
 // id3 field names that are supported
 window.fieldNames = ["title", "artist", "album", "trackNumber", "genre", "year", "copyright", "publisher", "language", "encodedBy"];
 
@@ -209,3 +218,9 @@ document.getElementById('copyListButton').addEventListener('click', function () 
         console.error('Error copying text: ', error);
     });
 });
+
+for (const input of document.querySelectorAll('#tag-editing input')) {
+    input.addEventListener('input', function () {
+        window.allowClosing = false;
+    });
+}
