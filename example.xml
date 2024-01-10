@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+    xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+    <channel>
+        <title>Chapter test podcast</title>
+        <itunes:owner>
+            <itunes:email>mail@dominik-peters.de</itunes:email>
+        </itunes:owner>
+        <itunes:author>Online MP3 Podcast Chapter Editor</itunes:author>
+        <itunes:explicit>no</itunes:explicit>
+        <description>Testing chapters.</description>
+        <itunes:image href="https://mp3chapters.github.io/hero.jpg" />
+        <language>en-us</language>
+        <link>https://mp3chapters.github.io/</link>
+        <itunes:category text="Education">
+        </itunes:category>
+        <item>
+            <title>Station jingles</title>
+            <description>Example file from the editor</description>
+            <enclosure url="https://mp3chapters.github.io/example.mp3" length="870999"
+                type="audio/mpeg" />
+            <guid>jingle_example</guid>
+            <itunes:duration>30</itunes:duration>
+            <itunes:episode>1</itunes:episode>
+            <pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate>
+        </item>
+        <item>
+            <title>Example with hidden chapters</title>
+            <description>An image is shown between 00:10 and 00:20</description>
+            <enclosure url="https://mp3chapters.github.io/example-hidden.mp3" length="859064"
+                type="audio/mpeg" />
+            <guid>hidden_example</guid>
+            <itunes:duration>30</itunes:duration>
+            <itunes:episode>1</itunes:episode>
+            <pubDate>Mon, 01 Jan 2024 00:00:00 +0000</pubDate>
+        </item>
+    </channel>
+</rss>
