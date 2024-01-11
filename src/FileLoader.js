@@ -19,7 +19,10 @@ export function loadFile(file, wave, player) {
     let tags;
     readTags(file, (fileTags) => {
         tags = fileTags;
-        // console.log(tags);
+        let toc = [];
+        if (tags.hasOwnProperty('tableOfContents') && tags.tableOfContents.length > 0 && tags.tableOfContents[0].elements) {
+            toc = tags.tableOfContents[0].elements;
+        }
         if (tags.hasOwnProperty('chapter')) {
             const parsedChapters = [];
             for (let chapter of tags.chapter) {
@@ -27,6 +30,10 @@ export function loadFile(file, wave, player) {
                     title: chapter.tags.title,
                     start: chapter.startTimeMs,
                 };
+                if (!toc.includes(chapter.elementID)) {
+                    chapterObject.title = "_" + chapterObject.title;
+                    chapterObject.toc = false;
+                }
                 if (chapter.tags.hasOwnProperty('userDefinedUrl')) {
                     chapterObject.url = chapter.tags.userDefinedUrl[0].url;
                 }
