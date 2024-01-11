@@ -220,7 +220,7 @@ document.getElementById('copyListButton').addEventListener('click', function () 
 });
 
 for (const input of document.querySelectorAll('#tag-editing input')) {
-    input.addEventListener('input', function () {
+    input.addEventListener('keydown', function () {
         window.allowClosing = false;
     });
 }

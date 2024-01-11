@@ -102,6 +102,8 @@ export function displayChapterList() {
     const textDisplay = document.getElementById('text-display');
     const buttonContainer = document.getElementById('button-container');
 
+    textInput.addEventListener('keydown', (e) => { window.allowClosing = false; });
+
     textDisplay.innerHTML = '';
     buttonContainer.innerHTML = '';
 
@@ -204,7 +206,6 @@ export function setTextAreaContent() {
         }
     });
     textInput.value = lines.join('\n');
-    window.allowClosing = false; // unsaved changes
 }
 
 export function editText(e) {
