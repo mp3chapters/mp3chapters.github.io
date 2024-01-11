@@ -89,7 +89,11 @@ export class ChapterList {
                 if (chapter.imageId != undefined && includeImgLinks) {
                     img = ` image="${baseURL}image-${chapter.imageId}.jpg"`;
                 }
-                xmlChapters += `    <psc:chapter start="${startTime}" title="${chapter.title}"${href}${img} />\n`;
+                let title = chapter.title;
+                if (title[0] == '_') {
+                    title = title.substring(1);
+                }
+                xmlChapters += `    <psc:chapter start="${startTime}" title="${title}"${href}${img} />\n`;
             }
         });
 

@@ -31,7 +31,11 @@ export function loadFile(file, wave, player) {
                     start: chapter.startTimeMs,
                 };
                 if (!toc.includes(chapter.elementID)) {
-                    chapterObject.title = "_" + chapterObject.title;
+                    if (chapterObject.title != undefined) {
+                        chapterObject.title = "_" + chapterObject.title;
+                    } else {
+                        chapterObject.title = "_";
+                    }
                     chapterObject.toc = false;
                 }
                 if (chapter.tags.hasOwnProperty('userDefinedUrl')) {
