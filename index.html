@@ -590,10 +590,11 @@
             <div class="card-body">
                 <p>Each chapter can be assigned a <strong>link</strong> that will be shown by some players. To add a link, add the URL
                     (starting with <code>http://</code> or <code>https://</code>) to the end of the chapter line.</p>
-                <p>Each chapter can be assigned an <strong>image</strong>. To add an image, upload an image and add its code (for example
+                <p>Each chapter can be assigned an <strong>image</strong>. To add an image, upload an image below and add its code (for example
                     <code>&lt;img-6&gt;</code>) to the end of the chapter line.
                     Images in the gallery that are not assigned to a chapter are ignored.
                     The same image can be used for multiple chapters.
+                    Images larger than 1400px wide or tall will be scaled down.
                     A chapter can get both a link and an image.
                 </p>
                 <p>
@@ -727,10 +728,6 @@
                     some other players (notably <a class="alert-link fw-normal"
                         href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a>)
                     only support time stamps in the episode description or podlove chapters.
-                </p>
-                <p>
-                    If you wish to add time stamps to your episode description, just copy and paste
-                    your chapter list. If you wish to use JSON or Podlove chapters, use the code below.
                 </p>
 
                 <div class="form-check form-switch">
