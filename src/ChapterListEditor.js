@@ -97,12 +97,19 @@ export function updateChapterListBasedOnTextarea() {
     window.chapters.setChapters(newChapters);
 }
 
+let keyStrokeCount = 0;
+
 export function displayChapterList() {
     const textInput = document.getElementById('text-input');
     const textDisplay = document.getElementById('text-display');
     const buttonContainer = document.getElementById('button-container');
 
-    textInput.addEventListener('keydown', (e) => { window.allowClosing = false; });
+    textInput.addEventListener('keydown', (e) => { 
+        if (keyStrokeCount > 10) {
+            window.allowClosing = false; 
+        }
+        keyStrokeCount++;
+    });
 
     textDisplay.innerHTML = '';
     buttonContainer.innerHTML = '';
