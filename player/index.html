@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MP3 Chapter Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            --bs-code-color: rgb(19, 80, 172);
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        code {
+            font-size: 0.8em;
+            background-color: hsl(180, 2%, 95%);
+            padding: calc((1em - 0.8em)/2) 2px;
+        }
+
+        [data-bs-theme="dark"] code {
+            background-color: hsl(180, 2%, 10%);
+            color: #79afff;
+        }
+
+        .app-icons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        #hero {
+            position: relative;
+        }
+
+        .help {
+            color: #9a9a9a;
+            cursor: help;
+            position: relative;
+            top: -2px;
+        }
+    </style>
+
+    <meta name="description" content="A simple desktop app for playing MP3 files with chapters." />
+    <link rel="canonical" href="https://mp3chapters.github.io/player/" />
+    <meta property="og:title" content="MP3 Chapter Player" />
+    <meta property="og:site_name" content="MP3 Chapter Player">
+    <meta property="og:description" content="A simple desktop app for playing MP3 files with chapters." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mp3chapters.github.io/player/" />
+    <meta property="og:image" content="https://mp3chapters.github.io/player/screenshot.png" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/x-png" href="../favicon.png" />
+
+    <meta name="google-site-verification" content="o74dCk-d27RBWDTJN6Deg4B2dT8ROyINaY8muiv8kH0" />
+
+</head>
+
+<body>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.bsTheme = 'dark';
+        }
+    </script>
+
+    <nav class="navbar bg-body-tertiary" style="z-index: 2;">
+        <div class="container">
+            <a class="navbar-brand icon-link" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                </svg>
+                MP3 Chapter Player</a>
+            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">|
+                &nbsp;<a href="/" class="text-dark-emphasis"
+                    data-tippy-content="Online app for adding chapters to MP3s">Editor</a></span>
+            <a href="https://github.com/mp3chapters/mp3chapters-player" class="icon-link ms-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+                    viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                </svg>
+                <span class="d-none d-sm-inline">
+                    GitHub
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container col-xxl-9 px-4 py-2 py-lg-4" id="hero">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-4 py-lg-6">
+            <div class="col-12 mt-5 mt-lg-3 col-lg-6">
+                <img src="screenshot.png" id="hero-image" class="d-block mx-lg-auto img-fluid"
+                    alt="Two example screenshots of podcast apps displaying a list of chapters" width="2024"
+                    height="1424" loading="lazy" data-tippy-content="Screenshot"
+                    style="transform: scale(1.07);">
+            </div>
+            <div class="col-lg-6 mt-4 mt-sm-8">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Play MP3 audio files with chapters<span
+                        class="d-none">.</span></h1>
+                <p class="lead">A simple desktop app for playing MP3 files with embedded
+                    <code class="text-body">id3</code> chapters supporting chapter images
+                    and featuring a convenient chapter list display.
+                </p>
+                <p class="lead">Free and open source. Note this is an early prototype and might not work perfectly.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container col-xxl-9 px-4 py-lg-2">
+        <div class="row">
+            <div class="text-body-secondary text-center col-lg-3 mb-3">
+                <a href="https://mp3chapters.github.io/mp3chapters-player/" 
+                    class="btn btn-success btn-md icon-link px-4 me-md-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-browser-chrome" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M16 8a8 8 0 0 1-7.022 7.94l1.902-7.098a3 3 0 0 0 .05-1.492A3 3 0 0 0 10.237 6h5.511A8 8 0 0 1 16 8M0 8a8 8 0 0 0 7.927 8l1.426-5.321a3 3 0 0 1-.723.255 3 3 0 0 1-1.743-.147 3 3 0 0 1-1.043-.7L.633 4.876A8 8 0 0 0 0 8m5.004-.167L1.108 3.936A8.003 8.003 0 0 1 15.418 5H8.066a3 3 0 0 0-1.252.243 2.99 2.99 0 0 0-1.81 2.59M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                      </svg>
+                    Web app in browser</a><br>
+                (loads instantly)
+            </div>
+            <div class="text-body-secondary text-center col-lg-3 mb-3">
+                <a href="https://github.com/mp3chapters/mp3chapters-player/releases/download/app-v0.1.0/MP3.Chapter.Player_0.1.0_x64.dmg" 
+                class="btn btn-primary btn-md icon-link px-4 me-md-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-apple" viewBox="0 0 16 16">
+                        <path
+                            d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
+                        <path
+                            d="M11.182.008C11.148-.03 9.923.023 8.857 1.18c-1.066 1.156-.902 2.482-.878 2.516s1.52.087 2.475-1.258.762-2.391.728-2.43m3.314 11.733c-.048-.096-2.325-1.234-2.113-3.422s1.675-2.789 1.698-2.854-.597-.79-1.254-1.157a3.7 3.7 0 0 0-1.563-.434c-.108-.003-.483-.095-1.254.116-.508.139-1.653.589-1.968.607-.316.018-1.256-.522-2.267-.665-.647-.125-1.333.131-1.824.328-.49.196-1.422.754-2.074 2.237-.652 1.482-.311 3.83-.067 4.56s.625 1.924 1.273 2.796c.576.984 1.34 1.667 1.659 1.899s1.219.386 1.843.067c.502-.308 1.408-.485 1.766-.472.357.013 1.061.154 1.782.539.571.197 1.111.115 1.652-.105.541-.221 1.324-1.059 2.238-2.758q.52-1.185.473-1.282" />
+                    </svg>
+                    Download for macOS</a><br>
+                (.dmg, 3.1 MB)
+            </div>
+            <div class="text-body-secondary text-center col-lg-3 mb-3">
+                <a href="https://github.com/mp3chapters/mp3chapters-player/releases/download/app-v0.1.0/MP3.Chapter.Player_0.1.0_x64-setup.exe" 
+                class="btn btn-primary btn-md icon-link px-4 me-md-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-windows" viewBox="0 0 16 16">
+                        <path
+                            d="M6.555 1.375 0 2.237v5.45h6.555zM0 13.795l6.555.933V8.313H0zm7.278-5.4.026 6.378L16 16V8.395zM16 0 7.33 1.244v6.414H16z" />
+                    </svg>
+                    Download for Windows</a><br>
+                (.exe installer, 2.8 MB)
+            </div>
+            <div class="text-body-secondary text-center col-lg-3">
+                <a href="https://github.com/mp3chapters/mp3chapters-player/releases/tag/app-v0.1.0" 
+                class="btn btn-primary btn-md icon-link px-4 me-md-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-ubuntu" viewBox="0 0 16 16">
+                        <path
+                            d="M2.273 9.53a2.273 2.273 0 1 0 0-4.546 2.273 2.273 0 0 0 0 4.547Zm9.467-4.984a2.273 2.273 0 1 0 0-4.546 2.273 2.273 0 0 0 0 4.546M7.4 13.108a5.54 5.54 0 0 1-3.775-2.88 3.27 3.27 0 0 1-1.944.24 7.4 7.4 0 0 0 5.328 4.465c.53.113 1.072.169 1.614.166a3.25 3.25 0 0 1-.666-1.9 6 6 0 0 1-.557-.091m3.828 2.285a2.273 2.273 0 1 0 0-4.546 2.273 2.273 0 0 0 0 4.546m3.163-3.108a7.44 7.44 0 0 0 .373-8.726 3.3 3.3 0 0 1-1.278 1.498 5.57 5.57 0 0 1-.183 5.535 3.26 3.26 0 0 1 1.088 1.693M2.098 3.998a3.3 3.3 0 0 1 1.897.486 5.54 5.54 0 0 1 4.464-2.388c.037-.67.277-1.313.69-1.843a7.47 7.47 0 0 0-7.051 3.745" />
+                    </svg>
+                    Download for Ubuntu</a><br>
+                (.deb, 4.6 MB)
+            </div>
+        </div>
+    </div>
+
+    <div class="container col-xxl-9 pt-2 pb-4 text-center text-body-secondary">
+        Version 0.1.0 &middot; January 2024
+    </div>
+
+    <footer class="bd-footer py-3 py-md-4 mt-4 bg-body-tertiary">
+        <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
+            <div class="row">
+                <div class="col-lg-6">
+                    <a class="d-inline-flex align-items-center mb-2 text-body-emphasis text-decoration-none icon-link"
+                        href="/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                        </svg>
+                        <span class="fs-5">MP3 Chapter Player</span>
+                    </a>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">Built by <a href="https://dominik-peters.de">Dominik Peters</a>.</li>
+                        <li class="mb-2">Built using
+                            <a href="https://tauri.app/">Tauri</a>,
+                            <a href="https://github.com/Zazama/node-id3">node-id3</a>,
+                            <a href="https://browserify.org/">browserify</a>, and
+                            <a href="https://vidstack.io/docs">Vidstack Player</a>.
+                        </li>
+                        <li class="mb-2">Code licensed <a href="https://github.com/twbs/bootstrap/blob/main/LICENSE"
+                                target="_blank" rel="license noopener">MIT</a>.
+                            Available on <a href="https://github.com/mp3chapters/mp3chapters.github.io">GitHub</a>,
+                            feedback welcome!</li>
+                        <li class="mb-2">First published January 2024. Last updated January 2024.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5B08GWJJCM"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-5B08GWJJCM');
+    </script>
+</body>
+
+</html>
