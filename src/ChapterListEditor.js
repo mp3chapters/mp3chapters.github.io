@@ -48,6 +48,10 @@ export function updateChapterListBasedOnTextarea() {
     const encounteredTimes = new Set();
 
     lines.forEach((line, index) => {
+        if (line.trim() === '') {
+            return;
+        }
+
         const chapter = { title: '', start: 0, error: '' };
 
         // Regex to handle optional parentheses and split time and title
