@@ -161,6 +161,7 @@ export function buildGallery() {
         button.className = 'btn btn-sm btn-light btn-gallery-copy';
         button.ariaLabel = "Copy image tag";
         button.innerHTML = copySVG;
+        tippy(button, { content: `Copy <img-${i}>`, placement: 'auto' });
         button.addEventListener('click', function () {
             navigator.clipboard.writeText(`<img-${i}>`).then(function () {
                 button.classList.add("btn-outline-success");
