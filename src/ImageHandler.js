@@ -189,59 +189,52 @@ export function encodeImage(image) {
 
         img.onload = function () {
             console.log("Image loaded");
-
-            if (image.mime === 'image/jpeg') {
-                if (img.width <= 1400 && img.height <= 1400) {
-                    // no need to resize
-                    resolve(image);
-                }
-            }
-            // if it's a png and filesize is < 100kb, no need to resize
-            if (image.mime === 'image/png' && image.imageBuffer.size < 100000) {
+            // no need to resize
+            if (image.mime === 'image/jpeg' && img.width <= 1400 && img.height <= 1400
+                || image.mime === 'image/png' && image.imageBuffer.size < 100000 ) {
                 resolve(image);
+            } else {
+                console.log("Resizing image");
+                // Calculate new dimensions
+                var maxSize = 1400; // maximum size of the largest dimension
+                var width = img.width;
+                var height = img.height;
+
+                if (width > height && width > maxSize) {
+                    height *= maxSize / width;
+                    width = maxSize;
+                } else if (height > maxSize) {
+                    width *= maxSize / height;
+                    height = maxSize;
+                }
+
+                // Create a canvas and draw the resized image onto it
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Convert the canvas content to a JPEG blob
+                canvas.toBlob(function (resizedBlob) {
+                    blobToUint8Array(resizedBlob, function (uint8Array) {
+                        const newImage = {
+                            ...image,
+                            imageBuffer: uint8Array,
+                            mime: 'image/jpeg',
+                        };
+                        console.log("Resized image", newImage);
+                        resolve(newImage);
+                    });
+                }, 'image/jpeg');
             }
-
-            console.log("Resizing image");
-
-            // Calculate new dimensions
-            var maxSize = 1400; // maximum size of the largest dimension
-            var width = img.width;
-            var height = img.height;
-
-            if (width > height && width > maxSize) {
-                height *= maxSize / width;
-                width = maxSize;
-            } else if (height > maxSize) {
-                width *= maxSize / height;
-                height = maxSize;
-            }
-
-            // Create a canvas and draw the resized image onto it
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
-            canvas.width = width;
-            canvas.height = height;
-            ctx.drawImage(img, 0, 0, width, height);
-
-            // Convert the canvas content to a JPEG blob
-            canvas.toBlob(function (resizedBlob) {
-                blobToUint8Array(resizedBlob, function (uint8Array) {
-                    const newImage = {
-                        ...image,
-                        imageBuffer: uint8Array,
-                        mime: 'image/jpeg',
-                    };
-                    console.log("Resized image", newImage);
-                    resolve(newImage);
-                });
-            }, 'image/jpeg');
-
-            img.onerror = function () {
-                reject(new Error('Image loading failed'));
-            };
 
             // Revoke the blob URL to release memory
             URL.revokeObjectURL(img.src);
+        };
+
+        img.onerror = function () {
+            reject(new Error('Image loading failed'));
         };
 
         // Set the source of the image to the blob URL
