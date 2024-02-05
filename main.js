@@ -35,7 +35,7 @@ function addChaptersToPlayer() {
         track.addCue({ "startTime": 0, "endTime": chapters.duration, "text": "Chapter" });
     }
     for (let chapter of chapters_) {
-        if (chapter.error == undefined) {
+        if (chapter.error == undefined || chapter.error == '') {
             track.addCue({ 
                 "startTime": chapter.start / 1000, 
                 "endTime": chapter.end / 1000, 
