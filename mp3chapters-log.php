@@ -7,6 +7,8 @@ $filename = 'mp3chapters-log.jsonl';
 $jsonPayload = file_get_contents('php://input');
 $data = json_decode($jsonPayload, true); // Decode as an associative array
 
+$data['date'] = date('Y-m-d'); // Gets the current date in ISO format (YYYY-MM-DD)
+
 // Function to validate the structure of the data
 function isValidDataStructure($data) {
     // Define the expected keys and their value types

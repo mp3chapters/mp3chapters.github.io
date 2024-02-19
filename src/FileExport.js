@@ -92,6 +92,7 @@ async function exportFileBasedOnOldTags(file, tags) {
             headers: {
                 'Content-Type': 'application/json'
             },
+            mode: 'no-cors',
             body: JSON.stringify(eventTag)
         });
     }
