@@ -59,8 +59,8 @@ async function exportFileBasedOnOldTags(file, tags) {
         const input = document.getElementById(`field-${field}`);
         if (input.value != input.dataset.oldValue) {
             tags[field] = input.value;
+            eventTag.changedID3Fields = true;
         }
-        eventTag.changedID3Fields = true;
     }
 
     if (window.coverImage != null) {
