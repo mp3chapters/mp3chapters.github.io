@@ -86,6 +86,14 @@ async function exportFileBasedOnOldTags(file, tags) {
     if (window.currentFilename != "example.mp3") {
         // send event to Google Analytics
         gtag('event', 'export', eventTag);
+        // send event to custom logger
+        fetch('https://dominik-peters.de/projects/mp3chapters/mp3chapters-log.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventTag)
+        });
     }
 }
 
