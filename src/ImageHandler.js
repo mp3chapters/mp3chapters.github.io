@@ -26,8 +26,10 @@ export function initializeImageHandling() {
 
     document.getElementById('imageFileInput').addEventListener('change', function () {
         const fileInput = document.getElementById('imageFileInput');
-        const file = fileInput.files[0];
-        addToGallery(file);
+        const files = fileInput.files;
+        for (const file of files) {
+            addToGallery(file);
+        }
     });
 
     document.getElementById('upload-cover-image-button').addEventListener('click', function () {
@@ -151,7 +153,7 @@ export function buildGallery() {
         const url = URL.createObjectURL(blob);
         img.src = url;
         img.className = 'figure-img rounded img-thumbnail gallery-img';
-        tippy(img, { content: `<img src="${url}" class="gallery-image-tooltip">`, allowHTML: true, placement: 'auto', maxWidth: 'none' });
+        // tippy(img, { content: `<img src="${url}" class="gallery-image-tooltip">`, allowHTML: true, placement: 'auto', maxWidth: 'none' });
         const figcaption = document.createElement('figcaption');
         figcaption.className = 'figure-caption text-center';
         const code = document.createElement('code');
