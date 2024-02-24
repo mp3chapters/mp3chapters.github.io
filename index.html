@@ -53,6 +53,11 @@
         #wave {
             padding: 0 calc(8px + var(--media-slider-thumb-size, 15px)/2);
             cursor: pointer;
+            height: 100px;
+        }
+
+        #player-container .card-body {
+            height: 218.5px;
         }
 
         #player {
@@ -474,7 +479,7 @@
     </div>
 
     <main class="container col-xxl-10 px-4 py-4">
-        <div class="card mb-3">
+        <div class="card mb-3" id="player-container">
             <div class="card-header py-2 icon-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" aria-hidden="true"
                     class="bi bi-file-earmark-play" viewBox="0 0 16 16">
@@ -485,8 +490,8 @@
                 </svg>
                 <span id="filename">example.mp3</span>
             </div>
-            <div class="card-body position-relative">
-                <button id="addTimestamp" class="btn btn-sm btn-primary icon-link"><svg
+            <div class="card-body position-relative" style="visibility: hidden;">
+                <button id="addTimestamp" class="btn btn-sm btn-primary icon-link" style="position: absolute; display: none;"><svg
                         xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-plus-circle-fill" viewBox="0 0 16 16" aria-hidden="true">
                         <path

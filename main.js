@@ -144,10 +144,13 @@ wave.on('ready', () => {
         waveColor: 'violet',
         progressColor: 'purple',
     });
+    document.getElementById("addTimestamp").style.display = null;
 });
 
 player.addEventListener('loaded-data', () => {
     addChaptersToPlayer();
+    // make player visible
+    document.querySelector("#player-container .card-body").style.visibility = "visible";
 });
 
 player.addEventListener('play', () => {
