@@ -72,6 +72,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('activate-dense-mode-button').addEventListener('click', activateDenseMode);
     document.getElementById('close-dense-mode-button').addEventListener('click', deactivateDenseMode);
+    if (document.querySelector("body").classList.contains("dense")) {
+        activateDenseMode();
+    }
 
     tippy('[data-tippy-content]');
 
@@ -113,7 +116,8 @@ function setColorScheme() {
 function activateDenseMode() {
     window.denseMode = true;
     document.querySelector("body").classList.add("dense");
-    // store preferenc for dense mode
+    document.getElementById("gallery-container").open = true;
+    // store preference for dense mode
     localStorage.setItem('denseMode', true);
 }
 
@@ -121,7 +125,7 @@ function deactivateDenseMode() {
     window.denseMode = false;
     document.querySelector("body").classList.remove("dense");
     document.getElementById("edit-chapter-heading").scrollIntoView({ behavior: "instant" });
-    // store preferenc for dense mode
+    // store preference against dense mode
     localStorage.setItem('denseMode', false);
 }
 
