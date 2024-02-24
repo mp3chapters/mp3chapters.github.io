@@ -12,7 +12,7 @@ export function loadFile(file, wave, player) {
     window.currentFile = file;
     window.chapters.duration = -1;
     window.chapterImages = [];
-    document.getElementById('gallery-container').open = false;
+    document.getElementById('gallery-container').open = window.denseMode;
     wave.loadBlob(file);
     player.src = { src: file, type: 'audio/object' };
 

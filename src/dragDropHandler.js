@@ -29,15 +29,18 @@ export function initializeDragDrop(callback) {
     const heroOverlay = document.getElementById('hero-drop-overlay');
     const hero = document.getElementById('hero');
 
+
+    // DP, Feb 2024: not sure we need any of this logic. If it's an audio file, we should allow drop.
+
     function dragOverHandler(ev) {
-        if (isAudioFile(ev) && !isGalleryVisible()) {
+        if (isAudioFile(ev) && (window.denseMode || !isGalleryVisible())) {
             dropOverlay.style.display = "block";
         }
         ev.preventDefault();
     }
 
     function heroDragOverHandler(ev) {
-        if (isAudioFile(ev) && isGalleryVisible()) {
+        if (isAudioFile(ev) && (window.denseMode || !isGalleryVisible())) {
             heroOverlay.style.display = "block";
         }
         ev.preventDefault();
@@ -74,7 +77,7 @@ export function initializeDragDrop(callback) {
     }
 
     document.body.addEventListener('drop', (e) => {
-        if (isGalleryVisible()) {
+        if (!window.denseMode && isGalleryVisible()) {
             return;
         } dropHandler(e);
     });

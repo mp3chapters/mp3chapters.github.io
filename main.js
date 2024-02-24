@@ -13,6 +13,8 @@ window.chapters = chapters;
 
 window.currentTime = 0;
 
+window.denseMode = document.querySelector("body").classList.contains("dense");
+
 window.allowClosing = true;
 window.addEventListener('beforeunload', function (e) {
     if (window.allowClosing) {
@@ -68,6 +70,9 @@ document.addEventListener('DOMContentLoaded', function () {
     textInput.addEventListener('mousedown', editText);
     textInput.addEventListener('input', adjustTextAreaHeight);
 
+    document.getElementById('activate-dense-mode-button').addEventListener('click', activateDenseMode);
+    document.getElementById('close-dense-mode-button').addEventListener('click', deactivateDenseMode);
+
     tippy('[data-tippy-content]');
 
     initializeDragDrop((filename, blob) => {
@@ -103,6 +108,21 @@ function setColorScheme() {
         document.documentElement.dataset.bsTheme = 'light';
         hero.src = 'hero.jpg';
     }
+}
+
+function activateDenseMode() {
+    window.denseMode = true;
+    document.querySelector("body").classList.add("dense");
+    // store preferenc for dense mode
+    localStorage.setItem('denseMode', true);
+}
+
+function deactivateDenseMode() {
+    window.denseMode = false;
+    document.querySelector("body").classList.remove("dense");
+    document.getElementById("edit-chapter-heading").scrollIntoView({ behavior: "instant" });
+    // store preferenc for dense mode
+    localStorage.setItem('denseMode', false);
 }
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
@@ -165,7 +185,7 @@ player.addEventListener('time-update', (e) => {
     const button = document.getElementById('addTimestamp');
     const buttonWidth = button.offsetWidth;
     // const leftOffset = button.parentElement.style.paddingLeft + document.getElementById('wave').style.paddingLeft;
-    const leftOffset = 16 + 15.5;
+    const leftOffset = window.denseMode ? 15.5 : 16 + 15.5;
     const innerWidth = document.getElementById('wave').offsetWidth - leftOffset;
     const left = leftOffset + innerWidth * e.detail.currentTime / chapters.duration + 7; // 7 is the offset of the button
     button.style.position = 'absolute';
@@ -174,7 +194,7 @@ player.addEventListener('time-update', (e) => {
     } else {
         button.style.left = left - buttonWidth - 2*7 + 'px';
     }
-    button.style.top = '80px';
+    button.style.top = window.denseMode ? '66px' : '80px';
     button.style.zIndex = '5';
 });
 
@@ -195,6 +215,10 @@ document.getElementById('mp3FileInputTriggerButton').addEventListener('click', (
     document.getElementById('mp3FileInput').click();
 });
 
+document.getElementById('mp3FileInputTriggerButton-dense').addEventListener('click', () => {
+    document.getElementById('mp3FileInput').click();
+});
+
 document.getElementById('mp3FileInput').addEventListener('change', function () {
     const fileInput = document.getElementById('mp3FileInput');
     const file = fileInput.files[0];
@@ -202,6 +226,10 @@ document.getElementById('mp3FileInput').addEventListener('change', function () {
 });
 
 document.getElementById('addTagsButton').addEventListener('click', function () {
+    exportFile(window.currentFile);
+});
+
+document.getElementById('addTagsButton-dense').addEventListener('click', function () {
     exportFile(window.currentFile);
 });
 

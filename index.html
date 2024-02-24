@@ -372,6 +372,123 @@
             font-size: 0.7em;
             max-height: 450px;
         }
+
+        .dense nav,
+        .dense #hero,
+        .dense #edit-chapter-heading,
+        .dense h2,
+        .dense p,
+        .dense .alert,
+        .dense #tag-editing,
+        .dense #cover-image-section,
+        .dense footer,
+        .dense #export-buttons-section {
+            display: none !important;
+        }
+
+        .dense body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .dense main {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            /* 1/3 for x, 2/3 for y and z combined */
+            grid-template-columns: auto 210px;
+            /* 5 equal columns, y spans 4 (80%), z spans 1 (20%) */
+            height: 100vh;
+            /* Full screen height */
+            width: 100vw;
+            max-width: none;
+            margin: 0;
+            padding: 0 !important;
+        }
+
+        .dense #player-container {
+            grid-column: 1 / -1;
+            margin: 0 0 -7px 0 !important;
+            border: 0;
+        }
+
+        .dense #player-container div.card-header {
+            border-radius: 0;
+        }
+
+        .dense #player-container div.card-body {
+            padding: 0;
+            height: 186.5px;
+        }
+
+        .dense #editor-container {
+            grid-row: 2;
+            grid-column: 1;
+            margin: 0 !important;
+            min-height: 100%;
+            max-height: 100%;
+            height: 100% !important;
+            overflow-y: scroll;
+        }
+
+        .dense #editor-container #text-input,
+        .dense #editor-container #text-display {
+            min-height: 100%;
+        }
+
+        .dense #gallery-container {
+            grid-row: 2;
+            grid-column: 2;
+            margin: 0 !important;
+            padding-top: 5px;
+            border: 0;
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        .dense #gallery-container #upload-image-button {
+            font-size: 90%;
+            margin-left: 8px;
+        }
+
+        .dense #gallery-container .card-header {
+            display: none;
+        }
+
+        .dense #gallery-container .card-body {
+            padding: 0;
+        }
+
+        .dense #gallery {
+            border: 0 !important;
+            padding: 0 0.2rem !important;
+            margin: 0 !important;
+        }
+
+        .dense #gallery figure {
+            margin: 6px 0 0 0 !important;
+        }
+
+        .dense #gallery .gallery-img {
+            height: auto;
+            margin-bottom: 0;
+        }
+
+        .dense #hint-gallery-drag-drop {
+            display: none;
+        }
+
+        #dense-mode-controls {
+            display: none;
+        }
+
+        .dense #dense-mode-controls {
+            display: block;
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            z-index: 10;
+        }
     </style>
     <script type="module" src="https://cdn.jsdelivr.net/npm/vidstack/dist/cdn/prod.js"></script>
 
@@ -397,6 +514,10 @@
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.dataset.bsTheme = 'dark';
         }
+
+        if (localStorage.getItem('denseMode') === 'true') {
+            document.body.classList.add('dense');
+        }
     </script>
 
     <nav class="navbar bg-body-tertiary" style="z-index: 2;">
@@ -407,8 +528,10 @@
                     <path fill-rule="evenodd"
                         d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
                 </svg>
-                <span class="d-none d-sm-inline">Online</span> MP3 Podcast Chapter Editor</a> 
-            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">| &nbsp;<a href="/player" class="text-dark-emphasis" data-tippy-content="Desktop app for playing MP3 with chapters">Player</a></span>
+                <span class="d-none d-sm-inline">Online</span> MP3 Podcast Chapter Editor</a>
+            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">|
+                &nbsp;<a href="/player" class="text-dark-emphasis"
+                    data-tippy-content="Desktop app for playing MP3 with chapters">Player</a></span>
             <a href="https://github.com/mp3chapters/mp3chapters.github.io" class="icon-link ms-auto">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
                     viewBox="0 0 16 16" aria-hidden="true">
@@ -491,9 +614,10 @@
                 <span id="filename">example.mp3</span>
             </div>
             <div class="card-body position-relative" style="visibility: hidden;">
-                <button id="addTimestamp" class="btn btn-sm btn-primary icon-link" style="position: absolute; display: none;"><svg
-                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-plus-circle-fill" viewBox="0 0 16 16" aria-hidden="true">
+                <button id="addTimestamp" class="btn btn-sm btn-primary icon-link"
+                    style="position: absolute; display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16"
+                        aria-hidden="true">
                         <path
                             d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
                     </svg> add chapter</button>
@@ -531,7 +655,18 @@
             </div>
         </div>
 
-        <h2>Edit chapters</h2>
+        <div id="edit-chapter-heading" class="d-flex align-items-center">
+            <h2>Edit chapters</h2>
+            <button class="btn btn-sm btn-outline-dark icon-link ms-auto d-none d-md-inline-flex"
+                id="activate-dense-mode-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-fullscreen" viewBox="0 0 16 16">
+                    <path
+                        d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5" />
+                </svg>
+                Dense mode (for experienced users)
+            </button>
+        </div>
 
         <p>Chapters are managed using the same syntax also used by YouTube. Each chapter is one line, starting with the
             timestamp when the chapter begins (for example <code>03:20</code> or using milliseconds
@@ -593,9 +728,11 @@
                 Advanced: Chapter URLs, images, hidden chapters
             </summary>
             <div class="card-body">
-                <p>Each chapter can be assigned a <strong>link</strong> that will be shown by some players. To add a link, add the URL
+                <p>Each chapter can be assigned a <strong>link</strong> that will be shown by some players. To add a
+                    link, add the URL
                     (starting with <code>http://</code> or <code>https://</code>) to the end of the chapter line.</p>
-                <p>Each chapter can be assigned an <strong>image</strong>. To add an image, upload an image below and add its code (for example
+                <p>Each chapter can be assigned an <strong>image</strong>. To add an image, upload an image below and
+                    add its code (for example
                     <code>&lt;img-6&gt;</code>) to the end of the chapter line.
                     Images in the gallery that are not assigned to a chapter are ignored.
                     The same image can be used for multiple chapters.
@@ -603,14 +740,16 @@
                     A chapter can get both a link and an image.
                 </p>
                 <p>
-                    A chapter can be <strong>hidden</strong> from the table of contents (i.e., the chapter list). This can be useful to show
+                    A chapter can be <strong>hidden</strong> from the table of contents (i.e., the chapter list). This
+                    can be useful to show
                     a chapter image for some time period without showing a separate chapter.
-                    To hide a chapter, begin its name with <code>_</code> (an underscore), for example <code>_photo</code> or simply <code>_</code>.
+                    To hide a chapter, begin its name with <code>_</code> (an underscore), for example
+                    <code>_photo</code> or simply <code>_</code>.
                     Note that hidden chapters are ignored by some players.
                 </p>
-                <button class="btn btn-secondary me-1" id="upload-image-button">Upload image</button> or drag and drop
-                file
                 <input type="file" id="imageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp" multiple>
+                <button class="btn btn-secondary me-1" id="upload-image-button">Upload image</button>
+                <span id="hint-gallery-drag-drop">or drag and drop file</span>
                 <div class="container mt-2 border border-2 rounded p-2 d-flex flex-wrap" id="gallery">
                 </div>
                 <div id="gallery-drop-overlay">
@@ -683,7 +822,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 mb-3" style="padding-right: 12px;">
+        <div class="col-12 col-md-6 mb-3" style="padding-right: 12px;" id="cover-image-section">
             <div class="card">
                 <div class="card-header py-2 icon-link">
                     <span class="text-muted">Cover image</span>
@@ -700,7 +839,7 @@
 
         <h2>Export</h2>
 
-        <div class="gap-2 d-flex align-items-center mt-2">
+        <div class="gap-2 d-flex align-items-center mt-2" id="export-buttons-section">
             <button id="addTagsButton" class="btn btn-success btn-lg icon-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16" aria-hidden="true">
@@ -727,7 +866,8 @@
                         Chapter JSON</a>
                     and
                     <a href="https://podlove.org/simple-chapters/">Podlove Simple Chapters XML</a>
-                    formats, which can be added to a podcast RSS feed via embedding into the <code>&lt;item&gt;</code> tag (XML) 
+                    formats, which can be added to a podcast RSS feed via embedding into the <code>&lt;item&gt;</code>
+                    tag (XML)
                     or by adding a link (JSON, XML).
                     While most podcast players use embedded chapters,
                     some other players (notably <a class="alert-link fw-normal"
@@ -741,7 +881,8 @@
                 </div>
                 <div class="card d-none" id="imageLinkInfo">
                     <div class="card-body">
-                        <p class="mb-1">You will need to upload the images to a web server and add the URLs to the chapter list.</p>
+                        <p class="mb-1">You will need to upload the images to a web server and add the URLs to the
+                            chapter list.</p>
                         <div class="form-floating mb-2">
                             <input type="text" class="form-control" id="imageURL"
                                 value="http://yourpodcast.com/episode-8/">
@@ -878,6 +1019,35 @@
             </div>
         </div>
     </footer>
+
+    <div id="dense-mode-controls" aria-hidden="true">
+        <button class="btn btn-sm btn-outline-primary icon-link" id="mp3FileInputTriggerButton-dense">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" aria-hidden="true"
+                class="bi bi-filetype-mp3" viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5Zm-4.911 9.67h-.443v-.609h.422a.688.688 0 0 0 .322-.073.558.558 0 0 0 .22-.2.505.505 0 0 0 .076-.284.49.49 0 0 0-.176-.392.652.652 0 0 0-.442-.15.74.74 0 0 0-.252.041.625.625 0 0 0-.193.112.496.496 0 0 0-.179.349H7.71c.006-.157.04-.302.102-.437.063-.135.153-.252.27-.352.117-.101.26-.18.428-.237.17-.057.364-.086.583-.088.279-.002.52.042.723.132.203.09.36.214.472.372a.91.91 0 0 1 .173.539.833.833 0 0 1-.12.478.96.96 0 0 1-.619.439v.041a1.008 1.008 0 0 1 .718.434.909.909 0 0 1 .144.521c.002.19-.037.359-.117.507a1.104 1.104 0 0 1-.329.378c-.14.101-.302.18-.486.234-.182.053-.376.08-.583.08-.3 0-.558-.051-.77-.153a1.206 1.206 0 0 1-.487-.41 1.094 1.094 0 0 1-.178-.563h.726a.457.457 0 0 0 .106.258.664.664 0 0 0 .249.179.98.98 0 0 0 .357.067.903.903 0 0 0 .384-.076.598.598 0 0 0 .252-.217.56.56 0 0 0 .088-.319.556.556 0 0 0-.334-.522.81.81 0 0 0-.372-.079ZM.706 15.925v-2.66h.038l.952 2.16h.516l.946-2.16h.038v2.66h.715v-3.999h-.8l-1.14 2.596h-.026l-1.14-2.596H0v4h.706Zm5.458-3.999h-1.6v4h.792v-1.342h.803c.287 0 .53-.058.732-.173.203-.118.357-.276.463-.475a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.475-.158-.677a1.175 1.175 0 0 0-.46-.477 1.4 1.4 0 0 0-.733-.179Zm.545 1.333a.795.795 0 0 1-.085.381.574.574 0 0 1-.237.24.793.793 0 0 1-.375.082h-.66v-1.406h.66c.219 0 .39.06.513.182.123.12.184.295.184.521Z" />
+            </svg>
+            Load File
+        </button>
+        <button class="btn btn-sm btn-outline-success icon-link" id="addTagsButton-dense">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                    d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                <path
+                    d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+            </svg>
+            Export
+        </button>
+        <button class="btn btn-sm btn-outline-dark icon-link" id="close-dense-mode-button">
+            Close dense mode
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-fullscreen-exit" viewBox="0 0 16 16">
+                <path
+                    d="M5.5 0a.5.5 0 0 1 .5.5v4A1.5 1.5 0 0 1 4.5 6h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5m5 0a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 10 4.5v-4a.5.5 0 0 1 .5-.5M0 10.5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 6 11.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5m10 1a1.5 1.5 0 0 1 1.5-1.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0z" />
+            </svg>
+        </button>
+    </div>
 
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
