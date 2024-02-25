@@ -250,6 +250,26 @@
             margin-top: -3px;
         }
 
+        .btn-outline-secondary {
+            --bs-btn-color: hsl(208, 7%, 27%);
+            --bs-btn-border-color: hsl(208, 7%, 27%);
+        }
+
+        [data-bs-theme="dark"] .btn-outline-secondary {
+            --bs-btn-color: hsl(208, 7%, 80%);
+            --bs-btn-border-color: hsl(208, 7%, 80%);
+        }
+
+        [data-bs-theme="dark"] .btn-outline-success {
+            --bs-btn-color: hsl(152, 69%, 45%);
+            --bs-btn-border-color: hsl(152, 69%, 45%);
+        }
+
+        [data-bs-theme="dark"] .btn-outline-primary {
+            --bs-btn-color: hsl(216, 98%, 75%);
+            --bs-btn-border-color: hsl(216, 98%, 75%);
+        }
+
         .form-floating>label {
             color: #6c757d;
         }
@@ -659,7 +679,7 @@
 
         <div id="edit-chapter-heading" class="d-flex align-items-center">
             <h2>Edit chapters</h2>
-            <button class="btn btn-sm btn-outline-dark icon-link ms-auto d-none d-md-inline-flex"
+            <button class="btn btn-sm btn-outline-secondary icon-link ms-auto d-none d-md-inline-flex"
                 id="activate-dense-mode-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-fullscreen" viewBox="0 0 16 16">
@@ -1041,7 +1061,7 @@
             </svg>
             Export
         </button>
-        <button class="btn btn-sm btn-outline-dark icon-link" id="close-dense-mode-button">
+        <button class="btn btn-sm btn-outline-secondary icon-link" id="close-dense-mode-button">
             Close dense mode
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                 class="bi bi-fullscreen-exit" viewBox="0 0 16 16">
