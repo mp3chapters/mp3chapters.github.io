@@ -15,6 +15,7 @@ async function exportFileBasedOnOldTags(file, tags) {
         usedURLs: false,
         changedID3Fields: false,
         changedCoverImage: false,
+        usedDenseMode: window.usedDenseMode,
     };
     let chapterIndex = 0;
     for (let chapter of window.chapters.getChapters()) {

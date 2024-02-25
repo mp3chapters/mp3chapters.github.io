@@ -112,6 +112,9 @@ export function displayChapterList() {
         if (keyStrokeCount > 10) {
             window.allowClosing = false; 
         }
+        if (window.denseMode) {
+            window.usedDenseMode = true;
+        }
         keyStrokeCount++;
     });
 

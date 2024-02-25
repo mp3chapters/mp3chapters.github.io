@@ -14,6 +14,7 @@ window.chapters = chapters;
 window.currentTime = 0;
 
 window.denseMode = document.querySelector("body").classList.contains("dense");
+window.usedDenseMode = false;
 
 window.allowClosing = true;
 window.addEventListener('beforeunload', function (e) {
