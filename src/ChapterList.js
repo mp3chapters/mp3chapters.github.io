@@ -114,7 +114,7 @@ export class ChapterList {
         this.chapters.forEach(chapter => {
             if (!chapter.error) {
                 const chapterObject = {
-                    startTime: secondsToString(chapter.start),
+                    startTime: chapter.start / 1000,
                     title: chapter.title,
                 };
                 if (chapter.url) {
