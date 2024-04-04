@@ -193,7 +193,7 @@ export function encodeImage(image) {
             console.log("Image loaded");
             // no need to resize
             if (image.mime === 'image/jpeg' && img.width <= 1400 && img.height <= 1400
-                || image.mime === 'image/png' && image.imageBuffer.size < 100000 ) {
+                || image.mime === 'image/png' && image.imageBuffer.length < 100000 ) {
                 resolve(image);
             } else {
                 console.log("Resizing image");
