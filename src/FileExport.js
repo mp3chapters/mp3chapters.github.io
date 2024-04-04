@@ -31,7 +31,7 @@ async function exportFileBasedOnOldTags(file, tags) {
             if (chapter.title[0] == "_") {
                 chapterObject.tags.title = chapter.title.substring(1);
             }
-            if (chapter.hasOwnProperty('url')) {
+            if (chapter.hasOwnProperty('url') && chapter.url) {
                 chapterObject.tags.userDefinedUrl = {
                     url: chapter.url,
                 }
