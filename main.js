@@ -1,5 +1,9 @@
-import WaveSurfer from './libs/wavesurfer.esm.js'
-import { secondsToString, stringToSeconds } from './src/utils.js';
+import WaveSurfer from './libs/wavesurfer.esm.js';
+import * as popperModule from './libs/popper.min.js';
+import * as tippyModule from './libs/tippy-bundle.umd.min.js';
+import * as nodeID3Module from './node-id3-browserify.min.js';
+import * as vidstackModule from './libs/vidstack.js';
+
 import { ChapterList } from './src/ChapterList.js';
 import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText, adjustTextAreaHeight, highlightCurrentLine } from './src/ChapterListEditor.js';
 import { loadFile } from './src/FileLoader.js';
