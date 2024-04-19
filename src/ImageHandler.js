@@ -187,10 +187,7 @@ export function encodeImage(image) {
     return new Promise((resolve, reject) => {
         var img = new Image();
 
-        console.log("Encoding image", image);
-
         img.onload = function () {
-            console.log("Image loaded");
             // no need to resize
             if (image.mime === 'image/jpeg' && img.width <= 1400 && img.height <= 1400
                 || image.mime === 'image/png' && image.imageBuffer.length < 100000 ) {
