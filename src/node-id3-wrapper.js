@@ -2,6 +2,7 @@
 //   `browserify src/node-id3-wrapper.js > node-id3-browserify.js`
 // or
 //   `browserify -g @browserify/uglifyify src/node-id3-wrapper.js > node-id3-browserify.js`
+// if needed, run `cd node_modules/node-id3 && npm install && npm run build` to build the node-id3 module
 
 const NodeID3 = require('node-id3');
 
