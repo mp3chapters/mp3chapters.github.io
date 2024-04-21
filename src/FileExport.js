@@ -54,7 +54,6 @@ async function exportFileBasedOnOldTags(file, tags) {
     }
     tags.chapter = chapterTag;
     tags.tableOfContents = tocTag;
-    // console.log("Exporting", chapterTag);
 
     for (let field of window.fieldNames) {
         const input = document.getElementById(`field-${field}`);
@@ -84,7 +83,9 @@ async function exportFileBasedOnOldTags(file, tags) {
         downloadLink.click();
     });
 
-    if (window.currentFilename != "example.mp3") {
+    if (window.currentFilename != "example.mp3" 
+        && window.location.host == "mp3chapters.github.io"
+        && eventTag.durationMinutes > 4) {
         // send event to Google Analytics
         gtag('event', 'export', eventTag);
         // send event to custom logger
@@ -105,11 +106,10 @@ export function exportFile(file) {
 }
 
 export async function exportImageZip() {
-    // first load jszip (/js/jszip.min.js)
     const script = document.createElement('script');
     script.src = '/libs/jszip.min.js';
     script.onload = async function() {
-        // then create zip file
+        // Create zip file
         const zip = new JSZip();
         const imageFolder = zip.folder("images");
         for (let i = 0; i < window.chapterImages.length; i++) {
