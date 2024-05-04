@@ -7,14 +7,38 @@ function arrayEquals(a, b) {
 
 let initialLoad = true;
 
+function activateWave() {
+    const playerCard = document.querySelector('#player-container > .card-body');
+    playerCard.style.height = '';
+    playerCard.style.paddingTop = '';
+    wave.style.display = 'block';
+    window.waveHidden = false;
+}
+
+function deactivateWave() {
+    const playerCard = document.querySelector('#player-container > .card-body');
+    playerCard.style.height = '';
+    playerCard.style.paddingTop = '50px';
+    wave.style.display = 'none';
+    window.waveHidden = true;
+}
+
 export function loadFile(file, wave, player) {
     window.currentFilename = file.name;
     window.currentFile = file;
     window.chapters.duration = -1;
     window.chapterImages = [];
     document.getElementById('gallery-container').open = window.denseMode;
-    wave.loadBlob(file);
+    const megabyte = 1024 * 1024;
+    if (file.size < 50 * megabyte) {
+        activateWave();
+        wave.loadBlob(file);
+    } else {
+        deactivateWave();
+        wave.loadBlob(null);
+    }
     player.src = { src: file, type: 'audio/object' };
+    player.currentTime = 0;
 
     let tags;
     readTags(file, (fileTags) => {

@@ -53,10 +53,6 @@
             height: 100px;
         }
 
-        #player-container .card-body {
-            height: 218.5px;
-        }
-
         #player {
             z-index: 10;
         }
@@ -69,6 +65,11 @@
         :where(media-menu:not([data-submenu]) > [data-media-menu-items]) {
             top: 100%;
             bottom: auto;
+        }
+
+        button#addTimestamp {
+            position: absolute;
+            z-index: 5;
         }
 
         #editor-container {
@@ -505,7 +506,7 @@
             position: absolute;
             top: 4px;
             right: 6px;
-            z-index: 10;
+            z-index: 5;
         }
     </style>
 
@@ -1013,7 +1014,7 @@
                                 target="_blank" rel="license noopener">MIT</a>.
                             Available on <a href="https://github.com/mp3chapters/mp3chapters.github.io">GitHub</a>,
                             feedback welcome!</li>
-                        <li class="mb-2">First published November 2023. Last updated April 2024.</li>
+                        <li class="mb-2">First published November 2023. Last updated May 2024.</li>
                     </ul>
                 </div>
             </div>

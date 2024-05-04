@@ -124,6 +124,7 @@ function activateDenseMode() {
     document.getElementById("gallery-container").open = true;
     // store preference for dense mode
     localStorage.setItem('denseMode', true);
+    updateButtonPosition();
 }
 
 function deactivateDenseMode() {
@@ -132,6 +133,7 @@ function deactivateDenseMode() {
     document.getElementById("edit-chapter-heading").scrollIntoView({ behavior: "instant" });
     // store preference against dense mode
     localStorage.setItem('denseMode', false);
+    updateButtonPosition();
 }
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
@@ -146,7 +148,7 @@ const wave = WaveSurfer.create({
     cursorWidth: 3,
     dragToSeek: true,
     partialRender: true,
-    sampleRate: 8000,
+    sampleRate: 5000,
     barWidth: 4,
     barGap: 1,
     height: 100,
@@ -166,6 +168,7 @@ wave.on('load', () => {
         waveColor: '#ddd',
         progressColor: '#999',
     });
+    wave.setTime(window.currentTime);
 });
 
 wave.on('ready', () => {
@@ -174,6 +177,7 @@ wave.on('ready', () => {
         progressColor: 'purple',
     });
     document.getElementById("addTimestamp").style.display = null;
+    wave.setTime(window.currentTime);
 });
 
 player.addEventListener('loaded-data', () => {
@@ -186,25 +190,36 @@ player.addEventListener('play', () => {
     addChaptersToPlayer();
 });
 
+function updateButtonPosition() {
+    // move add chapter button to cursor
+    const button = document.getElementById('addTimestamp');
+    const buttonWidth = button.offsetWidth;
+    // compute style
+    if (window.waveHidden) {
+        button.style.top = '10px';
+    } else {
+        button.style.top = window.denseMode ? '66px' : '80px';
+    }
+    const cardPadding = window.denseMode ? 0 : 15.5;
+    const leftOffset = 16; // padding of displayed wave within player
+    const rightOffset = leftOffset;
+    const innerWidth = player.offsetWidth - leftOffset - rightOffset;
+    const buttonGap = window.waveHidden ? 0 : 7;
+    const left = cardPadding + leftOffset + innerWidth * window.currentTime / chapters.duration;
+    if (left + buttonWidth < leftOffset + innerWidth) {
+        button.style.left = left + buttonGap + 'px';
+        button.style.flexDirection = '';
+    } else {
+        button.style.left = left - buttonWidth - buttonGap + 'px';
+        button.style.flexDirection = 'row-reverse';
+    }
+}
+
 player.addEventListener('time-update', (e) => {
     window.currentTime = e.detail.currentTime;
     wave.setTime(e.detail.currentTime);
     highlightCurrentLine();
-    // move add chapter button to cursor
-    const button = document.getElementById('addTimestamp');
-    const buttonWidth = button.offsetWidth;
-    // const leftOffset = button.parentElement.style.paddingLeft + document.getElementById('wave').style.paddingLeft;
-    const leftOffset = window.denseMode ? 15.5 : 16 + 15.5;
-    const innerWidth = document.getElementById('wave').offsetWidth - leftOffset;
-    const left = leftOffset + innerWidth * e.detail.currentTime / chapters.duration + 7; // 7 is the offset of the button
-    button.style.position = 'absolute';
-    if (left + buttonWidth < leftOffset + innerWidth) {
-        button.style.left = left + 'px';
-    } else {
-        button.style.left = left - buttonWidth - 2*7 + 'px';
-    }
-    button.style.top = window.denseMode ? '66px' : '80px';
-    button.style.zIndex = '5';
+    updateButtonPosition();
 });
 
 player.addEventListener('duration-change', (e) => {
@@ -258,6 +273,8 @@ document.getElementById('copyListButton').addEventListener('click', function () 
         console.error('Error copying text: ', error);
     });
 });
+
+window.addEventListener('resize', updateButtonPosition);
 
 // for (const input of document.querySelectorAll('#tag-editing input')) {
 //     input.addEventListener('keydown', function () {
