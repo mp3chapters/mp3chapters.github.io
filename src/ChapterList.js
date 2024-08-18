@@ -1,4 +1,5 @@
-import { secondsToString } from './utils.js';
+import { secondsToString, stringToSeconds } from './utils.js';
+import { addToGallery } from './ImageHandler.js';
 
 export class ChapterList {
     constructor() {
@@ -102,6 +103,48 @@ export class ChapterList {
         return xmlChapters;
     }
 
+    async importFromPodlove(xmlString) {
+        try {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+    
+            const chapterElements = xmlDoc.querySelectorAll("psc\\:chapter");
+            const newChapters = [];
+    
+            for (let chapterElement of chapterElements) {
+                const start = stringToSeconds(chapterElement.getAttribute("start"));
+                const title = chapterElement.getAttribute("title");
+                const href = chapterElement.getAttribute("href");
+                const image = chapterElement.getAttribute("image");
+    
+                const newChapter = { title, start };
+                if (href) {
+                    newChapter.url = href;
+                }
+    
+                if (image) {
+                    try {
+                        const response = await fetch(image, { mode: 'no-cors' });
+                        const blob = await response.blob();
+                        const fileName = image.split('/').pop();
+                        const file = new File([blob], fileName, { type: blob.type });
+    
+                        const imageId = await addToGallery(file);
+                        newChapter.imageId = imageId;
+                    } catch (error) {
+                        console.error('Error fetching image:', error);
+                    }
+                }
+    
+                newChapters.push(newChapter);
+            }
+    
+            this.setChapters(newChapters);
+        } catch (error) {
+            console.error('Error importing chapters from XML:', error);
+        }
+    }
+
     exportAsJSON() {
         const includeImgLinks = document.getElementById('imgLinkSwitch').checked;
         let baseURL = document.getElementById('imageURL').value;
@@ -135,6 +178,47 @@ export class ChapterList {
             version: '1.2.0',
             chapters: jsonChapters,
         }, null, 4);
+    }
+
+    async importFromJSON(jsonString) {
+        try {
+            const data = JSON.parse(jsonString);
+    
+            if (!data.chapters || !Array.isArray(data.chapters)) {
+                throw new Error("Invalid JSON format for chapters.");
+            }
+    
+            const newChapters = [];
+    
+            for (let chapterData of data.chapters) {
+                const start = stringToSeconds(chapterData.startTime);
+                const newChapter = { title: chapterData.title, start };
+    
+                if (chapterData.url) {
+                    newChapter.url = chapterData.url;
+                }
+    
+                if (chapterData.img) {
+                    try {
+                        const response = await fetch(chapterData.img, { mode: 'no-cors' });
+                        const blob = await response.blob();
+                        const fileName = chapterData.img.split('/').pop();
+                        const file = new File([blob], fileName, { type: blob.type });
+    
+                        const imageId = await addToGallery(file);
+                        newChapter.imageId = imageId;
+                    } catch (error) {
+                        console.error('Error fetching image:', error);
+                    }
+                }
+    
+                newChapters.push(newChapter);
+            }
+    
+            this.setChapters(newChapters);
+        } catch (error) {
+            console.error('Error importing chapters from JSON:', error);
+        }
     }
 
     exportAsList() {

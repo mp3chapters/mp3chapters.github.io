@@ -56,8 +56,7 @@ export function initializeImageHandling() {
     });
 }
 
-function addToGallery(file) {
-    console.log(file);
+export function addToGallery(file) {
     let reader = new FileReader();
     reader.onload = function (e) {
         const image = {
@@ -73,6 +72,7 @@ function addToGallery(file) {
         lastImage.scrollIntoView();
     };
     reader.readAsArrayBuffer(file);
+    return window.chapterImages.length; // return index of image
 }
 
 function isImageFile(ev) {
