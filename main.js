@@ -30,7 +30,7 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 // id3 field names that are supported
-window.fieldNames = ["title", "artist", "album", "trackNumber", "genre", "year", "copyright", "publisher", "language", "encodedBy"];
+window.fieldNames = ["title", "artist", "album", "trackNumber", "genre", "year", "date", "copyright", "publisher", "language", "encodedBy"];
 
 function addChaptersToPlayer() {
     const chapters_ = chapters.getChapters();
