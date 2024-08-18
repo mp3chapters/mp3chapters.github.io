@@ -11,8 +11,15 @@ class="bi bi-clipboard2-check" viewBox="0 0 16 16">
     <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z" id="publove-copy-check" style="visibility: hidden" />
 </svg>`;
 
+const deleteSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+  <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+</svg>`;
+
 export function initializeImageHandling() {
     window.chapterImages = [];
+    window.hiddenImages = new Set(); // images that are not displayed in the gallery
+
+    window.chapters.addEventListener(buildGallery);
 
     const container = document.getElementById('gallery-container');
     container.addEventListener('drop', dropHandler);
@@ -54,6 +61,33 @@ export function initializeImageHandling() {
         };
         reader.readAsArrayBuffer(file);
     });
+
+    document.getElementById('clean-gallery-button').addEventListener('click', function () {
+        // find all images that are not used by any chapter
+        // and add their indexes to the hiddenImages array
+        const usedImages = getUsedImages();
+        window.hiddenImages = new Set();
+        for (let i = 0; i < window.chapterImages.length; i++) {
+            if (!usedImages.has(i)) {
+                window.hiddenImages.add(i);
+            }
+        }
+        buildGallery();
+    });
+}
+
+function getUsedImages() {
+    const usedImages = new Map(); // number of times each image is used
+    for (const chapter of window.chapters.getChapters()) {
+        if (chapter.imageId !== undefined) {
+            if (usedImages.has(chapter.imageId)) {
+                usedImages.set(chapter.imageId, usedImages.get(chapter.imageId) + 1);
+            } else {
+                usedImages.set(chapter.imageId, 1);
+            }
+        }
+    }
+    return usedImages;
 }
 
 function addToGallery(file) {
@@ -143,10 +177,14 @@ export function buildGallery() {
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
     gallery.style.visibility = 'hidden';
+    const usedImages = getUsedImages();
     for (let i = 0; i < window.chapterImages.length; i++) {
         gallery.style.visibility = 'visible';
         const image = window.chapterImages[i];
         const figure = document.createElement('figure');
+        if (window.hiddenImages.has(i) && !usedImages.has(i)) {
+            figure.style.display = 'none';
+        }
         figure.className = 'figure mx-2';
         const img = document.createElement('img');
         const blob = new Blob([image.imageBuffer], { type: image.mime });
@@ -176,6 +214,25 @@ export function buildGallery() {
             });
         });
         figcaption.appendChild(button);
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-sm btn-light btn-gallery-delete';
+        deleteButton.ariaLabel = "Delete image";
+        deleteButton.innerHTML = deleteSVG;
+        tippy(deleteButton, { content: `Delete image (used ${usedImages.get(i) || 0} times)`, placement: 'auto' });
+        deleteButton.addEventListener('click', function () {
+            window.hiddenImages.add(i);
+            for (const chapter of window.chapters.getChapters()) {
+                if (chapter.imageId === i) {
+                    chapter.imageId = undefined;
+                }
+            }
+            if (usedImages.has(i)) {
+                // something was changed, so need to update the chapters
+                window.chapters.setChapters(window.chapters.getChapters());
+            }
+            buildGallery();
+        });
+        figcaption.appendChild(deleteButton);
         figure.appendChild(img);
         figure.appendChild(figcaption);
         gallery.appendChild(figure);

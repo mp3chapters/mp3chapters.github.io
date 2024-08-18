@@ -231,19 +231,22 @@
             margin-bottom: 2px;
         }
 
-        .btn-gallery-copy {
+        .btn-gallery-copy, 
+        .btn-gallery-delete {
             margin-left: 6px;
             padding: 0 2px;
             background-color: rgb(237, 239, 240);
         }
 
-        [data-bs-theme="dark"] .btn-gallery-copy {
+        [data-bs-theme="dark"] .btn-gallery-copy,
+        [data-bs-theme="dark"] .btn-gallery-delete {
             background-color: rgb(62, 74, 87);
             color: rgb(255, 255, 255);
             border-color: rgb(62, 74, 87);
         }
 
-        .btn-gallery-copy svg {
+        .btn-gallery-copy svg,
+        .btn-gallery-delete svg {
             height: 0.7em;
             margin-top: -3px;
         }
@@ -759,6 +762,7 @@
                         Drop an image file to load.
                     </div>
                 </div>
+                <button class="btn mt-2 btn-sm btn-outline-secondary" id="clean-gallery-button">Clear unused images</button>
             </div>
         </details>
 
