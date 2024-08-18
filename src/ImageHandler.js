@@ -20,6 +20,7 @@ export function initializeImageHandling() {
     window.hiddenImages = new Set(); // images that are not displayed in the gallery
 
     window.chapters.addEventListener(buildGallery);
+    document.addEventListener('paste', handlePaste);
 
     const container = document.getElementById('gallery-container');
     container.addEventListener('drop', dropHandler);
@@ -101,12 +102,16 @@ function addToGallery(file) {
         };
         window.chapterImages.push(image);
         buildGallery();
-        // scroll to bottom of gallery
-        const gallery = document.getElementById('gallery');
-        const lastImage = gallery.lastElementChild;
-        lastImage.scrollIntoView();
+        container.open = true;
+        // scroll to bottom of gallery, unless text-input is focused
+        if (document.activeElement !== document.getElementById('text-input')) {
+            const gallery = document.getElementById('gallery');
+            const lastImage = gallery.lastElementChild;
+            lastImage.scrollIntoView();
+        }
     };
     reader.readAsArrayBuffer(file);
+    return window.chapterImages.length;
 }
 
 function isImageFile(ev) {
@@ -152,6 +157,71 @@ function dropHandler(ev) {
                 }
             }
         });
+    }
+}
+
+function handlePaste(e) {
+
+    if (e.target.id === 'text-input') {
+        handleTextInputPaste(e);
+        return;
+    }
+
+    const items = e.clipboardData.items;
+    let imageFound = false;
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+            imageFound = true;
+            const blob = items[i].getAsFile();
+            addToGallery(blob);
+        }
+    }
+
+    if (imageFound) {
+        e.preventDefault();
+    }
+}
+
+function handleTextInputPaste(e) {
+    const items = e.clipboardData.items;
+    let imageItem = null;
+    let nonImageItemCount = 0;
+
+    // Check clipboard contents
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf('image') !== -1) {
+            imageItem = items[i];
+        } else {
+            nonImageItemCount++;
+        }
+    }
+
+    // If there's exactly one image and nothing else
+    if (imageItem && nonImageItemCount === 0) {
+        e.preventDefault();
+        const blob = imageItem.getAsFile();
+        const newImageId = addToGallery(blob);
+        
+        // Insert the image tag at the end of the current line
+        const textInput = document.getElementById('text-input');
+        const cursorPos = textInput.selectionStart;
+        const textValue = textInput.value;
+        const lineStart = textValue.lastIndexOf('\n', cursorPos - 1) + 1;
+        const lineEnd = textValue.indexOf('\n', cursorPos);
+        const insertPos = lineEnd === -1 ? textValue.length : lineEnd;
+
+        const textBefore = textValue.substring(0, insertPos);
+        const textAfter = textValue.substring(insertPos);
+        const newText = textBefore + ` <img-${newImageId}>` + textAfter;
+        textInput.value = newText;
+
+        // Move the cursor after the inserted tag
+        const newCursorPos = insertPos + ` <img-${newImageId}>`.length;
+        textInput.setSelectionRange(newCursorPos, newCursorPos);
+
+        // Trigger any necessary events (e.g., for reactive frameworks)
+        textInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
 }
 
