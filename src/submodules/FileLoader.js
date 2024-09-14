@@ -11,7 +11,7 @@ function activateWave() {
     const playerCard = document.querySelector('#player-container > .card-body');
     playerCard.style.height = '';
     playerCard.style.paddingTop = '';
-    wave.style.display = 'block';
+    document.getElementById('wave').style.display = 'block';
     window.waveHidden = false;
 }
 
@@ -19,7 +19,7 @@ function deactivateWave() {
     const playerCard = document.querySelector('#player-container > .card-body');
     playerCard.style.height = '';
     playerCard.style.paddingTop = '50px';
-    wave.style.display = 'none';
+    document.getElementById('wave').style.display = 'none';
     window.waveHidden = true;
 }
 
