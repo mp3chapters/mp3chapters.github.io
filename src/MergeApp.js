@@ -17,6 +17,9 @@ export function startMergeApp() {
     const fileList = document.getElementById('fileList');
     const mergeButton = document.getElementById('mergeButton');
     const normalMergeButtonContent = mergeButton.innerHTML;
+    const sortByNameButton = document.getElementById('sortByNameButton');
+    const reverseListButton = document.getElementById('reverseListButton');
+    const clearAllButton = document.getElementById('clearAllButton');
     let filesArray = [];
 
     // Trigger file input when the button is clicked
@@ -95,7 +98,7 @@ export function startMergeApp() {
                 <span>
                     ${file.descriptor} (${file.duration ? file.duration.toFixed(2) : 'unknown'}s)
                 </span>
-                <button type="button" class="btn btn-danger btn-sm delete-btn ms-auto">Delete</button>
+                <button type="button" class="btn btn-outline-danger btn-sm delete-btn ms-auto">Delete</button>
             `;
 
             file.listItem = listItem;
@@ -117,6 +120,21 @@ export function startMergeApp() {
 
         mergeButton.disabled = false;
     }
+
+    sortByNameButton.addEventListener('click', () => {
+        filesArray.sort((a, b) => a.descriptor.localeCompare(b.descriptor));
+        renderFileList();
+    });
+
+    reverseListButton.addEventListener('click', () => {
+        filesArray.reverse();
+        renderFileList();
+    });
+
+    clearAllButton.addEventListener('click', () => {
+        filesArray = [];
+        renderFileList();
+    });
 
     for (let checkbox of document.querySelectorAll('#merge-container input[type="checkbox"]')) {
         checkbox.addEventListener('change', renderFileList);
