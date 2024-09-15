@@ -8,6 +8,21 @@ const gripSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" 
   <path d="M7 2a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M7 5a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0M7 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-3 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0m3 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
 </svg>`;
 
+function formatDuration(duration) {
+    if (isNaN(duration)) return '';
+    const totalSeconds = Math.floor(duration);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    const minutesString = hours > 0 ? String(minutes).padStart(2, '0') : String(minutes);
+    const secondsString = String(seconds).padStart(2, '0');
+    if (hours > 0) {
+        return `${hours}:${minutesString}:${secondsString}`;
+    } else {
+        return `${minutes}:${secondsString}`;
+    }
+}
+
 export function startMergeApp() {
     startBaseApp();
 
@@ -93,12 +108,17 @@ export function startMergeApp() {
             const filenameCheckbox = document.getElementById('useFilenames');
             file.descriptor = file.tags && file.tags.title && !filenameCheckbox.checked ? file.tags.title : file.name;
 
+            const duration = file.duration ? formatDuration(file.duration) : '...';
+
             listItem.innerHTML = `
                 ${gripSVG}
-                <span>
-                    ${file.descriptor} (${file.duration ? file.duration.toFixed(2) : 'unknown'}s)
+                <span class="text-truncate">
+                    ${file.descriptor}
                 </span>
-                <button type="button" class="btn btn-outline-danger btn-sm delete-btn ms-auto">Delete</button>
+                <span class="ms-auto me-3">
+                    ${duration}
+                </span>
+                <button type="button" class="btn btn-outline-danger btn-sm delete-btn">Delete</button>
             `;
 
             file.listItem = listItem;
@@ -119,6 +139,20 @@ export function startMergeApp() {
         document.getElementById('useCoversAsChapterImagesContainer').classList.toggle('d-none', !imagesUsed);
 
         mergeButton.disabled = false;
+
+        const fileListStats = document.getElementById('fileListStats');
+        if (window.innerWidth > 768) {
+            fileListStats.innerHTML = `Number of files: ${filesArray.length} &middot; Total duration: ${formatDuration(filesArray.reduce((acc, file) => acc + file.duration, 0))}`;
+            sortByNameButton.innerHTML = 'Sort by name';
+            reverseListButton.innerHTML = 'Reverse list';
+            clearAllButton.innerHTML = 'Clear all';
+        } else {
+            // small screen
+            fileListStats.innerHTML = `Files: ${filesArray.length} &middot; Duration: ${formatDuration(filesArray.reduce((acc, file) => acc + file.duration, 0))}`;
+            sortByNameButton.innerHTML = 'Sort';
+            reverseListButton.innerHTML = 'Reverse';
+            clearAllButton.innerHTML = 'Clear';
+        }
     }
 
     sortByNameButton.addEventListener('click', () => {
