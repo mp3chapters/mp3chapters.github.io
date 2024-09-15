@@ -1,4 +1,3 @@
-import WaveSurfer from '/libs/wavesurfer.esm.js';
 import * as popperModule from '/libs/popper.min.js';
 import * as tippyModule from '/libs/tippy-bundle.umd.min.js';
 import * as nodeID3Module from '/node-id3-browserify.min.js';
@@ -99,48 +98,10 @@ export function startBaseApp() {
         setColorScheme();
     });
 
-    const wave = WaveSurfer.create({
-        container: '#wave',
-        waveColor: 'violet',
-        progressColor: 'purple',
-        cursorColor: '#333',
-        cursorWidth: 3,
-        dragToSeek: true,
-        partialRender: true,
-        sampleRate: 5000,
-        barWidth: 4,
-        barGap: 1,
-        height: 100,
-    });
-    window.wave = wave;
-
     const player = document.getElementById('player');
     window.player = player;
 
-    // on wave click, seek player to position
-    wave.on('interaction', (newTime) => {
-        player.currentTime = newTime;
-    });
-
-    wave.on('load', () => {
-        // set color to light grey
-        wave.setOptions({
-            waveColor: '#ddd',
-            progressColor: '#999',
-        });
-        wave.setTime(window.currentTime);
-    });
-
-    wave.on('ready', () => {
-        wave.setOptions({
-            waveColor: 'violet',
-            progressColor: 'purple',
-        });
-        document.getElementById("addTimestamp").style.display = null;
-        wave.setTime(window.currentTime);
-    });
-
-    player.addEventListener('loaded-data', () => {
+    player.addEventListener('loaded-data', async () => {
         addChaptersToPlayer();
         // make player visible
         document.querySelector("#player-container .card-body").style.visibility = "visible";
@@ -152,7 +113,9 @@ export function startBaseApp() {
 
     player.addEventListener('time-update', (e) => {
         window.currentTime = e.detail.currentTime;
-        wave.setTime(e.detail.currentTime);
+        if (window.wave) {
+            window.wave.setTime(e.detail.currentTime);
+        }
         highlightCurrentLine();
         updateButtonPosition();
     });
@@ -172,23 +135,6 @@ export function startBaseApp() {
 
     document.getElementById('addTagsButton').addEventListener('click', function () {
         exportFile(window.currentFile);
-    });
-
-    document.getElementById('copyListButton').addEventListener('click', function () {
-        const code = chapters.exportAsList();
-        navigator.clipboard.writeText(code).then(function() {
-            const button = document.getElementById('copyListButton');
-            const copyCheck = document.getElementById('list-copy-check');
-            copyCheck.style.visibility = 'visible';
-            button.classList.add("btn-outline-success");
-            setTimeout(function() {
-                copyCheck.style.visibility = 'hidden';
-                button.classList.remove("btn-outline-success");
-            }, 3000);
-        }).catch(function(error) {
-            // Error handling
-            console.error('Error copying text: ', error);
-        });
     });
 
     window.addEventListener('resize', updateButtonPosition);

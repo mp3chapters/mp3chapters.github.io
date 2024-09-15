@@ -1,10 +1,48 @@
-
+import WaveSurfer from '/libs/wavesurfer.esm.js';
 import { startBaseApp, updateButtonPosition } from './BaseApp.js';
 import { initializeDragDrop } from './submodules/DragDropHandler.js';
 import { loadFile } from './submodules/FileLoader.js';
 
 export function startEditorApp() {
     startBaseApp();
+
+    const wave = WaveSurfer.create({
+        container: '#wave',
+        waveColor: 'violet',
+        progressColor: 'purple',
+        cursorColor: '#333',
+        cursorWidth: 3,
+        dragToSeek: true,
+        partialRender: true,
+        sampleRate: 5000,
+        barWidth: 4,
+        barGap: 1,
+        height: 100,
+    });
+    window.wave = wave;
+
+    // on wave click, seek player to position
+    wave.on('interaction', (newTime) => {
+        player.currentTime = newTime;
+    });
+
+    wave.on('load', () => {
+        // set color to light grey
+        wave.setOptions({
+            waveColor: '#ddd',
+            progressColor: '#999',
+        });
+        wave.setTime(window.currentTime);
+    });
+
+    wave.on('ready', () => {
+        wave.setOptions({
+            waveColor: 'violet',
+            progressColor: 'purple',
+        });
+        document.getElementById("addTimestamp").style.display = null;
+        wave.setTime(window.currentTime);
+    });
 
     window.denseMode = document.querySelector("body").classList.contains("dense");
     window.usedDenseMode = false;
@@ -15,7 +53,7 @@ export function startEditorApp() {
         activateDenseMode();
     }
 
-    initializeDragDrop((filename, blob) => {
+    initializeDragDrop({ multipleFiles: false, heroTarget: true }, (filename, blob) => {
         const file = new File([blob], filename);
         loadFile(file, window.wave, player);
     });
@@ -28,6 +66,23 @@ export function startEditorApp() {
                 const file = new File([blob], 'example.mp3');
                 loadFile(file, window.wave, player);
             });
+    });
+
+    document.getElementById('copyListButton').addEventListener('click', function () {
+        const code = chapters.exportAsList();
+        navigator.clipboard.writeText(code).then(function() {
+            const button = document.getElementById('copyListButton');
+            const copyCheck = document.getElementById('list-copy-check');
+            copyCheck.style.visibility = 'visible';
+            button.classList.add("btn-outline-success");
+            setTimeout(function() {
+                copyCheck.style.visibility = 'hidden';
+                button.classList.remove("btn-outline-success");
+            }, 3000);
+        }).catch(function(error) {
+            // Error handling
+            console.error('Error copying text: ', error);
+        });
     });
 
     document.getElementById('mp3FileInputTriggerButton').addEventListener('click', () => {
