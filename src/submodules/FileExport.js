@@ -8,7 +8,8 @@ async function exportFileBasedOnOldTags(file, tags) {
         elements: [],
     };
     // collect coarse data for Google Analytics
-    const eventTag = {
+    const stats = {
+        app: window.location.pathname,
         durationMinutes: Math.round(window.chapters.duration / 60),
         numChapters: window.chapters.getChapters().length,
         usedImages: false,
@@ -35,7 +36,7 @@ async function exportFileBasedOnOldTags(file, tags) {
                 chapterObject.tags.userDefinedUrl = {
                     url: chapter.url,
                 }
-                eventTag.usedURLs = true;
+                stats.usedURLs = true;
             }
             if (chapter.hasOwnProperty('imageId')) {
                 try {
@@ -43,7 +44,7 @@ async function exportFileBasedOnOldTags(file, tags) {
                 } catch (error) {
                     console.error('Error encoding image:', error);
                 }
-                eventTag.usedImages = true;
+                stats.usedImages = true;
             }            
             chapterTag.push(chapterObject);
             if (chapter.title[0] != "_") {
@@ -59,16 +60,15 @@ async function exportFileBasedOnOldTags(file, tags) {
         const input = document.getElementById(`field-${field}`);
         if (input.value != input.dataset.oldValue) {
             tags[field] = input.value;
-            eventTag.changedID3Fields = true;
+            stats.changedID3Fields = true;
         }
     }
 
     if (window.coverImage != null) {
         tags.image = await encodeImage(window.coverImage);
-        eventTag.changedCoverImage = true;
+        stats.changedCoverImage = true;
     }
 
-    // Call the addTags function from your bundle
     addTags(tags, file, function (taggedBuffer) {
         // Convert buffer to Blob
         const blob = new Blob([taggedBuffer], { type: 'audio/mp3' });
@@ -85,9 +85,9 @@ async function exportFileBasedOnOldTags(file, tags) {
 
     if (window.currentFilename != "example.mp3" 
         && window.location.host == "mp3chapters.github.io"
-        && eventTag.durationMinutes > 4) {
+        && stats.durationMinutes > 4) {
         // send event to Google Analytics
-        gtag('event', 'export', eventTag);
+        gtag('event', 'export', stats);
         // send event to custom logger
         fetch('https://dominik-peters.de/projects/mp3chapters/mp3chapters-log.php', {
             method: 'POST',
@@ -95,7 +95,7 @@ async function exportFileBasedOnOldTags(file, tags) {
                 'Content-Type': 'application/json'
             },
             mode: 'no-cors',
-            body: JSON.stringify(eventTag)
+            body: JSON.stringify(stats)
         });
     }
 }
