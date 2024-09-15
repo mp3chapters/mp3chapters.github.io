@@ -1,4 +1,4 @@
-import { buildGallery } from "./ImageHandler.js";
+import { buildGallery, addImageBufferToGallery } from "./ImageHandler.js";
 
 function arrayEquals(a, b) {
     return a.length === b.length &&
@@ -41,7 +41,7 @@ export function loadFile(file, wave, player) {
     player.currentTime = 0;
 
     let tags;
-    readTags(file, (fileTags) => {
+    readTags(file, async (fileTags) => {
         tags = fileTags;
         let toc = [];
         if (tags.hasOwnProperty('tableOfContents') && tags.tableOfContents.length > 0 && tags.tableOfContents[0].elements) {
@@ -66,24 +66,9 @@ export function loadFile(file, wave, player) {
                     chapterObject.url = chapter.tags.userDefinedUrl[0].url;
                 }
                 if (chapter.tags.hasOwnProperty('image')) {
-                    // check if image is already in array (same buffer)
-                    let found = -1;
-                    for (let i = 0; i < window.chapterImages.length; i++) {
-                        if (arrayEquals(window.chapterImages[i].imageBuffer, chapter.tags.image.imageBuffer)) {
-                            found = i;
-                            break;
-                        }
-                    }
-                    if (found != -1) {
-                        chapterObject.imageId = found;
-                    } else {
-                        window.chapterImages.push(chapter.tags.image);
-                        chapterObject.imageId = window.chapterImages.length - 1;
-                        if (!initialLoad) {
-                            // do not open gallery on initial load with example file
-                            document.getElementById('gallery-container').open = true;
-                        }
-                    }
+                    const imageId = await addImageBufferToGallery(chapter.tags.image.imageBuffer, chapter.tags.image.mime);
+                    chapterObject.imageId = imageId;
+                    document.getElementById('gallery-container').open = !initialLoad;
                 }
                 parsedChapters.push(chapterObject);
             }

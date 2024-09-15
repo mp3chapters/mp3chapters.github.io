@@ -91,27 +91,54 @@ function getUsedImages() {
     return usedImages;
 }
 
-function addToGallery(file) {
-    console.log(file);
-    let reader = new FileReader();
-    reader.onload = function (e) {
-        const image = {
-            imageBuffer: new Uint8Array(e.target.result),
-            mime: file.type,
-            type: { id: 0, name: 'other' },
-        };
-        window.chapterImages.push(image);
-        buildGallery();
-        container.open = true;
-        // scroll to bottom of gallery, unless text-input is focused
-        if (document.activeElement !== document.getElementById('text-input')) {
-            const gallery = document.getElementById('gallery');
-            const lastImage = gallery.lastElementChild;
-            lastImage.scrollIntoView();
+export async function addImageBufferToGallery(imageBuffer, mime) {
+    // Generate a SHA-256 hash of the file
+    let hashBuffer;
+    try {
+        hashBuffer = await crypto.subtle.digest('SHA-256', imageBuffer);
+    } catch (e) {
+        // Fallback for browsers that don't support the Web Crypto API
+        // in this case, we won't be able to compare images by hash
+        // so duplicate images will be added to the gallery
+        hashBuffer = window.chapterImages.length - 1;
+    }
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+    // Check if the image already exists in the gallery
+    for (let i = 0; i < window.chapterImages.length; i++) {
+        if (window.chapterImages[i].hash === hashHex) {
+            // If a matching image is found, return its ID
+            return i;
         }
+    }
+
+    // If the image doesn't exist, add it to the gallery
+    const image = {
+        imageBuffer: imageBuffer,
+        mime: mime,
+        type: { id: 0, name: 'other' },
+        hash: hashHex, // Store the hash for future comparisons
     };
-    reader.readAsArrayBuffer(file);
-    return window.chapterImages.length;
+
+    window.chapterImages.push(image);
+    buildGallery();
+    container.open = true;
+
+    // Scroll to the bottom of the gallery, unless the text-input is focused
+    if (document.activeElement !== document.getElementById('text-input')) {
+        const gallery = document.getElementById('gallery');
+        const lastImage = gallery.lastElementChild;
+        lastImage.scrollIntoView();
+    }
+
+    return window.chapterImages.length - 1;
+}
+
+async function addToGallery(file) {
+    const buffer = await file.arrayBuffer();
+    const imageBuffer = new Uint8Array(buffer);
+    return addImageBufferToGallery(imageBuffer, file.type);
 }
 
 function isImageFile(ev) {
@@ -183,25 +210,23 @@ function handlePaste(e) {
     }
 }
 
-function handleTextInputPaste(e) {
+async function handleTextInputPaste(e) {
     const items = e.clipboardData.items;
+    
     let imageItem = null;
-    let nonImageItemCount = 0;
 
-    // Check clipboard contents
-    for (let i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf('image') !== -1) {
-            imageItem = items[i];
-        } else {
-            nonImageItemCount++;
-        }
+    if (items.length === 1 && items[0].type.indexOf('image') !== -1) {
+        imageItem = items[0];
+    } else if (items.length === 2 && items[0].type.indexOf('text/') !== 1 && items[1].type.indexOf('image') !== -1) {
+        // this happens if an image is copied from a browser
+        imageItem = items[1];
     }
 
     // If there's exactly one image and nothing else
-    if (imageItem && nonImageItemCount === 0) {
+    if (imageItem) {
         e.preventDefault();
         const blob = imageItem.getAsFile();
-        const newImageId = addToGallery(blob);
+        const newImageId = await addToGallery(blob);
         
         // Insert the image tag at the end of the current line
         const textInput = document.getElementById('text-input');
