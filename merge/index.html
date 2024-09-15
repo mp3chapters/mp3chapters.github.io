@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Online MP3 File Merger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../libs/styles/bootstrap-and-vidstack.min.css" />
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            --bs-code-color: rgb(19, 80, 172);
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        code {
+            font-size: 0.8em;
+            background-color: hsl(180, 2%, 95%);
+            padding: calc((1em - 0.8em)/2) 2px;
+        }
+
+        [data-bs-theme="dark"] code {
+            background-color: hsl(180, 2%, 10%);
+            color: #79afff;
+        }
+
+        .app-icons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .app-icons img {
+            --icon-size: 50px;
+            /* margin: calc(var(--icon-size) / 10); */
+            width: var(--icon-size);
+            height: var(--icon-size);
+            border-radius: calc(var(--icon-size) / 5);
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+        }
+
+        #wave {
+            padding: 0 calc(8px + var(--media-slider-thumb-size, 15px)/2);
+            cursor: pointer;
+            height: 100px;
+        }
+
+        #player {
+            z-index: 10;
+        }
+
+        :where(media-community-skin[data-audio] [part=chapter-title]) {
+            padding: var(--media-slider-value-padding, 1px 10px);
+            background-color: white;
+        }
+
+        :where(media-menu:not([data-submenu]) > [data-media-menu-items]) {
+            top: 100%;
+            bottom: auto;
+        }
+
+        button#addTimestamp {
+            position: absolute;
+            z-index: 5;
+        }
+
+        #editor-container {
+            position: relative;
+            width: 100%;
+            height: 530px;
+        }
+
+        #text-input,
+        #text-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            box-sizing: border-box;
+            width: 100%;
+            height: 530px;
+            padding: 5px 0;
+            border: 1px solid #ccc;
+            font-family: monospace;
+            white-space: pre;
+            overflow-y: hidden;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        #text-input {
+            padding: 5px 5px;
+            cursor: text;
+        }
+
+        #text-display {
+            background-color: white;
+            pointer-events: none;
+        }
+
+        [data-bs-theme="dark"] #text-display {
+            background-color: rgb(33, 37, 41);
+        }
+
+        .line {
+            padding: 0 5px;
+        }
+
+        .current-line {
+            background-color: #efefef;
+        }
+
+        [data-bs-theme="dark"] .current-line {
+            background-color: rgb(62, 74, 87);
+        }
+
+        span.error,
+        span.warning {
+            font-size: 12px;
+            background-color: hsl(355, 70%, 96%);
+            padding: 2px 4px;
+            border-radius: 5px;
+            margin-left: 5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        span.warning {
+            background-color: hsl(45, 100%, 71%);
+            color: hsl(45, 100%, 21%);
+        }
+
+        span.url {
+            font-size: 12px;
+            background-color: hsl(0, 0%, 90%);
+            color: #084298;
+            max-width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px 4px;
+            padding-left: 2px;
+            border-radius: 5px;
+            margin-left: 1ch;
+            font-family: Arial, Helvetica, sans-serif;
+            pointer-events: auto;
+            cursor: default;
+        }
+
+        [data-bs-theme="dark"] span.url {
+            background-color: hsl(0, 0%, 10%);
+            color: #0cf;
+        }
+
+        span.url>svg {
+            position: relative;
+            top: 2.5px;
+            margin-top: -7px;
+            margin-right: 1px;
+        }
+
+        span.image {
+            font-size: 12px;
+            background-color: hsl(124, 60%, 93%);
+            color: hsl(124, 60%, 25%);
+            max-width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 2px 4px;
+            padding-left: 2px;
+            border-radius: 5px;
+            margin-left: 1ch;
+            font-family: Arial, Helvetica, sans-serif;
+            pointer-events: auto;
+            cursor: default;
+        }
+
+        [data-bs-theme="dark"] span.image {
+            background-color: hsl(124, 60%, 7%);
+            color: hsl(124, 60%, 75%);
+        }
+
+        span.image>svg {
+            position: relative;
+            top: 2.5px;
+            margin-top: -7px;
+            margin-right: 2px;
+            height: 12px;
+        }
+
+        .chapter-image-tooltip {
+            max-width: 300px;
+            max-height: 400px;
+        }
+
+        .gallery-image-tooltip {
+            max-width: 400px;
+            max-height: 500px;
+        }
+
+        .timestamp {
+            color: var(--bs-primary);
+            /* width of space character */
+            margin-right: 1ch;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+
+        [data-bs-theme="dark"] .timestamp {
+            color: #79afff;
+            ;
+        }
+
+        .timestamp:hover {
+            text-decoration: underline;
+        }
+
+        #gallery figcaption {
+            font-size: 1em;
+        }
+
+        #gallery .gallery-img {
+            width: 200px;
+            height: 200px;
+            object-fit: scale-down;
+            margin-bottom: 2px;
+        }
+
+        .btn-gallery-copy, 
+        .btn-gallery-delete {
+            margin-left: 6px;
+            padding: 0 2px;
+            background-color: rgb(237, 239, 240);
+        }
+
+        [data-bs-theme="dark"] .btn-gallery-copy,
+        [data-bs-theme="dark"] .btn-gallery-delete {
+            background-color: rgb(62, 74, 87);
+            color: rgb(255, 255, 255);
+            border-color: rgb(62, 74, 87);
+        }
+
+        .btn-gallery-copy svg,
+        .btn-gallery-delete svg {
+            height: 0.7em;
+            margin-top: -3px;
+        }
+
+        .btn-outline-secondary {
+            --bs-btn-color: hsl(208, 7%, 27%);
+            --bs-btn-border-color: hsl(208, 7%, 27%);
+        }
+
+        [data-bs-theme="dark"] .btn-outline-secondary {
+            --bs-btn-color: hsl(208, 7%, 80%);
+            --bs-btn-border-color: hsl(208, 7%, 80%);
+        }
+
+        [data-bs-theme="dark"] .btn-outline-success {
+            --bs-btn-color: hsl(152, 69%, 45%);
+            --bs-btn-border-color: hsl(152, 69%, 45%);
+        }
+
+        [data-bs-theme="dark"] .btn-outline-primary {
+            --bs-btn-color: hsl(216, 98%, 75%);
+            --bs-btn-border-color: hsl(216, 98%, 75%);
+        }
+
+        .form-floating>label {
+            color: #6c757d;
+        }
+
+        #cover-image {
+            width: 200px;
+            height: 200px;
+            object-fit: scale-down;
+        }
+
+        [data-bs-theme="dark"] #cover-image[src="img/placeholder.png"] {
+            filter: invert(1);
+            background-color: hsl(124, 0%, 88%);
+            border-color: hsl(124, 0%, 80%);
+        }
+
+        #drop-overlay {
+            pointer-events: none;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 31, 157, 0.2) radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+            z-index: 9999;
+        }
+
+        #drop-overlay-instruction {
+            pointer-events: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 5px;
+            font-size: 200%;
+            text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px;
+        }
+
+        #gallery-container div.card-body {
+            position: relative;
+        }
+
+        #gallery-drop-overlay {
+            pointer-events: none;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(52, 157, 31, 0.2) radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+            z-index: 9999;
+        }
+
+        #gallery-drop-overlay-instruction {
+            pointer-events: none;
+            position: sticky;
+            margin-top: 50px;
+            top: 50px;
+            text-align: center;
+            border-radius: 5px;
+            font-size: 200%;
+            text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px;
+        }
+
+        .drop-instruction {
+            border: 2px #eee dashed;
+            border-radius: 10px;
+            padding: 7px 15px;
+        }
+
+        [data-bs-theme="dark"] .drop-instruction {
+            border: 2px #333 dashed;
+        }
+
+        /* hide on small devices */
+        @media (max-width: 800px) {
+            .drop-instruction {
+                display: none;
+            }
+        }
+
+        #hero {
+            position: relative;
+        }
+
+        #hero-drop-overlay {
+            pointer-events: none;
+            display: none !important;
+            /* position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 31, 157, 0.2) radial-gradient(rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+            z-index: 9999; */
+        }
+
+        #hero-drop-overlay-instruction {
+            display: none !important;
+            /* pointer-events: none;
+            position: absolute;
+            top: 70%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+            border-radius: 5px;
+            font-size: 200%;
+            text-shadow: white 0 0 10px, black 0 0 50px, black 0 0 30px; */
+        }
+
+        .help {
+            color: #9a9a9a;
+            cursor: help;
+            position: relative;
+            top: -2px;
+        }
+
+        #podlove-code,
+        #json-code {
+            font-size: 0.7em;
+            max-height: 450px;
+        }
+
+        .dense nav,
+        .dense #hero,
+        .dense #edit-chapter-heading,
+        .dense h2,
+        .dense p,
+        .dense .alert,
+        .dense #tag-editing,
+        .dense #cover-image-section,
+        .dense footer,
+        .dense #export-buttons-section,
+        .dense #podlove {
+            display: none !important;
+        }
+
+        .dense body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        .dense main {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            /* 1/3 for x, 2/3 for y and z combined */
+            grid-template-columns: auto 210px;
+            /* 5 equal columns, y spans 4 (80%), z spans 1 (20%) */
+            height: 100vh;
+            /* Full screen height */
+            width: 100vw;
+            max-width: none;
+            margin: 0;
+            padding: 0 !important;
+        }
+
+        .dense #player-container {
+            grid-column: 1 / -1;
+            margin: 0 0 -7px 0 !important;
+            border: 0;
+        }
+
+        .dense #player-container div.card-header {
+            border-radius: 0;
+        }
+
+        .dense #player-container div.card-body {
+            padding: 0;
+            height: 186.5px;
+        }
+
+        .dense #editor-container {
+            grid-row: 2;
+            grid-column: 1;
+            margin: 0 !important;
+            min-height: 100%;
+            max-height: 100%;
+            height: 100% !important;
+            overflow-y: scroll;
+        }
+
+        .dense #editor-container #text-input,
+        .dense #editor-container #text-display {
+            min-height: 100%;
+        }
+
+        .dense #gallery-container {
+            grid-row: 2;
+            grid-column: 2;
+            margin: 0 !important;
+            padding-top: 5px;
+            border: 0;
+            height: 100%;
+            overflow-y: scroll;
+        }
+
+        .dense #gallery-container #upload-image-button {
+            font-size: 90%;
+            margin-left: 8px;
+        }
+
+        .dense #gallery-container .card-header {
+            display: none;
+        }
+
+        .dense #gallery-container .card-body {
+            padding: 0;
+        }
+
+        .dense #gallery {
+            border: 0 !important;
+            padding: 0 0.2rem !important;
+            margin: 0 !important;
+        }
+
+        .dense #gallery figure {
+            margin: 6px 0 0 0 !important;
+        }
+
+        .dense #gallery .gallery-img {
+            height: auto;
+            margin-bottom: 0;
+        }
+
+        .dense #hint-gallery-drag-drop {
+            display: none;
+        }
+
+        #dense-mode-controls {
+            display: none;
+        }
+
+        .dense #dense-mode-controls {
+            display: block;
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            z-index: 5;
+        }
+    </style>
+
+    <style>
+        .file-list-item {
+            cursor: grab;
+        }
+
+        .sortable-chosen, .sortable-drag, .sortable-ghost {
+            cursor: grabbing;
+        }
+    </style>
+
+    <meta name="description"
+        content="A simple online tool for merging MP3 files with chapter support. No sign-up or install required." />
+    <link rel="canonical" href="https://mp3chapters.github.io/" />
+    <meta property="og:title" content="Online MP3 File Merger" />
+    <meta property="og:site_name" content="Online MP3 File Merger">
+    <meta property="og:description"
+        content="A simple online tool for merging MP3 files with chapter support. No sign-up or install required." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mp3chapters.github.io/merge/" />
+    <meta property="og:image" content="https://mp3chapters.github.io/merge/og-banner.png" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/x-png" href="../favicon.png" />
+
+    <meta name="google-site-verification" content="o74dCk-d27RBWDTJN6Deg4B2dT8ROyINaY8muiv8kH0" />
+
+</head>
+
+<body>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.bsTheme = 'dark';
+        }
+
+        if (localStorage.getItem('denseMode') === 'true') {
+            document.body.classList.add('dense');
+            window.denseMode = true;
+        }
+    </script>
+
+    <nav class="navbar bg-body-tertiary" style="z-index: 2;">
+        <div class="container">
+            <a class="navbar-brand icon-link" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                </svg>
+                <span class="d-none d-sm-inline">Online</span> MP3 File Merger</a>
+            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">
+                |&nbsp;<a href="/" class="text-dark-emphasis"
+                    data-tippy-content="Online tool to edit MP3 chapters">Chapter Editor</a>
+                |&nbsp;<a href="/player" class="text-dark-emphasis"
+                    data-tippy-content="Desktop app for playing MP3 with chapters">Player</a></span>
+            <a href="https://github.com/mp3chapters/mp3chapters.github.io" class="icon-link ms-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+                    viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                </svg>
+                <span class="d-none d-sm-inline">
+                    GitHub
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container col-xxl-9 px-4 py-2 mt-4" id="hero">
+        <div class="row flex-lg-row-reverse align-items-center g-5 py-0 py-sm-4">
+            <div class="col-5 mt-5 mt-sm-5 col-lg-4">
+                <img src="hero.webp"
+                    id="merge-hero-image" class="d-block mx-lg-auto img-fluid"
+                    alt="Illustration: MP3 files being merged" width="400" height="461"
+                    loading="lazy">
+            </div>
+            <div class="col-lg-8 mt-4 mt-sm-8">
+                <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Merge multiple MP3 files into a single MP3 with chapters<span
+                        class="d-none">.</span></h1>
+                <p class="lead">This simple online tool allows you to stitch together multiple MP3 files.
+                    It does not require install or signup, and runs locally in your browser. 
+                    It adds <code class="text-body">id3</code> chapter metadata that is supported by many podcast players.</p>
+                <p class="lead">To start, load your audio files.</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start align-items-center">
+                    <button type="button" class="btn btn-primary btn-lg icon-link px-4 me-md-2"
+                        id="mp3FileInputTriggerButton"
+                        data-tippy-content="Files will be processed locally and will not be uploaded">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            aria-hidden="true" class="bi bi-filetype-mp3" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5Zm-4.911 9.67h-.443v-.609h.422a.688.688 0 0 0 .322-.073.558.558 0 0 0 .22-.2.505.505 0 0 0 .076-.284.49.49 0 0 0-.176-.392.652.652 0 0 0-.442-.15.74.74 0 0 0-.252.041.625.625 0 0 0-.193.112.496.496 0 0 0-.179.349H7.71c.006-.157.04-.302.102-.437.063-.135.153-.252.27-.352.117-.101.26-.18.428-.237.17-.057.364-.086.583-.088.279-.002.52.042.723.132.203.09.36.214.472.372a.91.91 0 0 1 .173.539.833.833 0 0 1-.12.478.96.96 0 0 1-.619.439v.041a1.008 1.008 0 0 1 .718.434.909.909 0 0 1 .144.521c.002.19-.037.359-.117.507a1.104 1.104 0 0 1-.329.378c-.14.101-.302.18-.486.234-.182.053-.376.08-.583.08-.3 0-.558-.051-.77-.153a1.206 1.206 0 0 1-.487-.41 1.094 1.094 0 0 1-.178-.563h.726a.457.457 0 0 0 .106.258.664.664 0 0 0 .249.179.98.98 0 0 0 .357.067.903.903 0 0 0 .384-.076.598.598 0 0 0 .252-.217.56.56 0 0 0 .088-.319.556.556 0 0 0-.334-.522.81.81 0 0 0-.372-.079ZM.706 15.925v-2.66h.038l.952 2.16h.516l.946-2.16h.038v2.66h.715v-3.999h-.8l-1.14 2.596h-.026l-1.14-2.596H0v4h.706Zm5.458-3.999h-1.6v4h.792v-1.342h.803c.287 0 .53-.058.732-.173.203-.118.357-.276.463-.475a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.475-.158-.677a1.175 1.175 0 0 0-.46-.477 1.4 1.4 0 0 0-.733-.179Zm.545 1.333a.795.795 0 0 1-.085.381.574.574 0 0 1-.237.24.793.793 0 0 1-.375.082h-.66v-1.406h.66c.219 0 .39.06.513.182.123.12.184.295.184.521Z" />
+                        </svg>
+                        Select MP3 files</button>
+                    <!-- or drag and drop -->
+                    <span class="text-muted drop-instruction">or drag and drop files <svg
+                            xmlns="http://www.w3.org/2000/svg" width="16" aria-hidden="true" height="16"
+                            fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                            <path
+                                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5" />
+                            <path
+                                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z" />
+                        </svg></span>
+                    <input type="file" id="mp3FileInput" class="d-none" accept=".mp3" multiple>
+                </div>
+            </div>
+        </div>
+        <div id="hero-drop-overlay">
+            <div id="hero-drop-overlay-instruction">
+                Drop mp3 files to load.
+            </div>
+        </div>
+    </div>
+
+    <div class="container col-xxl-10 px-4 d-none" id="merge-container">
+        <ul id="fileList" class="list-group mb-3">
+        </ul>
+        <div class="form-check form-switch" id="useFilenamesContainer">
+            <input class="form-check-input" type="checkbox" role="switch" id="useFilenames">
+            <label class="form-check-label" for="useFilenames">Use filenames instead of file titles for chapter names</label>
+        </div>
+        <div class="form-check form-switch" id="useMillisecondsContainer">
+            <input class="form-check-input" type="checkbox" role="switch" id="useMilliseconds">
+            <label class="form-check-label" for="useMilliseconds">Use millisecond accuracy for chapter start times</label>
+        </div>
+        <div class="form-check form-switch" id="useSubchaptersContainer">
+            <input class="form-check-input" type="checkbox" role="switch" id="useSubchapters">
+            <label class="form-check-label" for="useSubchapters">Preserve chapters in input files in the merged file</label>
+        </div>
+        <div class="form-check form-switch" id="useCoversAsChapterImagesContainer">
+            <input class="form-check-input" type="checkbox" role="switch" id="useCoversAsChapterImages">
+            <label class="form-check-label" for="useCoversAsChapterImages">Use cover images as chapter images</label>
+        </div>
+        <div class="form-check form-switch" id="reencodeAudioContainer">
+            <input class="form-check-input" type="checkbox" role="switch" id="reencodeAudio">
+            <label class="form-check-label" for="reencodeAudio">Re-encode audio (slow, but may be needed if input files are incompatible)</label>
+        </div>
+        <div class="d-flex align-items-center">
+            <button type="button" class="btn btn-primary icon-link px-4 mt-2"
+                id="mergeButton">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-list" viewBox="0 0 16 16">
+                    <path d="M12 13c0 1.105-1.12 2-2.5 2S7 14.105 7 13s1.12-2 2.5-2 2.5.895 2.5 2"/>
+                    <path fill-rule="evenodd" d="M12 3v10h-1V3z"/>
+                    <path d="M11 2.82a1 1 0 0 1 .804-.98l3-.6A1 1 0 0 1 16 2.22V4l-5 1z"/>
+                    <path fill-rule="evenodd" d="M0 11.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 7H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5m0-4A.5.5 0 0 1 .5 3H8a.5.5 0 0 1 0 1H.5a.5.5 0 0 1-.5-.5"/>
+                </svg>
+                Merge</button>
+            <div class="progress d-none" style="width: 200px; margin-left: 10px;">
+                <div class="progress-bar" role="progressbar" id="merge-progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+        </div>
+    </div>
+
+    <main class="container col-xxl-10 px-4 py-4 d-none" id="chapter-editor-app-container">
+        <div class="card mb-3" id="player-container">
+            <div class="card-header py-2 icon-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" aria-hidden="true"
+                    class="bi bi-file-earmark-play" viewBox="0 0 16 16">
+                    <path
+                        d="M6 6.883v4.234a.5.5 0 0 0 .757.429l3.528-2.117a.5.5 0 0 0 0-.858L6.757 6.454a.5.5 0 0 0-.757.43z" />
+                    <path
+                        d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                </svg>
+                <span id="filename">Merged MP3 File</span>
+            </div>
+            <div class="card-body position-relative" style="visibility: hidden;">
+                <button id="addTimestamp" class="btn btn-sm btn-primary icon-link"
+                    style="position: absolute; display: none;"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                        height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16"
+                        aria-hidden="true">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3z" />
+                    </svg> add chapter</button>
+                <media-player id="player" src="../example.mp3">
+                    <media-outlet>
+                        <track src="" kind="chapters" label="English" srclang="en-US" default data-type="vtt" />
+                    </media-outlet>
+                    <media-community-skin></media-community-skin>
+                    <media-seek-button id="back1" seconds="-1">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" width="32"
+                            height="32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+                            <path fill="currentcolor"
+                                d="M16.7,10.3c0,0.5-0.6,0.9-1.1,0.5l-4.5-3.3c-0.4-0.3-0.4-0.8,0-1.1l4.5-3.3c0.4-0.3,1.1,0,1.1,0.5v1.6
+                            c0,0.1,0.1,0.1,0.1,0.1c5.9,0.4,10.5,5.3,10.5,11.3C27.3,22.9,22.3,28,16,28c-6,0-11-4.7-11.3-10.7c0-0.4,0.3-0.7,0.6-0.7h2
+                            C7.7,16.7,8,17,8,17.3c0.3,4.1,3.8,7.3,8,7.3c4.4,0,8-3.6,8-8c0-4.1-3.2-7.6-7.2-8c-0.1,0-0.1,0.1-0.1,0.1V10.3z" />
+                            <path fill="currentcolor" d="M16.5,19.9c0.1,0,0.1-0.1,0.1-0.1v-5.6c0-0.1-0.1-0.1-0.1-0.1h-1.1c0,0,0,0-0.1,0L14,14.9c0,0-0.1,0.1-0.1,0.1v0.9
+                            c0,0.1,0.1,0.2,0.2,0.1l1.1-0.7c0,0,0,0,0,0c0,0,0,0,0,0v4.3c0,0.1,0.1,0.1,0.1,0.1H16.5z" />
+                        </svg>
+                    </media-seek-button>
+                    <media-seek-button id="skip1" seconds="+1">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" width="32"
+                            height="32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
+                            <path fill="currentcolor"
+                                d="M15.3,10.3c0,0.5,0.6,0.9,1.1,0.5l4.5-3.3c0.4-0.3,0.4-0.8,0-1.1l-4.5-3.3c-0.4-0.3-1.1,0-1.1,0.5v1.6
+                            c0,0.1-0.1,0.1-0.1,0.1C9.3,5.8,4.7,10.7,4.7,16.7C4.7,22.9,9.7,28,16,28c6,0,11-4.7,11.3-10.7c0-0.4-0.3-0.7-0.6-0.7h-2
+                            c-0.4,0-0.7,0.3-0.7,0.7c-0.3,4.1-3.8,7.3-8,7.3c-4.4,0-8-3.6-8-8c0-4.1,3.2-7.6,7.2-8c0.1,0,0.1,0.1,0.1,0.1V10.3z" />
+                            <path fill="currentcolor" d="M16.6,19.9c0.1,0,0.1-0.1,0.1-0.1v-5.6c0-0.1-0.1-0.1-0.1-0.1h-1.1c0,0,0,0-0.1,0L14,14.9C14,15,14,15,14,15v0.9
+                            c0,0.1,0.1,0.2,0.2,0.1l1.1-0.7c0,0,0,0,0,0c0,0,0,0,0,0v4.3c0,0.1,0.1,0.1,0.1,0.1H16.6z" />
+                        </svg>
+                    </media-seek-button>
+                </media-player>
+            </div>
+        </div>
+
+        <details class="my-2">
+            <summary id="edit-chapter-heading" class="h3">
+                <h3 class="d-inline">Edit chapters</h3>
+            </summary>
+
+            <p>Chapters are managed using the same syntax also used by YouTube. Each chapter is one line, starting with the
+                timestamp when the chapter begins (for example <code>03:20</code> or using milliseconds
+                <code>14:21.320</code>), followed by a space, followed by the name of the chapter.
+                Chapters can also have a link and an image associated with them, see below for details.
+            </p>
+
+            <div id="editor-container" class="mb-3">
+                <textarea id="text-input" class="form-control"></textarea>
+                <div id="text-display" style="display: none;"></div>
+                <div id="button-container"></div>
+            </div>
+
+            <details class="card my-3" id="gallery-container">
+                <summary class="card-header">
+                    Advanced: Chapter URLs, images, hidden chapters
+                </summary>
+                <div class="card-body">
+                    <p>Each chapter can be assigned a <strong>link</strong> that will be shown by some players. To add a
+                        link, add the URL
+                        (starting with <code>http://</code> or <code>https://</code>) to the end of the chapter line.</p>
+                    <p>Each chapter can be assigned an <strong>image</strong>. To add an image, upload an image below and
+                        add its code (for example
+                        <code>&lt;img-6&gt;</code>) to the end of the chapter line.
+                        Images in the gallery that are not assigned to a chapter are ignored.
+                        The same image can be used for multiple chapters.
+                        Images larger than 1400px wide or tall will be scaled down.
+                        A chapter can get both a link and an image.
+                        You can also paste an image from the clipboard; if you do this while editing the chapter list, the correct 
+                        image code will be inserted at the cursor position.
+                    </p>
+                    <p>
+                        A chapter can be <strong>hidden</strong> from the table of contents (i.e., the chapter list). This
+                        can be useful to show
+                        a chapter image for some time period without showing a separate chapter.
+                        To hide a chapter, begin its name with <code>_</code> (an underscore), for example
+                        <code>_photo</code> or simply <code>_</code>.
+                        Note that hidden chapters are ignored by some players.
+                    </p>
+                    <input type="file" id="imageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp" multiple>
+                    <button class="btn btn-secondary me-1" id="upload-image-button">Upload image</button>
+                    <span id="hint-gallery-drag-drop">or drag and drop file or paste an image</span>
+                    <div class="container mt-2 border border-2 rounded p-2 d-flex flex-wrap" id="gallery">
+                    </div>
+                    <div id="gallery-drop-overlay">
+                        <div id="gallery-drop-overlay-instruction">
+                            Drop an image file to load.
+                        </div>
+                    </div>
+                    <button class="btn mt-2 btn-sm btn-outline-secondary" id="clean-gallery-button">Clear unused images</button>
+                </div>
+            </details>
+            <details class="card mt-3 mb-4" id="podlove">
+                <summary class="card-header" id="podlove-summary">
+                    Podlove Simple Chapters XML and Podcast Namespace JSON
+                </summary>
+                <div class="card-body">
+                    <p>
+                        Besides embedded ID3 chapters, other standards for specifying chapters exist.
+                        Examples are the
+                        <a href="https://podlove.org/simple-chapters/">Podlove Simple Chapters XML</a> and
+                        <a href="https://github.com/Podcastindex-org/podcast-namespace/blob/main/chapters/jsonChapters.md">Podcast Namespace
+                            Chapter JSON</a>
+                        formats, which can be added to a podcast RSS feed via embedding into the <code>&lt;item&gt;</code>
+                        tag (XML)
+                        or by adding a link (JSON, XML).
+                        While most podcast players use embedded chapters,
+                        some other players (notably <a class="alert-link fw-normal"
+                            href="https://support.spotify.com/bb/podcasters/article/enabling-podcast-chapters/">Spotify</a>)
+                        only support time stamps in the episode description or Podlove chapters.
+                    </p>
+    
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="imgLinkSwitch">
+                        <label class="form-check-label" for="imgLinkSwitch">Include image links</label>
+                    </div>
+                    <div class="card d-none" id="imageLinkInfo">
+                        <div class="card-body">
+                            <p class="mb-1">You will need to upload the images to a web server and add the URLs to the
+                                chapter list.</p>
+                            <div class="form-floating mb-2">
+                                <input type="text" class="form-control" id="imageURL"
+                                    value="http://yourpodcast.com/episode-8/">
+                                <label for="imageURL">Image base URL</label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary icon-link ms-1" id="downloadZipButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-floppy" viewBox="0 0 16 16">
+                                    <path d="M11 2H9v3h2z" />
+                                    <path
+                                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
+                                </svg>
+                                Download all images as a ZIP file
+                            </button>
+                        </div>
+                    </div>
+    
+                    <div class="card mt-3">
+                        <div class="card-header icon-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-file-earmark-code" viewBox="0 0 16 16" aria-hidden="true">
+                                <path
+                                    d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z" />
+                                <path
+                                    d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708m-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z" />
+                            </svg>
+                            Podlove Simple Chapters XML
+                            <button class="btn btn-sm btn-outline-secondary icon-link ms-auto" id="copyPodloveButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-clipboard2-check" viewBox="0 0 16 16" aria-hidden="true">
+                                    <path
+                                        d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z" />
+                                    <path
+                                        d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z" />
+                                    <path
+                                        d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z"
+                                        id="publove-copy-check" style="visibility: hidden" />
+                                </svg>
+                                Copy
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary icon-link ms-1" id="downloadPodloveButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-floppy" viewBox="0 0 16 16">
+                                    <path d="M11 2H9v3h2z" />
+                                    <path
+                                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <pre id="podlove-code" class="mb-0">
+                            </pre>
+                        </div>
+                    </div>
+    
+                    <div class="card mt-3">
+                        <div class="card-header icon-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-file-earmark-code" viewBox="0 0 16 16" aria-hidden="true">
+                                <path
+                                    d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z" />
+                                <path
+                                    d="M8.646 6.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 9 8.646 7.354a.5.5 0 0 1 0-.708m-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 9l1.647-1.646a.5.5 0 0 0 0-.708z" />
+                            </svg>
+                            Podcast Namespace JSON
+                            <button class="btn btn-sm btn-outline-secondary icon-link ms-auto" id="copyJSONButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-clipboard2-check" viewBox="0 0 16 16" aria-hidden="true">
+                                    <path
+                                        d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5z" />
+                                    <path
+                                        d="M3 2.5a.5.5 0 0 1 .5-.5H4a.5.5 0 0 0 0-1h-.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1H12a.5.5 0 0 0 0 1h.5a.5.5 0 0 1 .5.5v12a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5z" />
+                                    <path
+                                        d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0l3-3Z"
+                                        id="json-copy-check" style="visibility: hidden" />
+                                </svg>
+                                Copy
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary icon-link ms-1" id="downloadJSONButton">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-floppy" viewBox="0 0 16 16">
+                                    <path d="M11 2H9v3h2z" />
+                                    <path
+                                        d="M1.5 0h11.586a1.5 1.5 0 0 1 1.06.44l1.415 1.414A1.5 1.5 0 0 1 16 2.914V14.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 14.5v-13A1.5 1.5 0 0 1 1.5 0M1 1.5v13a.5.5 0 0 0 .5.5H2v-4.5A1.5 1.5 0 0 1 3.5 9h9a1.5 1.5 0 0 1 1.5 1.5V15h.5a.5.5 0 0 0 .5-.5V2.914a.5.5 0 0 0-.146-.353l-1.415-1.415A.5.5 0 0 0 13.086 1H13v4.5A1.5 1.5 0 0 1 11.5 7h-7A1.5 1.5 0 0 1 3 5.5V1H1.5a.5.5 0 0 0-.5.5m3 4a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V1H4zM3 15h10v-4.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5z" />
+                                </svg>
+                                Download
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <pre id="json-code" class="mb-0">
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </details>
+
+        <details>
+            <summary class="h3">
+                <h3 class="d-inline">Edit MP3 tags</h3>
+            </summary>
+            <p>MP3 files can contain metadata such as title, artist, etc., known as
+                <a href="https://en.wikipedia.org/wiki/ID3">ID3 tags</a>.
+                You can edit these tags below.
+            </p>
+
+            <div class="container" id="tag-editing">
+                <div class="row">
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-title" data-field-name="title"
+                            placeholder="Episode title">
+                        <label for="field-title">Title</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-artist" data-field-name="artist"
+                            placeholder="Artist / Author">
+                        <label for="field-artist">Artist / Author</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-album" data-field-name="album"
+                            placeholder="Album / Podcast name">
+                        <label for="field-album">Album / Podcast name</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-trackNumber" data-field-name="trackNumber"
+                            placeholder="Track number / Episode number">
+                        <label for="field-trackNumber">Track number / Episode number</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-year" data-field-name="year" placeholder="Year">
+                        <label for="field-year">Year</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                    <input type="text" class="form-control" id="field-date" data-field-name="date" placeholder="YYYY-MM-DD">
+                    <label for="field-date">Release Date (YYYY-MM-DD)</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-genre" data-field-name="genre"
+                            placeholder="Podcast">
+                        <label for="field-genre">Genre</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-copyright" data-field-name="copyright"
+                            placeholder="Copyright">
+                        <label for="field-copyright">Copyright</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-publisher" data-field-name="publisher"
+                            placeholder="Publisher">
+                        <label for="field-publisher">Publisher</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-language" data-field-name="language"
+                            placeholder="Language">
+                        <label for="field-language">Language</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0"
+                        data-tippy-content="Consider attributing this tool so others can find it.">
+                        <input type="text" class="form-control" id="field-encodedBy" data-field-name="encodedBy"
+                            placeholder="Encoded by">
+                        <label for="field-encodedBy">Encoded by</label>
+                    </div>
+                    <div class="form-floating col-12 col-md-6 mb-2 ps-0">
+                        <input type="text" class="form-control" id="field-audioSourceUrl" data-field-name="audioSourceUrl"
+                            placeholder="Website">
+                        <label for="field-audioSourceUrl">Website</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 mb-3" style="padding-right: 12px;" id="cover-image-section">
+                <div class="card">
+                    <div class="card-header py-2 icon-link">
+                        <span class="text-muted">Cover image</span>
+                    </div>
+                    <div class="card-body p-2 d-flex align-items-start">
+                        <img id="cover-image" class="img-thumbnail" src="../img/placeholder.png" alt="Cover image"
+                            aria-label="Cover image display">
+                        <button class="btn btn-sm btn-outline-secondary ms-2" id="upload-cover-image-button">Load
+                            image</button>
+                        <input type="file" id="coverImageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
+                    </div>
+                </div>
+            </div>
+        </details>
+
+
+        <div class="gap-2 d-flex align-items-end mt-3" id="export-buttons-section">
+            <button id="addTagsButton" class="btn btn-success btn-lg icon-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                        d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z" />
+                    <path
+                        d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                </svg>
+                Export merged MP3 file
+            </button>
+        </div>
+    </main>
+
+    <div id="drop-overlay">
+        <div id="drop-overlay-instruction">
+            Drop an mp3 file to load.
+        </div>
+    </div>
+
+    <footer class="bd-footer py-4 py-md-5 mt-5 bg-body-tertiary">
+        <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
+            <div class="row">
+                <div class="col-lg-6">
+                    <a class="d-inline-flex align-items-center mb-2 text-body-emphasis text-decoration-none icon-link"
+                        href="/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                        </svg>
+                        <span class="fs-5">Online MP3 File Merger</span>
+                    </a>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2">Built by <a href="https://dominik-peters.de">Dominik Peters</a>.</li>
+                        <li class="mb-2">Built using
+                            <a href="https://ffmpegwasm.netlify.app/">ffmpeg.wasm</a>,
+                            <a href="https://github.com/Zazama/node-id3">node-id3</a>,
+                            <a href="https://browserify.org/">browserify</a>, and
+                            <a href="https://vidstack.io/docs">Vidstack Player</a>.
+                        </li>
+                        <li class="mb-2">Code licensed <a href="https://github.com/mp3chapters/mp3chapters.github.io/blob/master/LICENSE"
+                                target="_blank" rel="license noopener">MIT</a>.
+                            Available on <a href="https://github.com/mp3chapters/mp3chapters.github.io">GitHub</a>,
+                            feedback welcome!</li>
+                        <li class="mb-2">First published September 2024. Last updated September 2024.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { startMergeApp } from '../src/MergeApp.js';
+        startMergeApp();
+    </script>
+</body>
+
+</html>

@@ -24,7 +24,9 @@ function isAudioFile(ev) {
 // if gallery is not visible, display a full screen drop overlay
 // if gallery is visible, display a drop overlay only over the hero image
 
-export function initializeDragDrop(callback) {
+export function initializeDragDrop(options, callback) {
+    const { multipleFiles, heroTarget } = options;
+
     const dropOverlay = document.getElementById('drop-overlay');
     const heroOverlay = document.getElementById('hero-drop-overlay');
     const hero = document.getElementById('hero');
@@ -52,27 +54,35 @@ export function initializeDragDrop(callback) {
         ev.preventDefault();
     }
 
-    function dropHandler(ev) {
+    async function dropHandler(ev) {
         dropOverlay.style.display = "none";
         heroOverlay.style.display = "none";
-
+    
         ev.preventDefault();
 
+        let files = [];
+    
         if (isAudioFile(ev) && ev.dataTransfer.items) {
-            [...ev.dataTransfer.items].forEach((item) => {
+            for (let item of ev.dataTransfer.items) {
                 if (item.kind === "file") {
                     let file = item.getAsFile();
-                    let reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        let blob = e.target.result;
-                        // Call the provided callback with the file name and file text
-                        callback(file.name, blob);
-                    };
-
-                    reader.readAsArrayBuffer(file);
+                    if (multipleFiles) {
+                        files.push(file);
+                        continue;
+                    }
+                    try {
+                        let arrayBuffer = await file.arrayBuffer();
+                        if (!multipleFiles) {
+                            callback(file.name, arrayBuffer);
+                        }
+                    } catch (error) {
+                        console.error('Error reading file:', error);
+                    }
                 }
-            });
+            }
+            if (multipleFiles) {
+                callback(files);
+            }
         }
     }
 
@@ -85,9 +95,11 @@ export function initializeDragDrop(callback) {
     document.body.addEventListener('dragenter', dragOverHandler);
     document.body.addEventListener('dragleave', dragEndHandler);
 
-    hero.addEventListener('drop', dropHandler);
-    hero.addEventListener('dragover', heroDragOverHandler);
-    hero.addEventListener('dragenter', heroDragOverHandler);
-    hero.addEventListener('dragleave', dragEndHandler);
+    if (heroTarget) {
+        hero.addEventListener('drop', dropHandler);
+        hero.addEventListener('dragover', heroDragOverHandler);
+        hero.addEventListener('dragenter', heroDragOverHandler);
+        hero.addEventListener('dragleave', dragEndHandler);
+    }
 
 }

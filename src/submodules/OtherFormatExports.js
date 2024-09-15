@@ -10,13 +10,23 @@ export function updatePodlove() {
 
 export function setUpExportButtons() {
 
-    document.getElementById('podloveButton').addEventListener('click', function () {
-        updatePodlove();
-        const container = document.getElementById('podlove');
-        container.classList.remove("d-none");
-        container.open = true;
-        gtag('event', 'podlove', {});
-    });
+    const podloveButton = document.getElementById('podloveButton');
+    if (podloveButton) {
+        podloveButton.addEventListener('click', function () {
+            updatePodlove();
+            const container = document.getElementById('podlove');
+            container.classList.remove("d-none");
+            container.open = true;
+            gtag('event', 'podlove', {});
+        });
+    }
+
+    const podloveSummary = document.getElementById('podloveSummary');
+    if (podloveSummary) {
+        podloveSummary.addEventListener('click', function () {
+            updatePodlove();
+        });
+    }
 
     const imgLinkSwitch = document.getElementById('imgLinkSwitch');
     imgLinkSwitch.addEventListener('click', function () {
