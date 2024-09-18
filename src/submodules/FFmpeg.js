@@ -90,9 +90,20 @@ export async function mergeFiles(files, reencode, onProgress) {
     };
     ffmpeg.on("log", onLog);
     if (reencode) {
-        await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat_list.txt', 'output.mp3']);
+        await ffmpeg.exec([
+            '-f', 'concat', 
+            '-stats_period', '0.2',
+            '-safe', '0', 
+            '-i', 'concat_list.txt', 
+            'output.mp3']);
     } else {
-        await ffmpeg.exec(['-f', 'concat', '-safe', '0', '-i', 'concat_list.txt', '-c', 'copy', 'output.mp3']);
+        await ffmpeg.exec([
+            '-f', 'concat', 
+            '-stats_period', '0.2',
+            '-safe', '0', 
+            '-i', 'concat_list.txt', 
+            '-c', 'copy', 
+            'output.mp3']);
     }
     ffmpeg.off("log", onLog);
     const data = await ffmpeg.readFile('output.mp3');
