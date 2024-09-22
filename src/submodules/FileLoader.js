@@ -98,13 +98,17 @@ export function loadFile(file, wave, player) {
             }
         }
 
+        const deleteCoverImageButton = document.getElementById('delete-cover-image-button');
+
         const img = document.getElementById('cover-image');
         if (tags.hasOwnProperty('image')) {
             const blob = new Blob([tags.image.imageBuffer], { type: tags.image.mime });
             const url = URL.createObjectURL(blob);
             img.src = url;
+            deleteCoverImageButton.classList.remove('d-none');
         } else {
             img.src = "img/placeholder.png";
+            deleteCoverImageButton.classList.add('d-none');
         }
 
         buildGallery();

@@ -40,6 +40,8 @@ export function initializeImageHandling() {
         }
     });
 
+    const deleteCoverImageButton = document.getElementById('delete-cover-image-button');
+
     document.getElementById('upload-cover-image-button').addEventListener('click', function () {
         document.getElementById('coverImageFileInput').click();
     });
@@ -59,8 +61,16 @@ export function initializeImageHandling() {
             const blob = new Blob([image.imageBuffer], { type: image.mime });
             const url = URL.createObjectURL(blob);
             img.src = url;
+            deleteCoverImageButton.classList.remove('d-none');
         };
         reader.readAsArrayBuffer(file);
+    });
+
+    deleteCoverImageButton.addEventListener('click', function () {
+        window.coverImage = "deleted";
+        const img = document.getElementById('cover-image');
+        img.src = '/img/placeholder.png';
+        deleteCoverImageButton.classList.add('d-none');
     });
 
     document.getElementById('clean-gallery-button').addEventListener('click', function () {
@@ -100,7 +110,7 @@ export async function addImageBufferToGallery(imageBuffer, mime) {
         // Fallback for browsers that don't support the Web Crypto API
         // in this case, we won't be able to compare images by hash
         // so duplicate images will be added to the gallery
-        hashBuffer = window.chapterImages.length - 1;
+        hashBuffer = [window.chapterImages.length - 1];
     }
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');

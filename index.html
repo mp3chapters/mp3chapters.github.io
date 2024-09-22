@@ -851,9 +851,13 @@
                 <div class="card-body p-2 d-flex align-items-start">
                     <img id="cover-image" class="img-thumbnail" src="img/placeholder.png" alt="Cover image"
                         aria-label="Cover image display">
-                    <button class="btn btn-sm btn-outline-secondary ms-2" id="upload-cover-image-button">Load
-                        image</button>
-                    <input type="file" id="coverImageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
+                    <div class="d-flex flex-column">
+                        <button class="btn btn-sm btn-outline-secondary ms-2" id="upload-cover-image-button">Load
+                            image</button>
+                        <input type="file" id="coverImageFileInput" class="d-none" accept=".jpg,.jpeg,.png,.gif,.webp">
+                        <button class="btn btn-sm btn-outline-danger d-none ms-2 mt-2" id="delete-cover-image-button">Delete
+                            image</button>
+                    </div>
                 </div>
             </div>
         </div>

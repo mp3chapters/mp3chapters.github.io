@@ -64,7 +64,10 @@ async function exportFileBasedOnOldTags(file, tags) {
         }
     }
 
-    if (window.coverImage != null) {
+    if (window.coverImage === "deleted") {
+        tags.image = null;
+        stats.changedCoverImage = true;
+    } else if (window.coverImage != null) {
         tags.image = await encodeImage(window.coverImage);
         stats.changedCoverImage = true;
     }
