@@ -294,6 +294,9 @@ export function startMergeApp() {
         }
 
         document.getElementById('chapter-editor-app-container').classList.remove('d-none');
+
+        // trigger input listener to update filename
+        document.getElementById('field-title').dispatchEvent(new Event('input'));
     }
 
     document.getElementById('field-title').addEventListener('input', (e) => {
