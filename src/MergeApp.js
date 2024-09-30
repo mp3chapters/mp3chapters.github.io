@@ -200,10 +200,6 @@ export function startMergeApp() {
             progressBar.parentElement.classList.add('d-none');
             const mergedFile = new File([mergedBlob], 'merged.mp3', { type: 'audio/mp3' });
             loadMergedFile(mergedFile);
-            // const a = document.createElement('a');
-            // a.href = URL.createObjectURL(mergedFile);
-            // a.download = 'merged.mp3';
-            // a.click();
         } catch (e) {
             alert('An error occurred while merging the files');
             console.error(e);
@@ -212,6 +208,39 @@ export function startMergeApp() {
             mergeButton.disabled = true;
         }
     });
+
+    function copyTags(tags, inferFromAlbum = false) {
+        if (tags.hasOwnProperty('encodedBy')) {
+            tags.encodedBy = `${tags.encodedBy} and mp3chapters.github.io`;
+        }
+        for (let field of window.fieldNames) {
+            const input = document.getElementById(`field-${field}`);
+            if (field === 'title' && tags.hasOwnProperty('album') && inferFromAlbum) {
+                // Use album as the title of the merged file
+                input.value = tags.album;
+                input.dataset.oldValue = "";
+            } else if (tags.hasOwnProperty(field)) {
+                input.value = tags[field];
+                input.dataset.oldValue = "";
+            } else {
+                input.value = "";
+                input.dataset.oldValue = "";
+            }
+        }
+        const deleteCoverImageButton = document.getElementById('delete-cover-image-button');
+        const img = document.getElementById('cover-image');
+        if (tags.hasOwnProperty('image')) {
+            const blob = new Blob([tags.image.imageBuffer], { type: tags.image.mime });
+            const url = URL.createObjectURL(blob);
+            img.src = url;
+            window.coverImage = tags.image;
+            deleteCoverImageButton.classList.remove('d-none');
+        } else {
+            img.src = "/img/placeholder.png";
+            window.coverImage = null;
+            deleteCoverImageButton.classList.add('d-none');
+        }
+    }
 
     async function loadMergedFile(file) {
         window.currentFilename = "merged.mp3";
@@ -261,37 +290,27 @@ export function startMergeApp() {
         window.chapters.setChapters(mergeChapters);
 
         // File tags
-        let tags = filesArray[0].tags;
-        if (tags.hasOwnProperty('encodedBy')) {
-            tags.encodedBy = `${tags.encodedBy} and mp3chapters.github.io`;
+        copyTags(filesArray[0].tags, true);
+        const copySelect = document.getElementById('copy-tags-select');
+        copySelect.innerHTML = '';
+        const option = document.createElement('option');
+        option.value = -1;
+        option.textContent = 'Copy tags from one of the input files';
+        copySelect.appendChild(option);
+        for (let i = 0; i < filesArray.length; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = filesArray[i].descriptor;
+            copySelect.appendChild(option);
         }
-        for (let field of window.fieldNames) {
-            const input = document.getElementById(`field-${field}`);
-            if (field === 'title' && tags.hasOwnProperty('album')) {
-                // Use album as the title of the merged file
-                input.value = tags.album;
-                input.dataset.oldValue = "";
-            } else if (tags.hasOwnProperty(field)) {
-                input.value = tags[field];
-                input.dataset.oldValue = "";
-            } else {
-                input.value = "";
-                input.dataset.oldValue = "";
+        const copyButton = document.getElementById('copy-tags-button');
+        copyButton.addEventListener('click', () => {
+            const index = parseInt(copySelect.value);
+            if (index >= 0) {
+                copyTags(filesArray[index].tags);
             }
-        }
-        const deleteCoverImageButton = document.getElementById('delete-cover-image-button');
-        const img = document.getElementById('cover-image');
-        if (tags.hasOwnProperty('image')) {
-            const blob = new Blob([tags.image.imageBuffer], { type: tags.image.mime });
-            const url = URL.createObjectURL(blob);
-            img.src = url;
-            window.coverImage = tags.image;
-            deleteCoverImageButton.classList.remove('d-none');
-        } else {
-            img.src = "/img/placeholder.png";
-            window.coverImage = null;
-            deleteCoverImageButton.classList.add('d-none');
-        }
+        });
+
 
         document.getElementById('chapter-editor-app-container').classList.remove('d-none');
 

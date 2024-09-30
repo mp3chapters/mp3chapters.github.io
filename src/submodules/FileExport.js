@@ -58,8 +58,8 @@ async function exportFileBasedOnOldTags(file, tags) {
 
     for (let field of window.fieldNames) {
         const input = document.getElementById(`field-${field}`);
+        tags[field] = input.value;
         if (input.value != input.dataset.oldValue) {
-            tags[field] = input.value;
             stats.changedID3Fields = true;
         }
     }
@@ -104,7 +104,7 @@ async function exportFileBasedOnOldTags(file, tags) {
 }
 
 export function exportFile(file) {
-    readTags(file, (fileTags) => { exportFileBasedOnOldTags(file, fileTags) });
+    readTags(file, (fileTags) => { console.log(fileTags); exportFileBasedOnOldTags(file, fileTags) });
     window.allowClosing = true;
 }
 
