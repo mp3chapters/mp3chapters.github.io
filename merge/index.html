@@ -546,11 +546,6 @@
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.dataset.bsTheme = 'dark';
         }
-
-        if (localStorage.getItem('denseMode') === 'true') {
-            document.body.classList.add('dense');
-            window.denseMode = true;
-        }
     </script>
 
     <nav class="navbar bg-body-tertiary" style="z-index: 2;">
