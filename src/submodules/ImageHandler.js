@@ -139,7 +139,9 @@ export async function addImageBufferToGallery(imageBuffer, mime) {
     if (document.activeElement !== document.getElementById('text-input')) {
         const gallery = document.getElementById('gallery');
         const lastImage = gallery.lastElementChild;
-        lastImage.scrollIntoView();
+        if (window.currentFilename !== 'example.mp3') {
+            lastImage.scrollIntoView();
+        }
     }
 
     return window.chapterImages.length - 1;
