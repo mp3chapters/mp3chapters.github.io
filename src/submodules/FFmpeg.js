@@ -74,7 +74,8 @@ export async function mergeFiles(files, reencode, onProgress) {
     for (const file of files) {
         const { name } = file;
         ffmpeg.writeFile(name, await fetchFile(file));
-        inputPaths.push(`file ${name.replace(/ /g, '\\ ')}`);
+        const escaped = name.replace(/([\\'\s])/g, '\\$1');
+        inputPaths.push(`file ${escaped}`);
     }
     await ffmpeg.writeFile('concat_list.txt', inputPaths.join('\n'));
     const onLog = ({ message }) => { 
