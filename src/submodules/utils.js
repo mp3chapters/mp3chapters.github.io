@@ -1,3 +1,17 @@
+export function secondsToStringWithoutMilliseconds(milliseconds) {
+    // used for Spotify/YouTube export
+    const seconds = Math.floor(milliseconds / 1000);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+
+    const paddedHours = hours.toString().padStart(2, '0');
+    const paddedMinutes = minutes.toString().padStart(2, '0');
+    const paddedSeconds = secs.toString().padStart(2, '0');
+
+    return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+}
+
 export function secondsToString(milliseconds, showHours = false) {
     const seconds = Math.floor(milliseconds / 1000);
     const hours = Math.floor(seconds / 3600);

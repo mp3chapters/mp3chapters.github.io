@@ -1,4 +1,4 @@
-import { secondsToString } from './utils.js';
+import { secondsToString, secondsToStringWithoutMilliseconds } from './utils.js';
 
 export class ChapterList {
     constructor() {
@@ -142,7 +142,7 @@ export class ChapterList {
         let list = '';
         this.chapters.forEach(chapter => {
             if (!chapter.error) {
-                const startTime = secondsToString(chapter.start);
+                const startTime = secondsToStringWithoutMilliseconds(chapter.start);
                 list += `${startTime} ${chapter.title}\n`;
             }
         });
