@@ -49,9 +49,9 @@ export class ChapterList {
             this.chapters[this.chapters.length - 1].end = Math.round(this.duration * 1000);
         }
 
-        if (this.chapters[0].start != 0) {
-            this.chapters[0].warning = 'Best practice: First chapter should start at 00:00';
-        }
+        // if (this.chapters[0].start != 0) {
+        //     this.chapters[0].warning = 'Best practice: First chapter should start at 00:00';
+        // }
 
         // check if ms are used
         this.usesMs = false;
