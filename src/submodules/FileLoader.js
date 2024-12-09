@@ -66,7 +66,7 @@ export function loadFile(file, wave, player) {
                     chapterObject.url = chapter.tags.userDefinedUrl[0].url;
                 }
                 if (chapter.tags.hasOwnProperty('image')) {
-                    const imageId = await addImageBufferToGallery(chapter.tags.image.imageBuffer, chapter.tags.image.mime);
+                    const imageId = await addImageBufferToGallery(chapter.tags.image.imageBuffer, chapter.tags.image.mime, true);
                     chapterObject.imageId = imageId;
                     document.getElementById('gallery-container').open = !initialLoad;
                 }

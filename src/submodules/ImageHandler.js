@@ -101,7 +101,7 @@ function getUsedImages() {
     return usedImages;
 }
 
-export async function addImageBufferToGallery(imageBuffer, mime) {
+export async function addImageBufferToGallery(imageBuffer, mime, mp3FileIsLoading = false) {
     // Generate a SHA-256 hash of the file
     let hashBuffer;
     try {
@@ -139,7 +139,7 @@ export async function addImageBufferToGallery(imageBuffer, mime) {
     if (document.activeElement !== document.getElementById('text-input')) {
         const gallery = document.getElementById('gallery');
         const lastImage = gallery.lastElementChild;
-        if (window.currentFilename !== 'example.mp3') {
+        if (!mp3FileIsLoading) {
             lastImage.scrollIntoView();
         }
     }
