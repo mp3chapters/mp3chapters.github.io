@@ -1,7 +1,7 @@
-import * as popperModule from '/libs/popper.min.js';
-import * as tippyModule from '/libs/tippy-bundle.umd.min.js';
-import * as nodeID3Module from '/node-id3-browserify.min.js';
-import * as vidstackModule from '/libs/vidstack.js';
+import * as popperModule from '../libs/popper.min.js';
+import * as tippyModule from '../libs/tippy-bundle.umd.min.js';
+import * as nodeID3Module from '../node-id3-browserify.min.js';
+import * as vidstackModule from '../libs/vidstack.js';
 
 import { ChapterList } from './submodules/ChapterList.js';
 import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText, adjustTextAreaHeight, highlightCurrentLine } from './submodules/ChapterListEditor.js';
@@ -84,13 +84,13 @@ export function startBaseApp() {
     });
 
     function setColorScheme() {
-        const hero = document.getElementById('hero-image');
+        // const hero = document.getElementById('hero-image');
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.dataset.bsTheme = 'dark';
-            if (hero) hero.src = 'hero-dark.jpg';
+            // if (hero) hero.src = 'hero-dark.jpg';
         } else {
             document.documentElement.dataset.bsTheme = 'light';
-            if (hero) hero.src = 'hero.jpg';
+            // if (hero) hero.src = 'hero.jpg';
         }
     }
 
