@@ -512,15 +512,22 @@
             right: 6px;
             z-index: 5;
         }
-    </style>
 
-    <style>
         .file-list-item {
             cursor: grab;
         }
 
         .sortable-chosen, .sortable-drag, .sortable-ghost {
             cursor: grabbing;
+        }
+
+        #spinner {
+            height: 2.5rem;
+            margin-left: 0.3rem;
+        }
+
+        [data-bs-theme="dark"] #spinner {
+            filter: invert(1);
         }
     </style>
 
@@ -1002,7 +1009,7 @@
         </details>
 
 
-        <div class="gap-2 d-flex align-items-end mt-3" id="export-buttons-section">
+        <div class="gap-2 d-flex align-items-center mt-3" id="export-buttons-section">
             <button id="addTagsButton" class="btn btn-success btn-lg icon-link">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16" aria-hidden="true">
@@ -1013,6 +1020,7 @@
                 </svg>
                 Export merged MP3 file
             </button>
+            <img src="../img/spinner.svg" id="spinner" alt="Export spinner" class="d-none">
         </div>
     </main>
 
@@ -1050,7 +1058,7 @@
                                 target="_blank" rel="license noopener">MIT</a>.
                             Available on <a href="https://github.com/mp3chapters/mp3chapters.github.io">GitHub</a>,
                             feedback welcome!</li>
-                        <li class="mb-2">First published September 2024. Last updated December 2024.</li>
+                        <li class="mb-2">First published September 2024. Last updated March 2025.</li>
                     </ul>
                 </div>
             </div>

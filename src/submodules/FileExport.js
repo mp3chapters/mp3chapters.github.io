@@ -84,6 +84,10 @@ async function exportFileBasedOnOldTags(file, tags) {
         downloadLink.href = url;
         downloadLink.download = window.currentFilename;
         downloadLink.click();
+
+        setTimeout(() => {
+            document.getElementById("spinner").classList.add("d-none");
+        }, 200);
     });
 
     if (window.currentFilename != "example.mp3" 
@@ -104,6 +108,7 @@ async function exportFileBasedOnOldTags(file, tags) {
 }
 
 export function exportFile(file) {
+    document.getElementById("spinner").classList.remove("d-none");
     readTags(file, (fileTags) => { console.log(fileTags); exportFileBasedOnOldTags(file, fileTags) });
     window.allowClosing = true;
 }

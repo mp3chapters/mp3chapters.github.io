@@ -515,6 +515,14 @@
             right: 6px;
             z-index: 5;
         }
+
+        #spinner {
+            height: 2.5rem;
+        }
+
+        [data-bs-theme="dark"] #spinner {
+            filter: invert(1);
+        }
     </style>
 
     <meta name="description"
@@ -875,6 +883,7 @@
                 </svg>
                 Export audio file
             </button>
+            <img src="img/spinner.svg" id="spinner" alt="Export spinner" class="d-none">
             <button id="podloveButton" class="btn btn-lg btn-outline-secondary">
                 Get Podlove XML/Podcast Namespace JSON
             </button>
@@ -1037,7 +1046,7 @@
                                 target="_blank" rel="license noopener">MIT</a>.
                             Available on <a href="https://github.com/mp3chapters/mp3chapters.github.io">GitHub</a>,
                             feedback welcome!</li>
-                        <li class="mb-2">First published November 2023. Last updated November 2024.</li>
+                        <li class="mb-2">First published November 2023. Last updated March 2025.</li>
                     </ul>
                 </div>
             </div>
