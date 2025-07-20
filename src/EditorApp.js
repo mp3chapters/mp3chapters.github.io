@@ -14,7 +14,7 @@ export function startEditorApp() {
         cursorWidth: 3,
         dragToSeek: true,
         partialRender: true,
-        sampleRate: 5000,
+        sampleRate: 8000,
         barWidth: 4,
         barGap: 1,
         height: 100,
