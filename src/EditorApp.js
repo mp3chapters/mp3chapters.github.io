@@ -1,4 +1,4 @@
-import WaveSurfer from '/libs/wavesurfer.esm.js';
+import WaveSurfer from 'libs/wavesurfer.esm.js';
 import { startBaseApp, updateButtonPosition } from './BaseApp.js';
 import { initializeDragDrop } from './submodules/DragDropHandler.js';
 import { loadFile } from './submodules/FileLoader.js';
