@@ -38,6 +38,7 @@ export function initializeImageHandling() {
         for (const file of files) {
             addToGallery(file);
         }
+        fileInput.value = '';
     });
 
     const deleteCoverImageButton = document.getElementById('delete-cover-image-button');
@@ -64,6 +65,7 @@ export function initializeImageHandling() {
             deleteCoverImageButton.classList.remove('d-none');
         };
         reader.readAsArrayBuffer(file);
+        fileInput.value = '';
     });
 
     deleteCoverImageButton.addEventListener('click', function () {
@@ -118,7 +120,9 @@ export async function addImageBufferToGallery(imageBuffer, mime, mp3FileIsLoadin
     // Check if the image already exists in the gallery
     for (let i = 0; i < window.chapterImages.length; i++) {
         if (window.chapterImages[i].hash === hashHex) {
-            // If a matching image is found, return its ID
+            // If a matching image is found, unhide it if necessary and return its ID
+            window.hiddenImages.delete(i);
+            buildGallery();
             return i;
         }
     }
