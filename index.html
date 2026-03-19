@@ -523,6 +523,15 @@
         [data-bs-theme="dark"] #spinner {
             filter: invert(1);
         }
+
+        .dropdown-menu {
+            top: 100%;
+            left: 0;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bs-tertiary-bg);
+        }
     </style>
 
     <meta name="description"
@@ -884,9 +893,19 @@
                 Export audio file
             </button>
             <img src="img/spinner.svg" id="spinner" alt="Export spinner" class="d-none">
-            <button id="podloveButton" class="btn btn-lg btn-outline-secondary">
-                Get Podlove XML/Podcast Namespace JSON
-            </button>
+            <div class="progress d-none" id="export-progress" style="width: 200px;">
+                <div class="progress-bar" role="progressbar" id="export-progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-lg btn-outline-secondary dropdown-toggle" data-dropdown-toggle>
+                    Other export options
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" id="podloveButton">Podlove XML / Podcast JSON</a></li>
+                    <li><a class="dropdown-item" href="#" id="exportM4BButton">Export as M4B</a></li>
+                    <li><a class="dropdown-item" href="#" id="exportVideoButton">Export as MP4 video</a></li>
+                </ul>
+            </div>
         </div>
         <details class="card mt-3 d-none" id="podlove">
             <summary class="card-header">

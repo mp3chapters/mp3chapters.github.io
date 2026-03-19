@@ -5,7 +5,7 @@ import * as vidstackModule from '../libs/vidstack.js';
 
 import { ChapterList } from './submodules/ChapterList.js';
 import { setTextAreaContent, displayChapterList, updateChapterListBasedOnTextarea, editText, adjustTextAreaHeight, highlightCurrentLine } from './submodules/ChapterListEditor.js';
-import { exportFile } from './submodules/FileExport.js';
+import { exportFile, exportM4B, exportVideo } from './submodules/FileExport.js';
 import { initializeImageHandling } from './submodules/ImageHandler.js';
 import { updatePodlove, setUpExportButtons } from './submodules/OtherFormatExports.js';
 
@@ -64,6 +64,7 @@ export function startBaseApp() {
         setColorScheme();
         initializeImageHandling();
         setUpExportButtons();
+        initDropdowns();
 
         const textInput = document.getElementById('text-input');
         textInput.addEventListener('blur', updateChapterListBasedOnTextarea);
@@ -82,6 +83,26 @@ export function startBaseApp() {
         back10.style.marginRight = "-4px";
         skip1.style.marginRight = "-4px";
     });
+
+    function initDropdowns() {
+        document.querySelectorAll('[data-dropdown-toggle]').forEach(btn => {
+            const menu = btn.nextElementSibling;
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('show');
+            });
+            // Close dropdown items after click
+            menu.querySelectorAll('.dropdown-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    menu.classList.remove('show');
+                });
+            });
+        });
+        // Close all dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.dropdown-menu.show').forEach(m => m.classList.remove('show'));
+        });
+    }
 
     function setColorScheme() {
         // const hero = document.getElementById('hero-image');
@@ -136,6 +157,22 @@ export function startBaseApp() {
     document.getElementById('addTagsButton').addEventListener('click', function () {
         exportFile(window.currentFile);
     });
+
+    const exportM4BButton = document.getElementById('exportM4BButton');
+    if (exportM4BButton) {
+        exportM4BButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            exportM4B(window.currentFile);
+        });
+    }
+
+    const exportVideoButton = document.getElementById('exportVideoButton');
+    if (exportVideoButton) {
+        exportVideoButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            exportVideo(window.currentFile);
+        });
+    }
 
     window.addEventListener('resize', updateButtonPosition);
 

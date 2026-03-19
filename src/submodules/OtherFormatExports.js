@@ -12,7 +12,8 @@ export function setUpExportButtons() {
 
     const podloveButton = document.getElementById('podloveButton');
     if (podloveButton) {
-        podloveButton.addEventListener('click', function () {
+        podloveButton.addEventListener('click', function (e) {
+            e.preventDefault();
             updatePodlove();
             const container = document.getElementById('podlove');
             container.classList.remove("d-none");
