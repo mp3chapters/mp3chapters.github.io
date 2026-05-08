@@ -351,7 +351,11 @@ export function buildGallery() {
 }
 
 
-export function encodeImage(image) {
+export function encodeImage(image, options = {}) {
+    if (options.resizeImages === false) {
+        return Promise.resolve(image);
+    }
+
     return new Promise((resolve, reject) => {
         var img = new Image();
 

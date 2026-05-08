@@ -664,6 +664,11 @@
             <input class="form-check-input" type="checkbox" role="switch" id="useCoversAsChapterImages">
             <label class="form-check-label" for="useCoversAsChapterImages">Use cover images as chapter images</label>
         </div>
+        <div class="form-check form-switch"
+            data-tippy-content="Scale cover and chapter images down to 1400px and convert larger images to JPEG. Turn this off to preserve original image files, which can make exports much larger.">
+            <input class="form-check-input" type="checkbox" role="switch" id="resizeImages" checked>
+            <label class="form-check-label" for="resizeImages">Resize images to 1400px</label>
+        </div>
         <div class="form-check form-switch" id="reencodeAudioContainer">
             <input class="form-check-input" type="checkbox" role="switch" id="reencodeAudio">
             <label class="form-check-label" for="reencodeAudio">Re-encode audio (slow, but may be needed if input files are incompatible)</label>
@@ -767,7 +772,7 @@
                         <code>&lt;img-6&gt;</code>) to the end of the chapter line.
                         Images in the gallery that are not assigned to a chapter are ignored.
                         The same image can be used for multiple chapters.
-                        Images larger than 1400px wide or tall will be scaled down.
+                        Images larger than 1400px wide or tall are scaled down by default.
                         A chapter can get both a link and an image.
                         You can also paste an image from the clipboard; if you do this while editing the chapter list, the correct 
                         image code will be inserted at the cursor position.

@@ -8,6 +8,7 @@ import { convertToM4B, createVideo } from './FFmpeg.js';
 function buildTaggedMP3(file) {
     return new Promise((resolve) => {
         readTags(file, async (tags) => {
+            const imageOptions = getImageExportOptions();
             const chapterTag = [];
             const tocTag = {
                 elementID: 'toc',
@@ -46,7 +47,7 @@ function buildTaggedMP3(file) {
                     }
                     if (chapter.hasOwnProperty('imageId')) {
                         try {
-                            chapterObject.tags.image = await encodeImage(window.chapterImages[chapter.imageId]);
+                            chapterObject.tags.image = await encodeImage(window.chapterImages[chapter.imageId], imageOptions);
                         } catch (error) {
                             console.error('Error encoding image:', error);
                         }
@@ -74,7 +75,7 @@ function buildTaggedMP3(file) {
                 tags.image = null;
                 stats.changedCoverImage = true;
             } else if (window.coverImage != null) {
-                tags.image = await encodeImage(window.coverImage);
+                tags.image = await encodeImage(window.coverImage, imageOptions);
                 stats.changedCoverImage = true;
             }
 
@@ -84,6 +85,22 @@ function buildTaggedMP3(file) {
             });
         });
     });
+}
+
+function getImageExportOptions() {
+    return {
+        resizeImages: document.getElementById('resizeImages')?.checked !== false,
+    };
+}
+
+function imageFileExtension(image) {
+    const extensions = {
+        'image/jpeg': 'jpg',
+        'image/png': 'png',
+        'image/gif': 'gif',
+        'image/webp': 'webp',
+    };
+    return extensions[image.mime] || 'jpg';
 }
 
 function downloadBlob(blob, filename) {
@@ -188,11 +205,12 @@ export async function exportImageZip() {
     const script = document.createElement('script');
     script.src = '/libs/jszip.min.js';
     script.onload = async function() {
+        const imageOptions = getImageExportOptions();
         const zip = new JSZip();
         const imageFolder = zip.folder("images");
         for (let i = 0; i < window.chapterImages.length; i++) {
-            const image = await encodeImage(window.chapterImages[i]);
-            imageFolder.file(`image-${i}.jpg`, image.imageBuffer);
+            const image = await encodeImage(window.chapterImages[i], imageOptions);
+            imageFolder.file(`image-${i}.${imageFileExtension(image)}`, image.imageBuffer);
         }
         zip.generateAsync({ type: "blob" }).then(function (content) {
             const downloadLink = document.createElement('a');
