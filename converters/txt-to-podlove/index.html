@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Convert Plain Text Chapters to Podlove XML</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../libs/styles/bootstrap-and-vidstack.min.css" />
+    <style>body { font-family: Arial, Helvetica, sans-serif; }</style>
+    <meta name="description" content="Free online converter: Plain Text chapters to Podlove Simple Chapters XML. Runs locally in your browser." />
+    <link rel="canonical" href="https://mp3chapters.github.io/converters/txt-to-podlove/" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="icon" type="image/x-png" href="../../favicon.png" />
+</head>
+<body>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.bsTheme = 'dark';
+        }
+    </script>
+
+    <nav class="navbar bg-body-tertiary" style="z-index: 2;">
+        <div class="container">
+            <a class="navbar-brand icon-link" href="/converters/">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                </svg>
+                Converters</a>
+            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">
+                |&nbsp;<a href="/" class="text-dark-emphasis">Chapter Editor</a>
+                |&nbsp;<a href="/merge" class="text-dark-emphasis">File Merger</a>
+                |&nbsp;<a href="/player" class="text-dark-emphasis">Player</a></span>
+            <a href="https://github.com/mp3chapters/mp3chapters.github.io" class="icon-link ms-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+                    viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                </svg>
+                <span class="d-none d-sm-inline">GitHub</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-4 mt-3" style="max-width: 800px;">
+        <h1 class="mb-3">Plain Text &rarr; Podlove XML</h1>
+        <p class="text-body-secondary mb-3">Paste Plain Text chapters below to convert to Podlove Simple Chapters XML.</p>
+
+        <div class="mb-3">
+            <label for="input" class="form-label fw-bold">Input (Plain Text)</label>
+            <textarea class="form-control font-monospace" id="input" rows="8" placeholder="00:00 Introduction
+01:30 Chapter 2"></textarea>
+        </div>
+
+        <button class="btn btn-primary mb-3" id="convertBtn">Convert</button>
+
+        <div class="mb-3 d-none" id="outputSection">
+            <label for="output" class="form-label fw-bold">Output (Podlove XML)</label>
+            <textarea class="form-control font-monospace" id="output" rows="8" readonly></textarea>
+            <div class="mt-2">
+                <button class="btn btn-sm btn-outline-secondary" id="copyBtn">Copy</button>
+                <button class="btn btn-sm btn-outline-secondary" id="downloadBtn">Download .psc</button>
+            </div>
+        </div>
+
+        <div class="alert alert-danger d-none" id="error"></div>
+    </div>
+
+    <script type="module">
+        import { parseTextChapters, chaptersToPodlove, downloadBlob } from '../converter-utils.js';
+
+        document.getElementById('convertBtn').addEventListener('click', () => {
+            const input = document.getElementById('input').value.trim();
+            const errorEl = document.getElementById('error');
+            const outputSection = document.getElementById('outputSection');
+            errorEl.classList.add('d-none');
+            try {
+                const chapters = parseTextChapters(input);
+                if (chapters.length === 0) throw new Error('No chapters found in input.');
+                const result = chaptersToPodlove(chapters);
+                document.getElementById('output').value = result;
+                outputSection.classList.remove('d-none');
+            } catch (e) {
+                errorEl.textContent = 'Error: ' + e.message;
+                errorEl.classList.remove('d-none');
+                outputSection.classList.add('d-none');
+            }
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            navigator.clipboard.writeText(document.getElementById('output').value);
+        });
+
+        document.getElementById('downloadBtn').addEventListener('click', () => {
+            const blob = new Blob([document.getElementById('output').value], { type: 'application/xml' });
+            downloadBlob(blob, 'chapters.psc');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MP3 Chapter Converters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../libs/styles/bootstrap-and-vidstack.min.css" />
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .converter-card {
+            transition: box-shadow 0.15s;
+        }
+        .converter-card:hover {
+            box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.15);
+        }
+        .converter-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+
+    <meta name="description" content="Free online converters for MP3 chapter formats. Convert between Podlove XML, Podcast JSON, plain text, M4B, and MP4." />
+    <link rel="canonical" href="https://mp3chapters.github.io/converters/" />
+    <meta property="og:title" content="MP3 Chapter Converters" />
+    <meta property="og:site_name" content="MP3 Chapter Converters">
+    <meta property="og:description" content="Free online converters for MP3 chapter formats. Convert between Podlove XML, Podcast JSON, plain text, M4B, and MP4." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mp3chapters.github.io/converters/" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="icon" type="image/x-png" href="../favicon.png" />
+
+</head>
+
+<body>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.bsTheme = 'dark';
+        }
+    </script>
+
+    <nav class="navbar bg-body-tertiary" style="z-index: 2;">
+        <div class="container">
+            <a class="navbar-brand icon-link" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                </svg>
+                Converters</a>
+            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">
+                |&nbsp;<a href="/" class="text-dark-emphasis">Chapter Editor</a>
+                |&nbsp;<a href="/merge" class="text-dark-emphasis">File Merger</a>
+                |&nbsp;<a href="/player" class="text-dark-emphasis">Player</a></span>
+            <a href="https://github.com/mp3chapters/mp3chapters.github.io" class="icon-link ms-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+                    viewBox="0 0 16 16" aria-hidden="true">
+                    <path
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                </svg>
+                <span class="d-none d-sm-inline">
+                    GitHub
+                </span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-4 mt-3">
+        <h1 class="mb-2">Chapter Format Converters</h1>
+        <p class="lead mb-4">Free online tools for converting between MP3 chapter formats. All processing happens locally in your browser.</p>
+
+        <h2 class="h5 mb-3">Audio Converters</h2>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="mp3-to-m4b/" class="card-body">
+                        <h5 class="card-title">MP3 &rarr; M4B</h5>
+                        <p class="card-text text-body-secondary">Convert a chaptered MP3 file to M4B audiobook format.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="mp3-to-mp4/" class="card-body">
+                        <h5 class="card-title">MP3 &rarr; MP4 Video</h5>
+                        <p class="card-text text-body-secondary">Create a slideshow video from an MP3 with chapter images.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="h5 mb-3">Extract Chapters from MP3</h2>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="mp3-to-podlove/" class="card-body">
+                        <h5 class="card-title">MP3 &rarr; Podlove XML</h5>
+                        <p class="card-text text-body-secondary">Extract chapters from an MP3 and export as Podlove Simple Chapters.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="mp3-to-json/" class="card-body">
+                        <h5 class="card-title">MP3 &rarr; Podcast JSON</h5>
+                        <p class="card-text text-body-secondary">Extract chapters from an MP3 and export as Podcast Namespace JSON.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="mp3-to-txt/" class="card-body">
+                        <h5 class="card-title">MP3 &rarr; Plain Text</h5>
+                        <p class="card-text text-body-secondary">Extract chapters from an MP3 as a plain text list.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="h5 mb-3">Convert Between Chapter Formats</h2>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="podlove-to-json/" class="card-body">
+                        <h5 class="card-title">Podlove XML &rarr; JSON</h5>
+                        <p class="card-text text-body-secondary">Convert Podlove Simple Chapters XML to Podcast Namespace JSON.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="json-to-podlove/" class="card-body">
+                        <h5 class="card-title">JSON &rarr; Podlove XML</h5>
+                        <p class="card-text text-body-secondary">Convert Podcast Namespace JSON to Podlove Simple Chapters XML.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="podlove-to-txt/" class="card-body">
+                        <h5 class="card-title">Podlove XML &rarr; Text</h5>
+                        <p class="card-text text-body-secondary">Convert Podlove Simple Chapters to a plain text list.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="json-to-txt/" class="card-body">
+                        <h5 class="card-title">JSON &rarr; Plain Text</h5>
+                        <p class="card-text text-body-secondary">Convert Podcast Namespace JSON to a plain text chapter list.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="txt-to-json/" class="card-body">
+                        <h5 class="card-title">Text &rarr; JSON</h5>
+                        <p class="card-text text-body-secondary">Convert a plain text chapter list to Podcast Namespace JSON.</p>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="card converter-card h-100">
+                    <a href="txt-to-podlove/" class="card-body">
+                        <h5 class="card-title">Text &rarr; Podlove XML</h5>
+                        <p class="card-text text-body-secondary">Convert a plain text chapter list to Podlove Simple Chapters XML.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

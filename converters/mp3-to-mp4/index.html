@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Convert MP3 to MP4 Video Slideshow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../../libs/styles/bootstrap-and-vidstack.min.css" />
+    <style>body { font-family: Arial, Helvetica, sans-serif; }</style>
+    <meta name="description" content="Free online tool to create a slideshow MP4 video from an MP3 file with chapter images. Runs locally in your browser." />
+    <link rel="canonical" href="https://mp3chapters.github.io/converters/mp3-to-mp4/" />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link rel="icon" type="image/x-png" href="../../favicon.png" />
+</head>
+<body>
+    <script>
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.dataset.bsTheme = 'dark';
+        }
+    </script>
+
+    <nav class="navbar bg-body-tertiary" style="z-index: 2;">
+        <div class="container">
+            <a class="navbar-brand icon-link" href="/converters/">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-list-columns-reverse" viewBox="0 0 16 16" aria-hidden="true">
+                    <path fill-rule="evenodd"
+                        d="M0 .5A.5.5 0 0 1 .5 0h2a.5.5 0 0 1 0 1h-2A.5.5 0 0 1 0 .5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10A.5.5 0 0 1 4 .5m-4 2A.5.5 0 0 1 .5 2h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 4h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 6h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2A.5.5 0 0 1 .5 8h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1h-8a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1h-10a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5m-4 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m4 0a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
+                </svg>
+                Converters</a>
+            <span class="d-none d-md-inline" style="margin-left: -5px; font-size: var(--bs-navbar-brand-font-size);">
+                |&nbsp;<a href="/" class="text-dark-emphasis">Chapter Editor</a>
+                |&nbsp;<a href="/merge" class="text-dark-emphasis">File Merger</a>
+                |&nbsp;<a href="/player" class="text-dark-emphasis">Player</a></span>
+            <a href="https://github.com/mp3chapters/mp3chapters.github.io" class="icon-link ms-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-github"
+                    viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8" />
+                </svg>
+                <span class="d-none d-sm-inline">GitHub</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container py-4 mt-3" style="max-width: 800px;">
+        <h1 class="mb-3">MP3 &rarr; MP4 Video Slideshow</h1>
+        <p class="text-body-secondary mb-3">Create a slideshow video from a chaptered MP3. The MP3 must already contain chapter metadata with embedded images (use the <a href="/">Chapter Editor</a> to add them). The conversion runs locally in your browser using FFmpeg.</p>
+
+        <div class="mb-3">
+            <label for="mp3Input" class="form-label fw-bold">Select MP3 file</label>
+            <input type="file" accept=".mp3,audio/mpeg" class="form-control" id="mp3Input">
+            <div class="form-text">Chapters and images will be extracted from the file's ID3 tags.</div>
+        </div>
+
+        <button class="btn btn-primary mb-3" id="convertBtn" disabled>Convert to MP4</button>
+
+        <div class="progress mb-3 d-none" id="progressContainer" style="height: 25px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar" role="progressbar" style="width: 0%">Loading...</div>
+        </div>
+
+        <div class="alert alert-success d-none" id="success"></div>
+        <div class="alert alert-danger d-none" id="error"></div>
+    </div>
+
+    <script src="../../libs/node-id3-browserify.js"></script>
+    <script type="module">
+        import { createVideo } from '../../src/submodules/FFmpeg.js';
+        import { downloadBlob } from '../converter-utils.js';
+
+        const mp3Input = document.getElementById('mp3Input');
+        const convertBtn = document.getElementById('convertBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const errorEl = document.getElementById('error');
+        const successEl = document.getElementById('success');
+
+        mp3Input.addEventListener('change', () => {
+            convertBtn.disabled = !mp3Input.files.length;
+            errorEl.classList.add('d-none');
+            successEl.classList.add('d-none');
+        });
+
+        function readTagsAsync(file) {
+            return new Promise((resolve) => {
+                window.readTags(file, resolve);
+            });
+        }
+
+        convertBtn.addEventListener('click', async () => {
+            const file = mp3Input.files[0];
+            if (!file) return;
+
+            convertBtn.disabled = true;
+            errorEl.classList.add('d-none');
+            successEl.classList.add('d-none');
+            progressContainer.classList.remove('d-none');
+            progressBar.style.width = '10%';
+            progressBar.textContent = 'Reading ID3 tags...';
+
+            try {
+                const tags = await readTagsAsync(file);
+
+                // Extract chapters
+                let toc = [];
+                if (tags.tableOfContents && tags.tableOfContents.length > 0 && tags.tableOfContents[0].elements) {
+                    toc = tags.tableOfContents[0].elements;
+                }
+                if (!tags.chapter || tags.chapter.length === 0) {
+                    throw new Error('No chapters found in this MP3 file. Use the Chapter Editor to add chapters first.');
+                }
+
+                const chapters = [];
+                const chapterImages = {};
+                let imageIdx = 0;
+                for (const ch of tags.chapter) {
+                    const chapter = {
+                        title: ch.tags?.title || '',
+                        start: ch.startTimeMs,
+                        end: ch.endTimeMs,
+                    };
+                    if (ch.tags?.image) {
+                        chapterImages[imageIdx] = ch.tags.image;
+                        chapter.imageId = imageIdx;
+                        imageIdx++;
+                    }
+                    chapters.push(chapter);
+                }
+
+                // Fill in end times from next chapter's start
+                for (let i = 0; i < chapters.length - 1; i++) {
+                    if (!chapters[i].end) chapters[i].end = chapters[i + 1].start;
+                }
+
+                // Get cover image
+                const coverImage = tags.image || null;
+
+                progressBar.style.width = '20%';
+                progressBar.textContent = 'Converting (this may take a while)...';
+
+                // Estimate total duration for progress
+                const lastChapter = chapters[chapters.length - 1];
+                const totalDuration = (lastChapter.end || lastChapter.start + 60000) / 1000;
+
+                const mp4Blob = await createVideo(file, chapters, chapterImages, coverImage, (currentTime) => {
+                    const pct = Math.min(95, 20 + (currentTime / totalDuration) * 75);
+                    progressBar.style.width = pct + '%';
+                    progressBar.textContent = `Encoding... ${Math.round(pct)}%`;
+                });
+
+                const filename = file.name.replace(/\.[^/.]+$/, '') + '.mp4';
+                downloadBlob(mp4Blob, filename);
+                progressBar.style.width = '100%';
+                progressBar.textContent = 'Done!';
+                successEl.textContent = `Converted successfully. Download started for ${filename}.`;
+                successEl.classList.remove('d-none');
+            } catch (e) {
+                errorEl.textContent = 'Error: ' + e.message;
+                errorEl.classList.remove('d-none');
+                progressContainer.classList.add('d-none');
+            } finally {
+                convertBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

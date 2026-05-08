@@ -262,6 +262,11 @@ export async function createVideo(mp3Blob, chapters, chapterImages, coverImage, 
     // Create frames directory
     try { await ffmpegVideo.createDir('frames'); } catch (e) { /* may already exist */ }
 
+    function durationSeconds(chapter) {
+        const duration = (chapter.end - chapter.start) / 1000;
+        return Number.isFinite(duration) && duration > 0 ? duration : null;
+    }
+
     const concatLines = [];
     for (let i = 0; i < chapters.length; i++) {
         const ch = chapters[i];
@@ -269,16 +274,22 @@ export async function createVideo(mp3Blob, chapters, chapterImages, coverImage, 
         const frameName = `frames/frame_${String(i).padStart(4, '0')}.png`;
         await ffmpegVideo.writeFile(frameName, frameData);
 
-        const durationSec = (ch.end - ch.start) / 1000;
         concatLines.push(`file '${frameName}'`);
         if (i < chapters.length - 1) {
+            const durationSec = durationSeconds(ch);
+            if (durationSec == null) {
+                throw new Error(`Missing valid end time for chapter ${i + 1}.`);
+            }
             concatLines.push(`duration ${durationSec}`);
         }
     }
     // Repeat last frame (concat demuxer quirk)
     if (chapters.length > 0) {
         const lastFrame = `frames/frame_${String(chapters.length - 1).padStart(4, '0')}.png`;
-        concatLines.push(`duration ${(chapters[chapters.length - 1].end - chapters[chapters.length - 1].start) / 1000}`);
+        const durationSec = durationSeconds(chapters[chapters.length - 1]);
+        if (durationSec != null) {
+            concatLines.push(`duration ${durationSec}`);
+        }
         concatLines.push(`file '${lastFrame}'`);
     }
 
