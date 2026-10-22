@@ -8,6 +8,31 @@ Built using [node-id3](https://github.com/Zazama/node-id3), [browserify](https:/
 
 Feedback, bug reports, and pull requests are very welcome.
 
+## Player release updates
+
+The `Update player release` workflow updates `player/index.html` from the latest
+published stable release in `mp3chapters/mp3chapters-player`. It updates the macOS,
+Windows, and Debian download links, installer sizes, version, and publication
+date. Screenshots and descriptive copy remain manually maintained.
+
+The player repo calls `.github/workflows/update-player-release.yml` on `master`
+via `workflow_dispatch`, passing `release_tag`. Add a fine-grained token scoped
+to this website repo with **Actions: write** as the player repo's
+`WEBSITE_DISPATCH_TOKEN` secret. No additional website secret is needed.
+Both workflow files must be merged into their repositories' default branches
+before automatic release notifications can work.
+
+The receiver can also be run manually with a blank tag to sync the latest
+release. It refuses drafts, prereleases, older release tags, missing installers,
+and incomplete uploads. Repeated runs with the same release are safe.
+
+This preserves the existing Pages configuration (deploy from `master`, `/`).
+After committing the page with `GITHUB_TOKEN`, the workflow explicitly requests
+a Pages build; bot commits alone do not trigger one. Branch rules must allow
+the workflow to push the page update to `master`.
+
+Run the offline checks with `node --test tests/player-release.test.mjs`.
+
 Features:
 * Add chapters using the player, which displays a waveform and the current chapters.
 * Add chapters manually using a straightforward text interface.
