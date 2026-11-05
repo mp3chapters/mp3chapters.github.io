@@ -51,14 +51,14 @@
         }
     </style>
 
-    <meta name="description" content="A simple desktop app for playing MP3 files with chapters." />
+    <meta name="description" content="Play MP3 files and podcasts with chapter artwork, a chapter list, and a built-in podcast directory. Free and open source for macOS, Windows, and Linux." />
     <link rel="canonical" href="https://mp3chapters.github.io/player/" />
     <meta property="og:title" content="MP3 Chapter Player" />
     <meta property="og:site_name" content="MP3 Chapter Player">
-    <meta property="og:description" content="A simple desktop app for playing MP3 files with chapters." />
+    <meta property="og:description" content="Play MP3 files and podcasts with chapter artwork and a built-in podcast directory. Free and open source." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://mp3chapters.github.io/player/" />
-    <meta property="og:image" content="https://mp3chapters.github.io/player/screenshot.png" />
+    <meta property="og:image" content="https://mp3chapters.github.io/player/screenshot-light.png" />
     <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
     <link rel="icon" type="image/x-png" href="../favicon.png" />
 
@@ -68,9 +68,12 @@
 
 <body>
     <script>
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.dataset.bsTheme = 'dark';
-        }
+        const appearance = window.matchMedia('(prefers-color-scheme: dark)');
+        const updateAppearance = () => {
+            document.documentElement.dataset.bsTheme = appearance.matches ? 'dark' : 'light';
+        };
+        updateAppearance();
+        appearance.addEventListener('change', updateAppearance);
     </script>
 
     <nav class="navbar bg-body-tertiary" style="z-index: 2;">
@@ -103,19 +106,24 @@
     <div class="container col-xxl-9 px-4 py-2 py-lg-4" id="hero">
         <div class="row flex-lg-row-reverse align-items-center g-5 py-4 py-lg-6">
             <div class="col-12 mt-5 mt-lg-5 col-lg-6">
-                <img src="screenshot.jpg" id="hero-image" class="d-block mx-lg-auto img-fluid"
-                    alt="Screenshot of the app" width="2024"
-                    height="1424" loading="lazy"
-                    style="box-shadow: 0 0 30px #00000077; border-radius: 6px;">
+                <picture>
+                    <source media="(prefers-color-scheme: dark)" srcset="screenshot-dark.png">
+                    <img src="screenshot-light.png" id="hero-image" class="d-block mx-lg-auto img-fluid"
+                        alt="MP3 Chapter Player playing Stay Forever's Rollercoaster Tycoon episode, with chapter artwork and progress in the chapter list."
+                        width="1800" height="1200" fetchpriority="high"
+                        style="box-shadow: 0 0 30px #00000044; border-radius: 6px;">
+                </picture>
             </div>
             <div class="col-lg-6 mt-4 mt-sm-8">
                 <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Play MP3 audio files with chapters<span
                         class="d-none">.</span></h1>
-                <p class="lead">A simple desktop app for playing MP3 files with embedded
-                    <code class="text-body">id3</code> chapters supporting chapter images
-                    and featuring a convenient chapter list display.
+                <p class="lead">Listen to MP3 files and podcasts with embedded chapters.
+                    Jump between chapters, follow along with chapter artwork, and see your progress at a glance.
                 </p>
-                <p class="lead">Free and open source. Note this is an early prototype and might not work perfectly.</p>
+                <p class="lead">New in 1.0: a redesigned player and a built-in podcast directory.
+                    Find a show, browse its episodes, and download one to listen offline.</p>
+                <p class="lead">Free and open source. Available for macOS, Windows, and Linux,
+                    with light and dark appearances.</p>
             </div>
         </div>
     </div>
@@ -143,11 +151,8 @@
                     </svg>
                     Download for macOS</button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" data-player-asset="macos-arm" href="https://github.com/mp3chapters/mp3chapters-player/releases/download/app-v1.0.1/MP3.Chapter.Player_1.0.1_aarch64.dmg">Version for Apple Silicon / M1</a></li>
+                        <li><a class="dropdown-item" data-player-asset="macos-arm" href="https://github.com/mp3chapters/mp3chapters-player/releases/download/app-v1.0.1/MP3.Chapter.Player_1.0.1_aarch64.dmg">Version for Apple Silicon (M1 and later)</a></li>
                         <li><a class="dropdown-item" data-player-asset="macos-intel" href="https://github.com/mp3chapters/mp3chapters-player/releases/download/app-v1.0.1/MP3.Chapter.Player_1.0.1_x64.dmg">Version for Intel x64</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><span class="dropdown-item text-body-secondary">Open .dmg and app via <code>Right click > Open</code>.</span></li>
-                        <li><span class="dropdown-item text-body-secondary">If necessary, click the <code>Open Anyway</code> button <br> in the <code>Privacy & Security</code> panel of System Settings.</span></li>
                     </ul>
                 </div>    
                 (.dmg, <span data-player-meta="macos-size">5.6–6.0 MB</span>)
@@ -199,7 +204,7 @@
                         <li class="mb-2">Built using
                             <a href="https://tauri.app/">Tauri</a>,
                             <a href="https://github.com/Zazama/node-id3">node-id3</a>,
-                            <a href="https://browserify.org/">browserify</a>, and
+                            <a href="https://webpack.js.org/">webpack</a>, and
                             <a href="https://vidstack.io/docs">Vidstack Player</a>.
                         </li>
                         <li class="mb-2">Code licensed <a href="https://github.com/mp3chapters/mp3chapters-player/blob/master/LICENSE"

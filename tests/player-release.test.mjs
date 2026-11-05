@@ -31,7 +31,8 @@ test('updates every platform, actual asset sizes, version, publication date, and
     assert.ok(updated.includes('/releases/tag/app-v1.2.3'));
     assert.equal(updatePage(updated, release()), updated);
     // Leave the manually maintained screenshot and descriptive copy alone.
-    assert.ok(updated.includes('src="screenshot.jpg"'));
+    assert.ok(updated.includes('src="screenshot-light.png"'));
+    assert.ok(updated.includes('media="(prefers-color-scheme: dark)" srcset="screenshot-dark.png"'));
     assert.ok(updated.includes('Free and open source.'));
 });
 
